@@ -2,8 +2,6 @@ class ApplicationController < ActionController::API
   require 'error_codes'
   require 'auth'
 
-  before_action :authenticate
-
   def authenticate
     auth_present ? true : (render json: ApiResponse::ACCESS_DENIED, status: ApiResponse::HTTP_CODE[:UNAUTHORIZE])
   end
