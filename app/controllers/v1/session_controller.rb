@@ -1,7 +1,21 @@
 class V1::SessionController < ApplicationController
 
-  def signIn
-    #check for email, mobile no validation
+  before_action :authenticate, :except => [:signUp]
+
+  def signUp
+    apiResponse = ApiResponse.new
+    if signUp_params
+      user = User.new(signUp_params)
+      if user.valid?
+        user.save()
+        saveUser = User.find(user.id)
+        render json: apiResponse.returnCurrentUser(user: saveUser)
+      else
+        render json: apiResponse.returnValidationErrors(errors: user.errors.messages)
+      end
+    else
+      render json: ApiResponse::MISSING_ENTRIES, status: ApiResponse::HTTP_CODE[:BAD_REQUEST]
+    end
   end
 
   def loginViaEmail
@@ -17,12 +31,19 @@ class V1::SessionController < ApplicationController
     end
   end
 
+  def loginViaOTP
+    # use twilio
+  end
+
   def logout
   end
 
   private
     def auth_params
       params.require(:session).permit(:email, :password)
+    end
+    def signUp_params
+      params.require(:session).permit(:email, :password, :mob_num, :name)
     end
 
 end
