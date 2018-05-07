@@ -1,0 +1,2 @@
+class CashTransaction < ApplicationRecord
+end

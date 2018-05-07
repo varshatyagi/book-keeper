@@ -1,0 +1,2 @@
+class OrgBankAccount < ApplicationRecord
+end
