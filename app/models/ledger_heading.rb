@@ -1,0 +1,2 @@
+class LedgerHeading < ApplicationRecord
+end

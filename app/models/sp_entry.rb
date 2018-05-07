@@ -1,0 +1,2 @@
+class SpEntry < ApplicationRecord
+end

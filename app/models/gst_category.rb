@@ -1,0 +1,2 @@
+class GstCategory < ApplicationRecord
+end
