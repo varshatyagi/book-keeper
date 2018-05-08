@@ -21,4 +21,4 @@ test:
   database: db/test.sqlite3
 
 production:
-  url: <%= ENV['DATABASE_URL'].sub(/^postgres/, "postgres") %>
+  url: <%= ENV['DATABASE_URL'].sub(/^postgres/, "postgis") %>
