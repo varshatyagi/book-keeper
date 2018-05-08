@@ -21,10 +21,4 @@ test:
   database: db/test.sqlite3
 
 production:
-  adapter: postgresql
-  encoding: unicode
-  database: d8anj4gglu14ns
-  port: 5432
-  pool: 5
-  username: iwdujjfmxbfnwi
-  password: a645d892fbac57550e62e4e9b0d88d9be6c69ece1aa3d55a911a80ad4c62ae09
+  url: <%= ENV['DATABASE_URL'].sub(/^postgres/, "postgis") %>
