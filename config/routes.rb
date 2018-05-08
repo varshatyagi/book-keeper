@@ -3,7 +3,8 @@ Rails.application.routes.draw do
   namespace :v1 do
     # resources :session, only: [:create, :destroy]
     post "register", to: "session#signUp"
-    post "session", to: "session#loginViaEmail"
+    post "login", to: "session#loginViaEmail"
+    get "session/:uid", to: "session#ifSessionExist"
     # delete "session/:id" to: "session#logout"
 
   end
