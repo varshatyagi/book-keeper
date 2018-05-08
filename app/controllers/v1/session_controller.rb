@@ -1,6 +1,16 @@
 class V1::SessionController < ApplicationController
 
-  before_action :authenticate, :except => [:signUp]
+  before_action :authenticate, :only => [:ifSessionExist]
+
+  def ifSessionExist
+    if authenticate
+      apiResponse = ApiResponse.new
+      user = User.find_by(id: params[:uid])
+      render json: apiResponse.returnCurrentUser(user: user), status: ApiResponse::HTTP_CODE[:SUCCESS]
+    else
+      render json: ApiResponse::ACCESS_DENIED, status: ApiResponse::HTTP_CODE[:UNAUTHORIZE]
+    end
+  end
 
   def signUp
     apiResponse = ApiResponse.new
@@ -8,8 +18,8 @@ class V1::SessionController < ApplicationController
       user = User.new(signUp_params)
       if user.valid?
         user.save()
-        saveUser = User.find(user.id)
-        render json: apiResponse.returnCurrentUser(user: saveUser)
+        user = generateToken(currentUser: user)
+        render json: apiResponse.returnCurrentUser(user: user)
       else
         render json: apiResponse.returnValidationErrors(errors: user.errors.messages)
       end
@@ -21,11 +31,9 @@ class V1::SessionController < ApplicationController
   def loginViaEmail
     apiResponse = ApiResponse.new
     user = User.where(email: auth_params[:email]).first
-    if user.valid_password?(auth_params[:password])
-      jwt = Auth.encode({user: user.id}) # get token
-      user.update(token: jwt, reset_password_token_at: Time.now)
-      user[:token] = jwt; # save token for future reference
-      render json: apiResponse.returnCurrentUser(user: user)
+    if user.valid_password? auth_params[:password]
+      user = generateToken(currentUser: user)
+      render json: apiResponse.returnCurrentUser(user: user), status: ApiResponse::HTTP_CODE[:SUCCESS]
     else
       render json: ApiResponse::ACCESS_DENIED, status: ApiResponse::HTTP_CODE[:UNAUTHORIZE]
     end
@@ -35,6 +43,7 @@ class V1::SessionController < ApplicationController
     # use twilio
   end
 
+
   def logout
   end
 
@@ -42,8 +51,15 @@ class V1::SessionController < ApplicationController
     def auth_params
       params.require(:session).permit(:email, :password)
     end
+
     def signUp_params
       params.require(:session).permit(:email, :password, :mob_num, :name)
+    end
+
+    def generateToken(currentUser: user)
+      jwt = Auth.encode({user: currentUser.id}) # get token
+      currentUser.update_attributes(token: jwt, reset_token_at: Time.now)
+      currentUser
     end
 
 end
