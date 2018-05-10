@@ -19,15 +19,15 @@ class ApiResponse
   INVALID_HEADERS = {errors: ERROR_MESSAGE[:NOT_ACCEPTABLE], status: false, response: nil}
   MISSING_ENTRIES = {errors: ERROR_MESSAGE[:MISSING_ENTRIES], status: false, response: nil}
 
-  def returnCurrentUser(user: nil)
+  def returnSuccessResponse(obj: nil)
     return {
       errors: nil,
       status: true,
-      response: {user: user}
+      response: obj
     }
   end
 
-  def returnValidationErrors(errors: errors)
+  def returnErrorResponse(errors: nil)
     return {
       errors: errors,
       status: false,
