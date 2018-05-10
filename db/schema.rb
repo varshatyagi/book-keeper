@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180507110112) do
+ActiveRecord::Schema.define(version: 20180509060525) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -69,10 +69,10 @@ ActiveRecord::Schema.define(version: 20180507110112) do
   create_table "ledger_headings", force: :cascade do |t|
     t.string   "name"
     t.boolean  "revenue"
-    t.string   "type"
-    t.boolean  "Asset"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "transcation_type"
+    t.boolean  "asset"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "org_balances", force: :cascade do |t|
