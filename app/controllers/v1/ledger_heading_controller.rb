@@ -15,6 +15,7 @@ class V1::LedgerHeadingController < ApplicationController
   private
 
     def prepareLedgerHeadings
+      ledgerHeadingObj = Array.new
       revenueCreditHeadings = prepareLedgerHeadingsByType({transcation_type: "credit", revenue: true})
       revenueDebitHeadings = prepareLedgerHeadingsByType({transcation_type: "debit", revenue: true})
 
@@ -22,8 +23,8 @@ class V1::LedgerHeadingController < ApplicationController
       assetDebitHeadings = prepareLedgerHeadingsByType({transcation_type: "debit", asset: true})
 
       ledgerHeadingObj = {
-        revenue: {credit: revenueCreditHeadings, debit: revenueDebitHeadings},
-        asset: {credit: assetCreditHeadings, debit: assetDebitHeadings}
+        revenue: {credit: revenueCreditHeadings[:revenue], debit: revenueDebitHeadings[:revenue]},
+        asset: {credit: assetCreditHeadings[:asset], debit: assetDebitHeadings[:asset]}
       }
       ledgerHeadingObj
     end
