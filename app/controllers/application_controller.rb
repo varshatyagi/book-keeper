@@ -20,7 +20,11 @@ class ApplicationController < ActionController::API
       if token && Auth.decode(token)
         decodedUserId = Auth.decode(token)
         currentUser = getCurrentUser(userId: decodedUserId["user"])
-        isTokenValid(token: token, user: currentUser)
+        if params[:uid]
+          (currentUser[:id] == params[:uid].to_i) ? isTokenValid(token: token, user: currentUser) : false
+        else
+          isTokenValid(token: token, user: currentUser)
+        end
       else
         return false
       end

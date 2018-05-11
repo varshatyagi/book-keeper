@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
     get "balance-summary/:orgId", controller: 'organisation', action: :getOrganisationMoneyBalance
 
-    post "transaction/:uid", controller: 'transaction', action: :money_transaction
+    post "transaction/:uid", controller: 'transaction', action: :saveTransaction
 
   end
 end
