@@ -19,7 +19,7 @@ class V1::SessionController < ApplicationController
       if user.valid?
         user.save()
         user = generateToken(currentUser: user)
-        render json: helper.returnSuccessResponse(obj: {user: saveUser}), status: Helper::HTTP_CODE[:SUCCESS]
+        render json: helper.returnSuccessResponse(obj: {user: user}), status: Helper::HTTP_CODE[:SUCCESS]
       else
         render json: helper.returnErrorResponse(errors: user.errors.messages), status: Helper::HTTP_CODE[:SUCCESS]
       end
