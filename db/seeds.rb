@@ -14,6 +14,7 @@
 
 #### Organisation seed data ####
 # Organisation.create(name: 'xyzOrg', org_type: nil, address: 'dm tower' , city: "Indore", state_code: "MP", status: "active", created_by: 1, user_id: 1)
+
 #### End of Organisation seed data ####
 
 #### OrgBalance seed data ####
