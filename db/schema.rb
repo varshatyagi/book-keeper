@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180509060525) do
+ActiveRecord::Schema.define(version: 20180511080950) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20180509060525) do
   end
 
   create_table "org_balances", force: :cascade do |t|
-    t.integer  "org_Id"
+    t.integer  "org_id"
     t.decimal  "cash_opening_balance"
     t.decimal  "bank_opening_balance"
     t.decimal  "credit_opening_balance"
@@ -93,8 +93,9 @@ ActiveRecord::Schema.define(version: 20180509060525) do
     t.integer  "bank_id"
     t.string   "account_num"
     t.boolean  "deleted"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.decimal  "bank_balance"
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -149,15 +150,16 @@ ActiveRecord::Schema.define(version: 20180509060525) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.string   "ledger_heading"
+    t.integer  "ledger_heading_id"
     t.decimal  "amount"
     t.string   "remarks"
     t.string   "payment_mode"
     t.datetime "txn_date"
     t.string   "status"
     t.integer  "created_by"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "bank_id"
   end
 
   create_table "users", force: :cascade do |t|

@@ -4,38 +4,38 @@ class V1::SessionController < ApplicationController
 
   def ifSessionExist
     if authenticate
-      apiResponse = ApiResponse.new
+      helper = Helper.new
       user = User.find_by(id: params[:uid])
-      render json: apiResponse.returnCurrentUser(user: user), status: ApiResponse::HTTP_CODE[:SUCCESS]
+      render json: helper.returnCurrentUser(user: user), status: Helper::HTTP_CODE[:SUCCESS]
     else
-      render json: ApiResponse::ACCESS_DENIED, status: ApiResponse::HTTP_CODE[:UNAUTHORIZE]
+      render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
     end
   end
 
   def signUp
-    apiResponse = ApiResponse.new
+    helper = Helper.new
     if signUp_params
       user = User.new(signUp_params)
       if user.valid?
         user.save()
         user = generateToken(currentUser: user)
-        render json: apiResponse.returnSuccessResponse(obj: {user: saveUser})
+        render json: helper.returnSuccessResponse(obj: {user: saveUser}), status: Helper::HTTP_CODE[:SUCCESS]
       else
-        render json: apiResponse.returnErrorResponse(errors: user.errors.messages)
+        render json: helper.returnErrorResponse(errors: user.errors.messages), status: Helper::HTTP_CODE[:SUCCESS]
       end
     else
-      render json: ApiResponse::MISSING_ENTRIES, status: ApiResponse::HTTP_CODE[:BAD_REQUEST]
+      render json: Helper::MISSING_ENTRIES, status: Helper::HTTP_CODE[:BAD_REQUEST]
     end
   end
 
   def loginViaEmail
-    apiResponse = ApiResponse.new
+    helper = Helper.new
     user = User.where(email: auth_params[:email]).first
     if user.valid_password? auth_params[:password]
       user = generateToken(currentUser: user)
-      render json: apiResponse.returnSuccessResponse(obj: {user: user}), status: ApiResponse::HTTP_CODE[:SUCCESS]
+      render json: helper.returnSuccessResponse(obj: {user: user}), status: Helper::HTTP_CODE[:SUCCESS]
     else
-      render json: ApiResponse::ACCESS_DENIED, status: ApiResponse::HTTP_CODE[:UNAUTHORIZE]
+      render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
     end
   end
 
