@@ -2,14 +2,14 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 #### LedgerHeading seed data ####
-# LedgerHeading.create(name: 'Sales', revenue: 1, transcation_type: 'credit' , asset: 0)
-# LedgerHeading.create(name: 'Commission', revenue: 1, transcation_type: 'credit' , asset: 0)
-# LedgerHeading.create(name: 'Salaries', revenue: 1, transcation_type: 'debit' , asset: 0)
-# LedgerHeading.create(name: 'House', revenue: 0, transcation_type: 'credit' , asset: 1)
-# LedgerHeading.create(name: 'Car', revenue: 0, transcation_type: 'credit' , asset: 1)
-# LedgerHeading.create(name: 'Prop Capital', revenue: 0, transcation_type: 'debit' , asset: 1)
-#LedgerHeading.create(name: 'Discount', revenue: true, transcation_type: 'debit' , asset: false)
-#LedgerHeading.create(name: 'xyz', revenue: true, transcation_type: 'credit' , asset: false)
+LedgerHeading.create(name: 'Sales', revenue: 1, transcation_type: 'credit' , asset: 0)
+LedgerHeading.create(name: 'Commission', revenue: 1, transcation_type: 'credit' , asset: 0)
+LedgerHeading.create(name: 'Salaries', revenue: 1, transcation_type: 'debit' , asset: 0)
+LedgerHeading.create(name: 'House', revenue: 0, transcation_type: 'credit' , asset: 1)
+LedgerHeading.create(name: 'Car', revenue: 0, transcation_type: 'credit' , asset: 1)
+LedgerHeading.create(name: 'Prop Capital', revenue: 0, transcation_type: 'debit' , asset: 1)
+LedgerHeading.create(name: 'Discount', revenue: true, transcation_type: 'debit' , asset: false)
+LedgerHeading.create(name: 'xyz', revenue: true, transcation_type: 'credit' , asset: false)
 #### End of LedgerHeading seed data ####
 
 #### Organisation seed data ####
