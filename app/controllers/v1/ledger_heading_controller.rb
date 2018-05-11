@@ -3,40 +3,45 @@ class V1::LedgerHeadingController < ApplicationController
   before_action :authenticate
 
   def getLedgerHeadings
-    apiResponse = ApiResponse.new
+    helper = Helper.new
     ledgerheadings = nil
-    if params[:type] == nil
-      render json: apiResponse.returnSuccessResponse(obj: prepareLedgerHeadings)
+    if params[:transaction_type] == nil
+      render json: helper.returnSuccessResponse(obj: prepareLedgerHeadings), status: Helper::HTTP_CODE[:SUCCESS]
       return true
     end
-    paramsHash = Hash.new
-    paramsHash[params[:type]] = true
-    render json: apiResponse.returnSuccessResponse(obj: {params[:type] => prepareLedgerHeadingsByType(paramsHash)})
+    render json: helper.returnSuccessResponse(obj: prepareLedgerHeadingsByType({transcation_type: params[:transaction_type]})), status: Helper::HTTP_CODE[:SUCCESS]
   end
 
   private
 
     def prepareLedgerHeadings
-      assetHeadings = prepareLedgerHeadingsByType({asset: true})
-      revenueHeadings = prepareLedgerHeadingsByType({revenue: true})
-      ledgerHeadingObj = {revenue: revenueHeadings, asset: assetHeadings}
+      revenueCreditHeadings = prepareLedgerHeadingsByType({transcation_type: "credit", revenue: true})
+      revenueDebitHeadings = prepareLedgerHeadingsByType({transcation_type: "debit", revenue: true})
+
+      assetCreditHeadings = prepareLedgerHeadingsByType({transcation_type: "credit", asset: true})
+      assetDebitHeadings = prepareLedgerHeadingsByType({transcation_type: "debit", asset: true})
+
+      ledgerHeadingObj = {
+        revenue: {credit: revenueCreditHeadings, debit: revenueDebitHeadings},
+        asset: {credit: assetCreditHeadings, debit: assetDebitHeadings}
+      }
       ledgerHeadingObj
     end
 
     def prepareLedgerHeadingsByType(paramsHash)
-      ledgerCreditArray = Array.new
-      ledgerDebitArray = Array.new
+      ledgerRevenueArray = Array.new
+      ledgerAssetArray = Array.new
       ledgerheadings = LedgerHeading.where(paramsHash)
       ledgerheadings.all.each do |ledgerHeading|
-        if ledgerHeading.transcation_type === "credit"
+        if ledgerHeading.revenue === true
           ledgerHeading = ledgerHeading.as_json
-          ledgerCreditArray << ledgerHeading
+          ledgerRevenueArray << ledgerHeading
         else
           ledgerHeading = ledgerHeading.as_json
-          ledgerDebitArray << ledgerHeading
+          ledgerAssetArray << ledgerHeading
         end
       end
-      ledgerHeadingObj = {credit: ledgerCreditArray, debit: ledgerDebitArray}
+      ledgerHeadingObj = {revenue: ledgerRevenueArray, asset: ledgerAssetArray}
       ledgerHeadingObj
     end
 end

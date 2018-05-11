@@ -1,9 +1,9 @@
 class ApplicationController < ActionController::API
-  require 'error_codes'
+  require 'helper'
   require 'auth'
 
   def authenticate
-    auth_present ? true : (render json: ApiResponse::ACCESS_DENIED, status: ApiResponse::HTTP_CODE[:UNAUTHORIZE])
+    auth_present ? true : (render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE])
   end
 
   private
@@ -31,7 +31,7 @@ class ApplicationController < ActionController::API
     end
 
     def isTokenValid(token: token, user: currentUser)
-      token === user[:token] ? !((DateTime.now.to_i - user[:reset_token_at].to_i) > ApiResponse::TOKEN_EXPIRATION_TIME) : false
+      token === user[:token] ? !((DateTime.now.to_i - user[:reset_token_at].to_i) > Helper::TOKEN_EXPIRATION_TIME) : false
     end
 
 end
