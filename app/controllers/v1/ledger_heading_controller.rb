@@ -15,7 +15,6 @@ class V1::LedgerHeadingController < ApplicationController
   private
 
     def prepareLedgerHeadings
-      ledgerHeadingObj = Array.new
       revenueCreditHeadings = prepareLedgerHeadingsByType({transcation_type: "credit", revenue: true})
       revenueDebitHeadings = prepareLedgerHeadingsByType({transcation_type: "debit", revenue: true})
 

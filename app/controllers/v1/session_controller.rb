@@ -14,8 +14,8 @@ class V1::SessionController < ApplicationController
 
   def signUp
     helper = Helper.new
-    if signUp_params
-      user = User.new(signUp_params)
+    if signUpParams
+      user = User.new(signUpParams)
       if user.valid?
         user.save()
         user = generateToken(currentUser: user)
@@ -30,8 +30,8 @@ class V1::SessionController < ApplicationController
 
   def loginViaEmail
     helper = Helper.new
-    user = User.where(email: auth_params[:email]).first
-    if user.valid_password? auth_params[:password]
+    user = User.where(email: authParams[:email]).first
+    if user.valid_password? authParams[:password]
       user = generateToken(currentUser: user)
       render json: helper.returnSuccessResponse(obj: {user: user}), status: Helper::HTTP_CODE[:SUCCESS]
     else
@@ -48,11 +48,11 @@ class V1::SessionController < ApplicationController
   end
 
   private
-    def auth_params
+    def authParams
       params.require(:session).permit(:email, :password)
     end
 
-    def signUp_params
+    def signUpParams
       params.require(:session).permit(:email, :password, :mob_num, :name)
     end
 

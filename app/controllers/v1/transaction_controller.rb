@@ -1,14 +1,32 @@
 class V1::TransactionController < ApplicationController
 
-  def money_transaction
-    # if transaction_params ?
-    #   render json: {error: true}
-    # end
-    # render json: {error: false}
+  before_action :authenticate
+  def saveTransaction
+    helper = Helper.new
+    if transactionParams
+      # ledgerHeading = LedgerHeading.find_by(params[:ledgerHeading])
+      options = {
+        ledger_heading_id: transactionParams[:ledgerHeading],
+        amount: transactionParams[:amount],
+        remarks: transactionParams[:remarks],
+        payment_mode: transactionParams[:mode],
+        txn_date: Time.now,
+        status: 'completed',
+        created_by: params[:uid]
+        }
+      transactionParams[:mode] == "bank" ? (options[:bank_id] = transactionParams[:org_bank_account]) : options
+      transaction = Transaction.new(options)
+      transaction.save()
+      Rails.logger.info(transaction.errors.messages.inspect)
+      byebug
+      render json: helper.returnSuccessResponse
+      return
+    end
+    render json: helper.returnErrorResponse
   end
 
   private
-    def transaction_params
-      params.require(:transaction).permit(:ledgerHeading, :amount, :remark, :mode)
+    def transactionParams
+      params.required(:transaction).permit(:ledgerHeading, :amount, :remarks, :mode)
     end
 end
