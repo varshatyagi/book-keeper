@@ -5,11 +5,12 @@ Rails.application.routes.draw do
     post "login", controller: 'session', action: :loginViaEmail
     post "session/:uid", controller: 'session', action: :ifSessionExist
 
-    get "ledger-headings/:type", controller: 'ledger_heading', action: :getLedgerHeadings
+    get "ledger-headings/:transaction_type", controller: 'ledger_heading', action: :getLedgerHeadings
     get "ledger-headings", controller: 'ledger_heading', action: :getLedgerHeadings
 
-    # delete "session/:id" to: "session#logout"
-    # get "ledger-heading/:type", to: "ledgerHeading#getLedgerHeadings"
+    get "balance-summary/:orgId", controller: 'organisation', action: :getOrganisationMoneyBalance
+
+    post "transaction/:uid", controller: 'transaction', action: :money_transaction
 
   end
 end
