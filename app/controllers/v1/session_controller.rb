@@ -22,8 +22,7 @@ class V1::SessionController < ApplicationController
           render json: Helper::UNIQUE_ORG_NAME, status: Helper::HTTP_CODE[:SUCCESS]
           return true
         end
-        user = generateToken(currentUser: hasUserObj)
-        render json: helper.returnSuccessResponse(obj: {user: user}), status: Helper::HTTP_CODE[:SUCCESS]
+        render json: helper.returnSuccessResponse(obj: {user: generateToken(hasUserObj)}), status: Helper::HTTP_CODE[:SUCCESS]
       else
         render json: helper.returnErrorResponse(errors: user.errors.messages), status: Helper::HTTP_CODE[:SUCCESS]
       end
@@ -36,8 +35,7 @@ class V1::SessionController < ApplicationController
     helper = Helper.new
     user = User.where(email: authParams[:email]).first
     if user.valid_password? authParams[:password]
-      user = generateToken(currentUser: user)
-      render json: helper.returnSuccessResponse(obj: {user: user}), status: Helper::HTTP_CODE[:SUCCESS]
+      render json: helper.returnSuccessResponse(obj: {user: generateToken(user)}), status: Helper::HTTP_CODE[:SUCCESS]
     else
       render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
     end
@@ -56,6 +54,16 @@ class V1::SessionController < ApplicationController
       unless org
         return false
       end
+      OrgBalance.create({
+          org_id: org.id,
+          cash_opening_balance: 0.0,
+          bank_opening_balance: 0.0,
+          credit_opening_balance: 0.0,
+          financial_year_start: Time.now,
+          cash_balance: 0.0,
+          bank_balance: 0.0,
+          credit_balance: 0.0
+        })
       user[:org_id] = org.id
       user.save
       user
@@ -83,7 +91,7 @@ class V1::SessionController < ApplicationController
       params.require(:organisation).permit(:name)
     end
 
-    def generateToken(currentUser: user)
+    def generateToken(currentUser)
       jwt = Auth.encode({user: currentUser.id}) # get token
       currentUser.update_attributes(token: jwt, reset_token_at: Time.now)
       currentUser
