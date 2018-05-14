@@ -12,5 +12,7 @@ Rails.application.routes.draw do
 
     post "transaction/:uid", controller: 'transaction', action: :saveTransaction
 
+    get "organisation/:orgId", controller: 'organisation', action: :organisation
+
   end
 end
