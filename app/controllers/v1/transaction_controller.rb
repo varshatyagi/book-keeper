@@ -10,11 +10,11 @@ class V1::TransactionController < ApplicationController
         amount: transactionParams[:amount],
         remarks: transactionParams[:remarks],
         payment_mode: transactionParams[:mode],
-        txn_date: Time.now,
-        status: 'completed',
+        txn_date: transactionParams[:date],
+        status: Helper::STATUS[:COMPLETED],
         created_by: params[:uid]
         }
-      transactionParams[:mode] == "bank" ? (options[:bank_id] = transactionParams[:org_bank_account]) : options
+      transactionParams[:mode] == "bank" ? (options[:bank_id] = transactionParams[:bank_id]) : options
       transaction = Transaction.new(options)
       transaction.save()
       render json: helper.returnSuccessResponse(obj: nil), status: Helper::HTTP_CODE[:SUCCESS]
@@ -25,6 +25,6 @@ class V1::TransactionController < ApplicationController
 
   private
     def transactionParams
-      params.required(:transaction).permit(:ledgerHeading, :amount, :remarks, :mode)
+      params.required(:transaction).permit(:ledgerHeading, :amount, :remarks, :mode, :date)
     end
 end

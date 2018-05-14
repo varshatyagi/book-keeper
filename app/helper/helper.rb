@@ -15,6 +15,12 @@ class Helper
     "UNIQUE_ORG_NAME": "Organisation name has already been taken"
   }
 
+  STATUS = {
+    "COMPLETED": "Completed",
+    "PENDING": "Pending",
+    "FAILED": "Failed"
+  }
+
   TOKEN_EXPIRATION_TIME = 86400 # In seconds 24 hrs
 
   ACCESS_DENIED = {errors: ERROR_MESSAGE[:UNAUTHORIZE], status: false, response: nil}
