@@ -14,5 +14,7 @@ Rails.application.routes.draw do
 
     get "organisation/:orgId", controller: 'organisation', action: :organisation
 
+    get "banks", controller: 'utility', action: :getBankList
+
   end
 end
