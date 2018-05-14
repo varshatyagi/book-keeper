@@ -17,8 +17,12 @@ class V1::SessionController < ApplicationController
     if signUpParams
       user = User.new(signUpParams)
       if user.valid?
-        user.save()
-        user = generateToken(currentUser: user)
+        hasUserObj = createOrganisationForUser(user)
+        unless hasUserObj
+          render json: Helper::UNIQUE_ORG_NAME, status: Helper::HTTP_CODE[:SUCCESS]
+          return true
+        end
+        user = generateToken(currentUser: hasUserObj)
         render json: helper.returnSuccessResponse(obj: {user: user}), status: Helper::HTTP_CODE[:SUCCESS]
       else
         render json: helper.returnErrorResponse(errors: user.errors.messages), status: Helper::HTTP_CODE[:SUCCESS]
@@ -39,6 +43,25 @@ class V1::SessionController < ApplicationController
     end
   end
 
+  def createOrganisationForUser(user)
+    helper = Helper.new
+    if organisationParams && organisationParams[:name] != nil
+      isOrganisationExist = Organisation.find_by(name: organisationParams[:name])
+      if isOrganisationExist
+        return false
+      end
+      user.save
+      organisation = {created_by: user.id, user_id: user.id, name: organisationParams[:name]}
+      org = Organisation.create(organisation)
+      unless org
+        return false
+      end
+      user[:org_id] = org.id
+      user.save
+      user
+    end
+  end
+
   def loginViaOTP
     # use twilio
   end
@@ -53,7 +76,11 @@ class V1::SessionController < ApplicationController
     end
 
     def signUpParams
-      params.require(:session).permit(:email, :password, :mob_num, :name)
+      params.require(:user).permit(:email, :password, :mob_num, :name)
+    end
+
+    def organisationParams
+      params.require(:organisation).permit(:name)
     end
 
     def generateToken(currentUser: user)
