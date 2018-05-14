@@ -18,10 +18,10 @@
 #### End of Organisation seed data ####
 
 #### OrgBalance seed data ####
-OrgBalance.create(org_id: 1, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
-OrgBalance.create(org_id: 2, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
-OrgBalance.create(org_id: 3, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
-OrgBalance.create(org_id: 4, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
+# OrgBalance.create(org_id: 1, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
+# OrgBalance.create(org_id: 2, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
+# OrgBalance.create(org_id: 3, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
+# OrgBalance.create(org_id: 4, cash_opening_balance: 23452, bank_opening_balance: 235678 , credit_opening_balance: 50000, financial_year_start: Time.now, cash_balance: 23452, bank_balance: 235678, credit_balance: 50000)
 #### End of OrgBalance seed data ####
 
 #### OrgBankAccount seed data ####
