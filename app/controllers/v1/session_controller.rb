@@ -72,7 +72,7 @@ class V1::SessionController < ApplicationController
 
   private
     def authParams
-      params.require(:session).permit(:email, :password)
+      params.require(:user).permit(:email, :password)
     end
 
     def signUpParams
