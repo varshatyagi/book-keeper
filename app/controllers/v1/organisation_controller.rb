@@ -1,6 +1,7 @@
 class V1::OrganisationController < ApplicationController
 
   before_action :authenticate
+
   def getOrganisationMoneyBalance
     helper = Helper.new
     consolidatedBalance = OrgBalance.find_by(org_id: params[:orgId])
