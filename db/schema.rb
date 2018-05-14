@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180511080950) do
+ActiveRecord::Schema.define(version: 20180514071730) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -106,9 +106,10 @@ ActiveRecord::Schema.define(version: 20180511080950) do
     t.string   "state_code"
     t.string   "status"
     t.integer  "created_by"
-    t.integer  "owner_id"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_organisations_on_name", unique: true
   end
 
   create_table "payment_modes", force: :cascade do |t|
@@ -157,9 +158,9 @@ ActiveRecord::Schema.define(version: 20180511080950) do
     t.datetime "txn_date"
     t.string   "status"
     t.integer  "created_by"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.integer  "bank_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.integer  "org_bank_account_id"
   end
 
   create_table "users", force: :cascade do |t|

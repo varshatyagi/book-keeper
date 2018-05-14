@@ -1,5 +1,6 @@
 class Organisation < ApplicationRecord
   has_many :org_bank_account
-  belongs_to :user
-  belongs_to :org_balance
+  belongs_to :user, optional: true
+  belongs_to :org_balance, optional: true
+  validates_uniqueness_of :name
 end
