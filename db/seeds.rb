@@ -31,9 +31,9 @@
 #### End of OrgBankAccount seed data ####
 
 #### Bank seed data ####
-# Bank.create(name: "State Bank Of India")
-# Bank.create(name: "ICICI Bank")
-# Bank.create(name: "Bank Of India")
-# Bank.create(name: "Corporation Bank")
-# Bank.create(name: "Oriental Bank")
+Bank.create(name: "State Bank Of India")
+Bank.create(name: "ICICI Bank")
+Bank.create(name: "Bank Of India")
+Bank.create(name: "Corporation Bank")
+Bank.create(name: "Oriental Bank")
 #### End of Bank seed data ####
