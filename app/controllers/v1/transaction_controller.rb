@@ -17,12 +17,10 @@ class V1::TransactionController < ApplicationController
       transactionParams[:mode] == "bank" ? (options[:bank_id] = transactionParams[:org_bank_account]) : options
       transaction = Transaction.new(options)
       transaction.save()
-      Rails.logger.info(transaction.errors.messages.inspect)
-      byebug
-      render json: helper.returnSuccessResponse
+      render json: helper.returnSuccessResponse(obj: nil), status: Helper::HTTP_CODE[:SUCCESS]
       return
     end
-    render json: helper.returnErrorResponse
+    render json: helper.returnSuccessResponse(errors: nil), status: Helper::HTTP_CODE[:BAD_REQUEST]
   end
 
   private
