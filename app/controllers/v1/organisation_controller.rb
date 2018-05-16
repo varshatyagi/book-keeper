@@ -32,7 +32,7 @@ class V1::OrganisationController < ApplicationController
         if bankParams
           bankParams.each do |bank|
             ApplicationRecord.transaction do
-              ifOrgBankExist = OrgBankAccount.find_by!(org_id: params[:orgId], bank_id: bank[:bankId])
+              ifOrgBankExist = OrgBankAccount.find_by(org_id: params[:orgId], bank_id: bank[:bankId])
               if ifOrgBankExist
                 orgBank = ifOrgBankExist.update_attributes!({bank_balance: bank[:balance], account_num: bank[:accountNumber]})
               else
