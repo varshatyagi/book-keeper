@@ -28,7 +28,6 @@ class V1::TransactionController < ApplicationController
             orgBankAccount = OrgBankAccount.find_by(bank_id: options[:org_bank_account_id], org_id: user.org_id, account_num: accountNumber).first
             (ledgerHeading[:transaction_type] == 'credit') ? orgBankBalance = orgBankAccount[:bank_balance] + options[:amount] : orgBankBalance = orgBankAccount[:bank_balance] - options[:amount]
             orgBankAccount.update_attributes!({bank_balance: orgBankBalance})
-            byebug
             ApplicationRecord.transaction do
               orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
               orgBalance = orgBalanceObj[:bank_balance] - options[:amount]
