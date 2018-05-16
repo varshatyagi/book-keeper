@@ -1,72 +1,40 @@
 class V1::SessionController < ApplicationController
 
-  before_action :authenticate, :only => [:ifSessionExist]
-
-  def ifSessionExist
-    if authenticate
-      helper = Helper.new
-      user = User.find_by(id: params[:uid])
-      render json: helper.returnCurrentUser(user: user), status: Helper::HTTP_CODE[:SUCCESS]
-    else
-      render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
-    end
-  end
-
   def signUp
-    helper = Helper.new
     if signUpParams
       user = User.new(signUpParams)
       if user.valid?
-        hasUserObj = createOrganisationForUser(user)
-        unless hasUserObj
-          render json: Helper::UNIQUE_ORG_NAME, status: Helper::HTTP_CODE[:SUCCESS]
-          return true
+        begin
+          ApplicationRecord.transaction do
+            organisation = Organisation.new(name: organisationParams[:name])
+            organisation.save!
+            ApplicationRecord.transaction do
+              user[:org_id] = organisation.id
+              user.save!
+              ApplicationRecord.transaction do
+                organisation.update_attributes!({created_by: user.id, user_id: user.id})
+              end
+            end
+          end
+        rescue StandardError => error
+          render json: {errors: error, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
+          return
         end
-        render json: helper.returnSuccessResponse(obj: {user: generateToken(hasUserObj)}), status: Helper::HTTP_CODE[:SUCCESS]
+        render json: {errors: nil, status: true, response: generateToken(user)}, status: Helper::HTTP_CODE[:SUCCESS]
       else
-        render json: helper.returnErrorResponse(errors: user.errors.messages), status: Helper::HTTP_CODE[:SUCCESS]
+        render json: {errors: user.errors.messages, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
       end
     else
-      render json: Helper::MISSING_ENTRIES, status: Helper::HTTP_CODE[:BAD_REQUEST]
+      render json: Helper.MISSING_ENTRIES, status: Helper.HTTP_CODE[:BAD_REQUEST]
     end
   end
 
   def loginViaEmail
-    helper = Helper.new
-    user = User.where(email: authParams[:email]).first
+    user = User.find_by!(email: authParams[:email])
     if user.valid_password? authParams[:password]
-      render json: helper.returnSuccessResponse(obj: {user: generateToken(user)}), status: Helper::HTTP_CODE[:SUCCESS]
+      render json: {errors: nil, status: true, response: generateToken(user)}, status: Helper::HTTP_CODE[:SUCCESS]
     else
       render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
-    end
-  end
-
-  def createOrganisationForUser(user)
-    helper = Helper.new
-    if organisationParams && organisationParams[:name] != nil
-      isOrganisationExist = Organisation.find_by(name: organisationParams[:name])
-      if isOrganisationExist
-        return false
-      end
-      user.save
-      organisation = {created_by: user.id, user_id: user.id, name: organisationParams[:name]}
-      org = Organisation.create(organisation)
-      unless org
-        return false
-      end
-      OrgBalance.create({
-          org_id: org.id,
-          cash_opening_balance: 0.0,
-          bank_opening_balance: 0.0,
-          credit_opening_balance: 0.0,
-          financial_year_start: Time.now,
-          cash_balance: 0.0,
-          bank_balance: 0.0,
-          credit_balance: 0.0
-        })
-      user[:org_id] = org.id
-      user.save
-      user
     end
   end
 

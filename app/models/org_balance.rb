@@ -1,3 +1,4 @@
 class OrgBalance < ApplicationRecord
-  has_one :organisation
+  belongs_to :organisation, optional: true
+  # validates_presence_of :financial_year_start
 end

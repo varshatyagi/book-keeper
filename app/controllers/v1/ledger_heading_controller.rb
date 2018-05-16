@@ -3,13 +3,12 @@ class V1::LedgerHeadingController < ApplicationController
   before_action :authenticate
 
   def getLedgerHeadings
-    helper = Helper.new
     ledgerheadings = nil
     if params[:transaction_type] == nil
-      render json: helper.returnSuccessResponse(obj: prepareLedgerHeadings), status: Helper::HTTP_CODE[:SUCCESS]
+      render json: {errors: nil, status: true, response: prepareLedgerHeadings}, status: Helper::HTTP_CODE[:SUCCESS]
       return true
     end
-    render json: helper.returnSuccessResponse(obj: prepareLedgerHeadingsByType({transcation_type: params[:transaction_type]})), status: Helper::HTTP_CODE[:SUCCESS]
+    render json: {errors: nil, status: true, response: prepareLedgerHeadingsByType({transcation_type: params[:transaction_type]})}, status: Helper::HTTP_CODE[:SUCCESS]
   end
 
   private
