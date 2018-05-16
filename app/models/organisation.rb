@@ -4,7 +4,7 @@ class Organisation < ApplicationRecord
   has_one :org_balance
 
   validates_presence_of :name
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, message: 'Orgainsation name has already been taken.'
 
   after_create :insertRecordInOrgBalance
 

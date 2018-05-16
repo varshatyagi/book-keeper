@@ -14,7 +14,7 @@ class V1::TransactionController < ApplicationController
         created_by: params[:uid]
         }
       if transactionParams[:mode] != "bank"
-        createTransaction(options, params[:uid])
+        createTransaction(options, params[:uid], ledgerHeading)
         return
       end
       options[:org_bank_account_id] = transactionParams[:bankId]
@@ -44,7 +44,7 @@ class V1::TransactionController < ApplicationController
     render json: Helper::STANDARD_ERROR, status: Helper::HTTP_CODE[:BAD_REQUEST]
   end
 
-  def createTransaction(options, uid)
+  def createTransaction(options, uid, ledgerHeading)
     ApplicationRecord.transaction do
       transaction = Transaction.new(options)
       transaction.save!
@@ -52,7 +52,12 @@ class V1::TransactionController < ApplicationController
         user = User.find_by({id: uid})
         orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
         (ledgerHeading[:transaction_type] == 'credit') ? (orgBalance = orgBalanceObj[:bank_balance] + options[:amount]) : (orgBalance = orgBalanceObj[:bank_balance] - options[:amount])
-        orgBalanceObj.update_attributes!({bank_balance: orgBalance})
+        case options[:payment_mode]
+        when "cash"
+           orgBalanceObj.update_attributes!({cash_balance: orgBalance})
+        else
+          orgBalanceObj.update_attributes!({credit_balance: orgBalance})
+        end
       end
     end
     render json: Helper::STANDARD_RESPONSE, status: Helper::HTTP_CODE[:SUCCESS]
