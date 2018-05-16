@@ -31,7 +31,6 @@ class V1::SessionController < ApplicationController
 
   def loginViaEmail
     user = User.find_by(email: authParams[:email])
-    byebug
     if user
       if user.valid_password? authParams[:password]
         render json: {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
