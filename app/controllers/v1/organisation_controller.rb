@@ -17,7 +17,11 @@ class V1::OrganisationController < ApplicationController
       render json: {errors: error, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
       return true
     end
-    render json: {errors: nil, status: true, response: organisation}, status: Helper::HTTP_CODE[:SUCCESS]
+    banks = OrgBankAccount.where({org_id: params[:orgId]})
+    unless banks
+      banks = nil
+    end
+    render json: {errors: nil, status: true, response: {organisation: organisation, banks: banks}}, status: Helper::HTTP_CODE[:SUCCESS]
   end
 
   def update

@@ -25,11 +25,21 @@ class V1::TransactionController < ApplicationController
           ApplicationRecord.transaction do
             user = User.find_by(id: params[:uid])
             orgBankAccount = OrgBankAccount.find_by(bank_id: options[:org_bank_account_id], org_id: user.org_id)
-            (ledgerHeading[:transaction_type] == 'credit') ? (orgBankBalance = orgBankAccount[:bank_balance] + options[:amount]) : (orgBankBalance = orgBankAccount[:bank_balance] - options[:amount])
+            if ledgerHeading[:transcation_type] == 'credit'
+              orgBankBalance = orgBankAccount[:bank_balance] + options[:amount]
+            else
+              orgBankBalance = orgBankAccount[:bank_balance] - options[:amount]
+            end
+
             orgBankAccount.update_attributes!({bank_balance: orgBankBalance})
+            orgBankAccount.save
             ApplicationRecord.transaction do
               orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
-              (ledgerHeading[:transaction_type] == 'credit') ? (orgBalance = orgBalanceObj[:bank_balance] + options[:amount]) : (orgBalance = orgBalanceObj[:bank_balance] - options[:amount])
+              if ledgerHeading[:transcation_type] == 'credit'
+                orgBalance = orgBalanceObj[:bank_balance] + options[:amount]
+              else
+                orgBalance = orgBalanceObj[:bank_balance] - options[:amount]
+              end
               orgBalanceObj.update_attributes!({bank_balance: orgBalance})
             end
           end
@@ -51,7 +61,12 @@ class V1::TransactionController < ApplicationController
       ApplicationRecord.transaction do
         user = User.find_by({id: uid})
         orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
-        (ledgerHeading[:transaction_type] == 'credit') ? (orgBalance = orgBalanceObj[:bank_balance] + options[:amount]) : (orgBalance = orgBalanceObj[:bank_balance] - options[:amount])
+        if ledgerHeading[:transcation_type] == 'credit'
+          orgBalance = orgBalanceObj[:bank_balance] + options[:amount]
+        else
+          orgBalance = orgBalanceObj[:bank_balance] - options[:amount]
+        end
+        byebug
         case options[:payment_mode]
         when "cash"
            orgBalanceObj.update_attributes!({cash_balance: orgBalance})
