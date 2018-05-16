@@ -20,7 +20,7 @@ class V1::SessionController < ApplicationController
           render json: {errors: error, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
           return
         end
-        render json: {errors: nil, status: true, response: generateToken(user)}, status: Helper::HTTP_CODE[:SUCCESS]
+        render json: {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
       else
         render json: {errors: user.errors.messages, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
       end
@@ -32,7 +32,7 @@ class V1::SessionController < ApplicationController
   def loginViaEmail
     user = User.find_by!(email: authParams[:email])
     if user.valid_password? authParams[:password]
-      render json: {errors: nil, status: true, response: generateToken(user)}, status: Helper::HTTP_CODE[:SUCCESS]
+      render json: {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
     else
       render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
     end
