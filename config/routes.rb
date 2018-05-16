@@ -3,7 +3,6 @@ Rails.application.routes.draw do
   namespace :v1 do
     post "register", controller: 'session', action: :signUp
     post "login", controller: 'session', action: :loginViaEmail
-    post "session/:uid", controller: 'session', action: :ifSessionExist
 
     get "ledger-headings/:transaction_type", controller: 'ledger_heading', action: :getLedgerHeadings
     get "ledger-headings", controller: 'ledger_heading', action: :getLedgerHeadings
@@ -13,8 +12,10 @@ Rails.application.routes.draw do
     post "transaction/:uid", controller: 'transaction', action: :saveTransaction
 
     get "organisation/:orgId", controller: 'organisation', action: :organisation
+    put "organisation/:orgId", controller: 'organisation', action: :update
 
     get "banks", controller: 'utility', action: :getBankList
+
 
   end
 end

@@ -29,20 +29,8 @@ class Helper
   ORG_ID_MISSING = {errors: ERROR_MESSAGE[:ORG_ID_MISSING], status: false, response: nil}
   UNIQUE_ORG_NAME = {errors: ERROR_MESSAGE[:UNIQUE_ORG_NAME], status: false, response: nil}
 
-  def returnSuccessResponse(obj: nil)
-    return {
-      errors: nil,
-      status: true,
-      response: obj
-    }
-  end
+  STANDARD_ERROR = {errors: nil, status: false, response: nil}
+  STANDARD_RESPONSE = {errors: nil, status: true, response: nil}
 
-  def returnErrorResponse(errors: nil)
-    return {
-      errors: errors,
-      status: false,
-      response: nil
-    }
-  end
 
 end

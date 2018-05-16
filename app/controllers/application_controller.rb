@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
-  require 'helper'
-  require 'auth'
+  require 'Helper'
+  require 'Auth'
 
   def authenticate
     auth_present ? true : (render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE])
