@@ -66,7 +66,6 @@ class V1::TransactionController < ApplicationController
         else
           orgBalance = orgBalanceObj[:bank_balance] - options[:amount]
         end
-        byebug
         case options[:payment_mode]
         when "cash"
            orgBalanceObj.update_attributes!({cash_balance: orgBalance})
