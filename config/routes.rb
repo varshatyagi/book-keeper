@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     put "organisation/:orgId", controller: 'organisation', action: :update
 
     get "banks", controller: 'utility', action: :getBankList
+    get "banks/:orgId", controller: 'utility', action: :getOrganisationBanks
 
 
   end

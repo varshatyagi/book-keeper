@@ -14,23 +14,22 @@ class V1::TransactionController < ApplicationController
         created_by: params[:uid]
         }
       if transactionParams[:mode] != "bank"
-        createTransaction(options)
+        createTransaction(options, params[:uid])
         return
       end
-      options[:org_bank_account_id] = transactionParams[:bank_id]
-      accountNumber = transactionParams[:accountNumber]
+      options[:org_bank_account_id] = transactionParams[:bankId]
       begin
         ApplicationRecord.transaction do
           transaction = Transaction.new(options)
           transaction.save!
           ApplicationRecord.transaction do
             user = User.find_by(id: params[:uid])
-            orgBankAccount = OrgBankAccount.find_by(bank_id: options[:org_bank_account_id], org_id: user.org_id, account_num: accountNumber)
-            (ledgerHeading[:transaction_type] == 'credit') ? orgBankBalance = orgBankAccount[:bank_balance] + options[:amount] : orgBankBalance = orgBankAccount[:bank_balance] - options[:amount]
+            orgBankAccount = OrgBankAccount.find_by(bank_id: options[:org_bank_account_id], org_id: user.org_id)
+            (ledgerHeading[:transaction_type] == 'credit') ? (orgBankBalance = orgBankAccount[:bank_balance] + options[:amount]) : (orgBankBalance = orgBankAccount[:bank_balance] - options[:amount])
             orgBankAccount.update_attributes!({bank_balance: orgBankBalance})
             ApplicationRecord.transaction do
               orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
-              orgBalance = orgBalanceObj[:bank_balance] - options[:amount]
+              (ledgerHeading[:transaction_type] == 'credit') ? (orgBalance = orgBalanceObj[:bank_balance] + options[:amount]) : (orgBalance = orgBalanceObj[:bank_balance] - options[:amount])
               orgBalanceObj.update_attributes!({bank_balance: orgBalance})
             end
           end
@@ -45,18 +44,22 @@ class V1::TransactionController < ApplicationController
     render json: Helper::STANDARD_ERROR, status: Helper::HTTP_CODE[:BAD_REQUEST]
   end
 
-  def createTransaction(options)
-    transaction = Transaction.new(options)
-    if transaction.valid?
-      render json: Helper::STANDARD_RESPONSE, status: Helper::HTTP_CODE[:SUCCESS]
-      return
+  def createTransaction(options, uid)
+    ApplicationRecord.transaction do
+      transaction = Transaction.new(options)
+      transaction.save!
+      ApplicationRecord.transaction do
+        user = User.find_by({id: uid})
+        orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
+        (ledgerHeading[:transaction_type] == 'credit') ? (orgBalance = orgBalanceObj[:bank_balance] + options[:amount]) : (orgBalance = orgBalanceObj[:bank_balance] - options[:amount])
+        orgBalanceObj.update_attributes!({bank_balance: orgBalance})
+      end
     end
-    render json: {errors: transaction.errors.messages, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
-    return
+    render json: Helper::STANDARD_RESPONSE, status: Helper::HTTP_CODE[:SUCCESS]
   end
 
   private
     def transactionParams
-      params.required(:transaction).permit(:ledgerHeading, :amount, :remarks, :mode, :date, :bank_id, :accountNumber)
+      params.required(:transaction).permit(:ledgerHeading, :amount, :remarks, :mode, :date, :bankId)
     end
 end

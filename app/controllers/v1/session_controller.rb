@@ -30,9 +30,13 @@ class V1::SessionController < ApplicationController
   end
 
   def loginViaEmail
-    user = User.find_by!(email: authParams[:email])
-    if user.valid_password? authParams[:password]
-      render json: {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
+    user = User.find_by(email: authParams[:email])
+    if user
+      if user.valid_password? authParams[:password]
+        render json: {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
+      else
+        render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
+      end
     else
       render json: Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
     end
