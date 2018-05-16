@@ -25,7 +25,7 @@ class V1::TransactionController < ApplicationController
           transaction.save!
           ApplicationRecord.transaction do
             user = User.find_by(id: params[:uid])
-            orgBankAccount = OrgBankAccount.find_by(bank_id: options[:org_bank_account_id], org_id: user.org_id, account_num: accountNumber).first
+            orgBankAccount = OrgBankAccount.find_by(bank_id: options[:org_bank_account_id], org_id: user.org_id, account_num: accountNumber)
             (ledgerHeading[:transaction_type] == 'credit') ? orgBankBalance = orgBankAccount[:bank_balance] + options[:amount] : orgBankBalance = orgBankAccount[:bank_balance] - options[:amount]
             orgBankAccount.update_attributes!({bank_balance: orgBankBalance})
             ApplicationRecord.transaction do
