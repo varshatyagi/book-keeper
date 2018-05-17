@@ -61,15 +61,13 @@ class V1::TransactionController < ApplicationController
       ApplicationRecord.transaction do
         user = User.find_by({id: uid})
         orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
-        if ledgerHeading[:transcation_type] == 'credit'
-          orgBalance = orgBalanceObj[:credit_balance] + options[:amount]
-        else
-          orgBalance = orgBalanceObj[:cash_balance] - options[:amount]
-        end
+
         case options[:payment_mode]
         when "cash"
-           orgBalanceObj.update_attributes!({cash_balance: orgBalance})
+          (ledgerHeading[:transcation_type] == 'credit') ? orgBalance = orgBalanceObj[:cash_balance] + options[:amount] : orgBalance = orgBalanceObj[:cash_balance] - options[:amount]
+          orgBalanceObj.update_attributes!({cash_balance: orgBalance})
         else
+          (ledgerHeading[:transcation_type] == 'credit') ? orgBalance = orgBalanceObj[:credit_balance] + options[:amount] : orgBalance = orgBalanceObj[:credit_balance] - options[:amount]
           orgBalanceObj.update_attributes!({credit_balance: orgBalance})
         end
       end
