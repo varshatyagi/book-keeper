@@ -108,7 +108,6 @@ class V1::SessionController < ApplicationController
   end
 
   def isOtpValid(options)
-    byebug
     otpObj = Otp.find_by({mobile_num: options[:mob_num]})
     unless otpObj
       return false
