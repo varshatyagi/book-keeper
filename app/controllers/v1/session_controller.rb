@@ -58,10 +58,10 @@ class V1::SessionController < ApplicationController
     user = User.find_by(email: options[:email])
     if user
       if user.valid_password? options[:password]
-        return {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
+        return {errors: nil, status: true, response: {user: generateToken(user)}}
       end
     else
-      return Helper::ACCESS_DENIED, status: Helper::HTTP_CODE[:UNAUTHORIZE]
+      return Helper::ACCESS_DENIED
     end
   end
 
@@ -73,9 +73,9 @@ class V1::SessionController < ApplicationController
     if user
       otpRecord = Otp.find_by({mobile_num: options[:mob_num]})
       otpRecord.destroy
-      return {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
+      return {errors: nil, status: true, response: {user: generateToken(user)}}
     else
-      return {errors: ['Please register yourself first'], status: true, response: nil}, status: Helper::HTTP_CODE[:SUCCESS]
+      return {errors: ['Please register yourself first'], status: true, response: nil}
     end
   end
 
