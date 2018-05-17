@@ -62,9 +62,9 @@ class V1::TransactionController < ApplicationController
         user = User.find_by({id: uid})
         orgBalanceObj = OrgBalance.find_by({org_id: user.org_id})
         if ledgerHeading[:transcation_type] == 'credit'
-          orgBalance = orgBalanceObj[:bank_balance] + options[:amount]
+          orgBalance = orgBalanceObj[:credit_balance] + options[:amount]
         else
-          orgBalance = orgBalanceObj[:bank_balance] - options[:amount]
+          orgBalance = orgBalanceObj[:cash_balance] - options[:amount]
         end
         case options[:payment_mode]
         when "cash"
