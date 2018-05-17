@@ -22,6 +22,7 @@ class Helper
   }
 
   TOKEN_EXPIRATION_TIME = 86400 # In seconds 24 hrs
+  OTP_EXPIRATION_TIME = 3600 # In seconds 24 hrs
 
   ACCESS_DENIED = {errors: ERROR_MESSAGE[:UNAUTHORIZE], status: false, response: nil}
   INVALID_HEADERS = {errors: ERROR_MESSAGE[:NOT_ACCEPTABLE], status: false, response: nil}

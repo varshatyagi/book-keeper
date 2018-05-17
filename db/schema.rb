@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180514071730) do
+ActiveRecord::Schema.define(version: 20180517062040) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -110,6 +110,18 @@ ActiveRecord::Schema.define(version: 20180514071730) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_organisations_on_name", unique: true
+  end
+
+  create_table "otp", force: :cascade do |t|
+    t.string   "mobile_num"
+    t.string   "message"
+    t.datetime "created_at"
+  end
+
+  create_table "otps", force: :cascade do |t|
+    t.string   "mobile_num"
+    t.string   "otp_pin"
+    t.datetime "created_at"
   end
 
   create_table "payment_modes", force: :cascade do |t|
