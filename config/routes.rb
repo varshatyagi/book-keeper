@@ -2,7 +2,8 @@ Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
     post "register", controller: 'session', action: :signUp
-    post "login", controller: 'session', action: :loginViaEmail
+    post "login", controller: 'session', action: :login
+    post "get-otp", controller: 'session', action: :getOtp
 
     get "ledger-headings/:transaction_type", controller: 'ledger_heading', action: :getLedgerHeadings
     get "ledger-headings", controller: 'ledger_heading', action: :getLedgerHeadings
