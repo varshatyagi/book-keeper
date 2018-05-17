@@ -13,7 +13,7 @@ class V1::SessionController < ApplicationController
           ApplicationRecord.transaction do
             if otpParams[:otp]
               unless isOtpValid(otpParams) == false
-                render json: {error: ['Otp is not valid'], status: false, response: nil}
+                render json: {error: 'Otp is not valid', status: false, response: nil}
                 return
               end
               otpRecord = Otp.find_by({mobile_num: signUpParams[:mob_num]})
@@ -67,7 +67,7 @@ class V1::SessionController < ApplicationController
 
   def loginViaOTP(options)
     unless isOtpValid(options) == false
-      return {error: ['Otp is not valid'], status: false, response: nil}
+      return {error: 'Otp is not valid', status: false, response: nil}
     end
     user = User.find_by(mob_num: options[:mob_num])
     if user
@@ -112,7 +112,7 @@ class V1::SessionController < ApplicationController
     unless otpObj
       return false
     end
-    notExpired = (Time.now.to_i - otpObj[:created_at].to_i) < Helper::OTP_EXPIRATION_TIME
+    notExpired = (Time.now.to_i - otpObj[:created_at].to_i) > Helper::OTP_EXPIRATION_TIME
     notExpired
   end
 
