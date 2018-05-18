@@ -13,6 +13,7 @@ gem 'rack-cors'
 gem 'devise'
 gem 'rails_admin', '~> 1.3'
 gem 'jwt'
+gem 'swagger-docs'
 
 
 group :development, :test do
@@ -23,6 +24,7 @@ end
 
 group :development do
   gem 'listen', '~> 3.0.5'
+  gem 'annotate'
 end
 
 group :production do

@@ -5,7 +5,7 @@ class V1::SessionController < ApplicationController
   require "uri"
   require "json"
 
-  def signUp
+  def sign_up
     if signUpParams
       user = User.new(signUpParams)
       if user.valid?
@@ -32,7 +32,7 @@ class V1::SessionController < ApplicationController
             end
           end
         rescue StandardError => error
-          render json: {errors: error, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
+          render json: {errors: }, status: 400
           return
         end
         render json: {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
@@ -45,8 +45,8 @@ class V1::SessionController < ApplicationController
   end
 
   def login
-    if authParams[:mob_num] && authParams[:otp]
-      render json: loginViaOTP(authParams)
+    if otpParams[:mob_num] && otpParams[:otp]
+      render json: loginViaOTP(otpParams)
     elsif authParams[:email] && authParams[:password]
       render json: loginViaEmail(authParams)
     else
@@ -66,7 +66,7 @@ class V1::SessionController < ApplicationController
   end
 
   def loginViaOTP(options)
-    unless isOtpValid(options) == false
+    unless isOtpValid(options) == true
       return {error: 'Otp is not valid', status: false, response: nil}
     end
     user = User.find_by(mob_num: options[:mob_num])
@@ -122,7 +122,7 @@ class V1::SessionController < ApplicationController
       params.require(:otp).permit(:mob_num, :otp)
     end
     def authParams
-      params.require(:user).permit(:email, :password, :mob_num, :otp)
+      params.require(:user).permit(:email, :password, :mob_num)
     end
 
     def signUpParams

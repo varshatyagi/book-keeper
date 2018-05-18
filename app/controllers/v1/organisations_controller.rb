@@ -1,6 +1,6 @@
 class V1::OrganisationController < ApplicationController
 
-  before_action :authenticate
+  before_action :require_user
 
   def getOrganisationMoneyBalance
     consolidatedBalance = OrgBalance.find_by(org_id: params[:orgId])

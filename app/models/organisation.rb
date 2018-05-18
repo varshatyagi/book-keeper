@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: organisations
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  org_type   :string
+#  address    :string
+#  city       :string
+#  state_code :string
+#  status     :string
+#  created_by :integer
+#  user_id    :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_organisations_on_name  (name) UNIQUE
+#
+
 class Organisation < ApplicationRecord
   has_many :org_bank_accounts
   belongs_to :user, optional: true

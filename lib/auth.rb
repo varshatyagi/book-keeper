@@ -7,9 +7,9 @@ class Auth
   end
 
   def self.decode(token)
-      JWT.decode(token, Rails.application.secrets.secret_key_base, true, { algorithm: ALGORITHM }).first
-    rescue
-      nil
+    return nil unless token.present?
+    JWT.decode(token, Rails.application.secrets.secret_key_base, true, { algorithm: ALGORITHM }).first
+  rescue
+    nil
   end
-
 end
