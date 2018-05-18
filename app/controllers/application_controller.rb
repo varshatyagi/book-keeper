@@ -35,7 +35,7 @@ class ApplicationController < ActionController::API
     end
 
     def isTokenValid(token: token, user: currentUser)
-      token === user[:token] ? !((DateTime.now.to_i - user[:reset_token_at].to_i) > Helper::TOKEN_EXPIRATION_TIME) : false
+      token === user[:token] ? ((DateTime.now.to_i - user[:reset_token_at].to_i) > Helper::TOKEN_EXPIRATION_TIME) : false
     end
 
 end
