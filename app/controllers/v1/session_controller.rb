@@ -11,7 +11,7 @@ class V1::SessionController < ApplicationController
       if user.valid?
         begin
           ApplicationRecord.transaction do
-            if otpParams[:otp]
+            if otpParams[:otp].present?
               unless isOtpValid(otpParams) == false
                 render json: {error: 'Otp is not valid', status: false, response: nil}
                 return
