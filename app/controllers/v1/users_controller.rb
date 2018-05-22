@@ -14,7 +14,9 @@ class V1::UsersController < ApplicationController
     organisation = Organisation.new(organisation_params)
     otp = Otp.new({mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin]})
     errors = []
-    errors << otp.errors.values unless otp.valid?
+    if !user_sign_up_via_login
+      errors << otp.errors.values unless otp.valid?
+    end
     errors << user.errors.values unless user.valid?
     errors << organisation.errors.values unless organisation.valid?
     errors = errors.flatten(3)
