@@ -5,8 +5,14 @@ class ApplicationController < ActionController::API
   require 'uri'
 
   #before_action :ensure_domain
-  rescue_from ActiveRecord::RecordInvalid, with: :handle_exception
   @current_user = nil
+
+  rescue_from ActiveRecord::RecordInvalid do |e|
+    error = e.record.errors.values.flatten(2)
+    error = error[0] if error.kind_of?(Array)
+    error = error[:message] if error.kind_of?(Hash)
+    render json: {errors: [error]}, status: 422
+  end
 
   def require_user
     return true if valid_token?
@@ -23,10 +29,6 @@ class ApplicationController < ActionController::API
 
   def set_current_user(user)
     @current_user = user
-  end
-
-  def handle_exception(exception)
-    render json: {errors: [exception]}, status: :unprocessable_entity
   end
 
   private

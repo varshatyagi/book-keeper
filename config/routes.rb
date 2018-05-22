@@ -1,13 +1,6 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
-    # post "transactions/:uid", controller: 'transactions', action: :saveTransaction
-    #
-    # get "organisations/:orgId", controller: 'organisations', action: :organisation
-    # put "organisations/:orgId", controller: 'organisations', action: :update
-    #
-    # get "banks", controller: 'utility', action: :getBankList
-    # get "banks/:orgId", controller: 'utility', action: :getOrganisationBanks
 
     post "login", controller: 'users', action: :login
     post "otp", controller: 'users', action: :otp
