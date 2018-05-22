@@ -1,4 +1,4 @@
-class V1::TransactionController < ApplicationController
+class V1::TransactionsController < ApplicationController
 
   before_action :require_user
   def saveTransaction

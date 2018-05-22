@@ -1,27 +1,32 @@
-class V1::OrganisationController < ApplicationController
+class V1::OrganisationsController < ApplicationController
 
   before_action :require_user
 
-  def getOrganisationMoneyBalance
-    consolidatedBalance = OrgBalance.find_by(org_id: params[:orgId])
-    unless consolidatedBalance
-      render json: Helper::STANDARD_ERROR, status: Helper::HTTP_CODE[:BAD_REQUEST]
-      return true
-    end
-    render json: {errors: nil, status: true, response: consolidatedBalance}, status: Helper::HTTP_CODE[:SUCCESS]
+  def index
+    oraganisations = Organisation.all
+    oraganisations = oraganisations.map {|oraganisation| OrganisationSerializer.new(oraganisation).serializable_hash} if banks.present?
+    render json: {response: oraganisations}
   end
 
-  def organisation
-    organisation = Organisation.find_by(id: params[:orgId])
-    unless organisation
-      render json: {errors: error, status: false, response: nil}, status: Helper::HTTP_CODE[:BAD_REQUEST]
-      return true
-    end
-    banks = OrgBankAccount.where({org_id: params[:orgId]})
-    unless banks
-      banks = nil
-    end
-    render json: {errors: nil, status: true, response: {organisation: organisation, banks: banks}}, status: Helper::HTTP_CODE[:SUCCESS]
+  def show
+    oraganisations = Organisation.find(:id)
+    return render json: {errors: ['Oranisation is missing']} unless oraganisations.present?
+    oraganisations = oraganisations.map {|oraganisation| OrganisationSerializer.new(oraganisation).serializable_hash} if banks.present?
+    render json: {response: oraganisations}
+  end
+
+  def balance_summary
+    org_balance_rec = OrgBalance.find_by(organisation_id: params[:id])
+    return render json: {errors: ['Balanace Summary is not available for this orgnanisation']} if org_balance_rec.blank?
+    org_balance_rec = org_balance_rec.map {|org_balance| OrgBalanceSerializer.new(org_balance).serializable_hash} if org_balance_rec.present?
+    render json: {response: org_balance_rec}
+  end
+
+  def org_bank_accounts
+    org_bank_accnts = OrgBankAccount.where({organisation_id: params[:id]})
+    return render json: {error: ['Banks accounts are not available for this Organisation']} if org_bank_accnts.blank?
+    render json: {response: org_bank_accnts}
+
   end
 
   def update

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180521125924) do
+ActiveRecord::Schema.define(version: 20180522053720) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -76,7 +76,7 @@ ActiveRecord::Schema.define(version: 20180521125924) do
   end
 
   create_table "org_balances", force: :cascade do |t|
-    t.integer  "org_id"
+    t.integer  "organisation_id"
     t.decimal  "cash_opening_balance"
     t.decimal  "bank_opening_balance"
     t.decimal  "credit_opening_balance"
@@ -89,12 +89,12 @@ ActiveRecord::Schema.define(version: 20180521125924) do
   end
 
   create_table "org_bank_accounts", force: :cascade do |t|
-    t.integer  "org_id"
+    t.integer  "organisation_id"
     t.integer  "bank_id"
     t.string   "account_num"
     t.boolean  "deleted"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
     t.decimal  "bank_balance"
   end
 
@@ -106,16 +106,11 @@ ActiveRecord::Schema.define(version: 20180521125924) do
     t.string   "state_code"
     t.string   "status"
     t.integer  "created_by"
-    t.integer  "user_id"
+    t.integer  "owner_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_organisations_on_name", unique: true
-  end
-
-  create_table "otp", force: :cascade do |t|
-    t.string   "mobile_num"
-    t.string   "message"
-    t.datetime "created_at"
+    t.index ["owner_id"], name: "index_organisations_on_owner_id"
   end
 
   create_table "otps", force: :cascade do |t|
@@ -163,7 +158,7 @@ ActiveRecord::Schema.define(version: 20180521125924) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.integer  "ledger_heading_id"
+    t.string   "ledger_heading_id"
     t.decimal  "amount"
     t.string   "remarks"
     t.string   "payment_mode"
