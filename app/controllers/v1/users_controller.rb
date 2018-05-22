@@ -49,8 +49,10 @@ class V1::UsersController < ApplicationController
 
   def login
     if otp_params[:mob_num].present? && otp_params[:otp_pin].present?
+      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless login_via_otp(otp_params)
       render json: login_via_otp(otp_params)
     elsif user_params[:email].present? && user_params[:password].present?
+      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless login_via_email(user_params)
       render json: login_via_email(user_params)
     else
       render json: {errors: ['Your are not authorized to access this resource']}, status: 401
@@ -59,14 +61,14 @@ class V1::UsersController < ApplicationController
 
   def login_via_email(options)
     user = User.find_by(email: options[:email])
-     return {errors: ['Your are not authorized to access this resource']} unless user.present? && (user.valid_password? options[:password])
+     return false unless user.present? && (user.valid_password? options[:password])
      generate_token(user)
      return {response: {user: UserSerializer.new(user).serializable_hash}}
   end
 
   def login_via_otp(otp_params)
     otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
-    return {errors: ['You are not authorized to access this resource']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
+    return false unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
     user = User.find_by(mob_num: otp_params[:mob_num])
     return {errors: ['Otp is not valid']} if user.blank?
     otp_record.destroy
