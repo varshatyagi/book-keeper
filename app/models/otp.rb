@@ -19,7 +19,11 @@ class Otp < ApplicationRecord
     end
 
     if self.mob_num.blank?
-      self.errors.add(:mob_num, message: 'please provide mobile number')
+      self.errors.add(:mob_num, message: 'Please provide mobile number')
+    end
+
+    if self.otp_pin.blank?
+      self.errors.add(:otp_pin, message: 'Please provide valid Otp')
     end
 
   end

@@ -7,34 +7,37 @@ class V1::UsersController < ApplicationController
   # before_action :require_user
 
   def create
-    user_sign_up_via_login = false
+    user_sign_up_via_email = false
     organisation = Organisation.new(organisation_params)
-    unless otp_params.present?
-      user_sign_up_via_login = true
-      user = User.new(user_params)
-    end
     errors = []
-    if !user_sign_up_via_login
+    unless otp_params.present?
+      user_sign_up_via_email = true
+      user = User.new(user_params)
+      errors << user.errors.values unless user.valid?
+    end
+
+    if !user_sign_up_via_email
       otp = Otp.new({mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin]})
+      user = User.new(mob_num: otp_params[:mob_num])
       errors << otp.errors.values unless otp.valid?
     end
-    errors << user.errors.values unless user.valid?
     errors << organisation.errors.values unless organisation.valid?
     errors = errors.flatten(3)
     errors = Common.process_errors(errors)
     return render json: {errors: errors}, status: 400 if errors.present?
     ApplicationRecord.transaction do
-      unless user_sign_up_via_login
+      unless user_sign_up_via_email
         otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
         return render json:  {errors: ['You are not authorized to access this resource']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
         otp_record = Otp.find_by({mob_num: otp_params[:mob_num]})
         otp_record.destroy!
       end
-      user.role = User::USER_ROLE_CLIENT
+      user.role = User::USER_ROLE_CLIENT if user_sign_up_via_email
       user.save!
-      organisation.user_id = user.id
+      organisation.owner_id = user.id
       organisation.save!
-      user.update_attributes({organisation_id: organisation.id})
+      user.organisation_id = organisation.id
+      user.save(validate: false)
     end
     generate_token(user)
     render json: {response: {user: UserSerializer.new(user).serializable_hash}}, status: 200
@@ -49,12 +52,14 @@ class V1::UsersController < ApplicationController
   end
 
   def login
-    if otp_params[:mob_num].present? && otp_params[:otp_pin].present?
-      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless login_via_otp(otp_params)
-      render json: login_via_otp(otp_params)
-    elsif user_params[:email].present? && user_params[:password].present?
-      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless login_via_email(user_params)
-      render json: login_via_email(user_params)
+    if otp_params.present?
+      has_user_obj = login_via_otp(otp_params)
+      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless has_user_obj
+      render json: has_user_obj
+    elsif user_params.present?
+      has_user_obj = login_via_email(user_params)
+      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless has_user_obj
+      render json: has_user_obj
     else
       render json: {errors: ['Your are not authorized to access this resource']}, status: 401
     end
@@ -71,7 +76,7 @@ class V1::UsersController < ApplicationController
     otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
     return false unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
     user = User.find_by(mob_num: otp_params[:mob_num])
-    return {errors: ['Mobile number is not registered']}, status: 400 if user.blank?
+    return {errors: ['Mobile number is not registered']} if user.blank?
     otp_record.destroy
     generate_token(user)
     return {response: {user: UserSerializer.new(user).serializable_hash}}

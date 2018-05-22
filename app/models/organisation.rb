@@ -29,7 +29,7 @@ class Organisation < ApplicationRecord
 
   def create_org_balance
     OrgBalance.create({
-        org_id: self.id,
+        organisation_id: self.id,
         cash_opening_balance: 0.0,
         bank_opening_balance: 0.0,
         credit_opening_balance: 0.0,
@@ -43,7 +43,7 @@ class Organisation < ApplicationRecord
   def validate_organisation
     if self.name.blank?
       self.errors.add(:name, message: 'Please provide your organisation name')
-      
+
     elsif self.name.present?
       self.errors.add(:name, message: 'Organisation name has already been taken') if Organisation.find_by(name: self.name)
     end
