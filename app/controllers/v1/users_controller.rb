@@ -42,7 +42,7 @@ class V1::UsersController < ApplicationController
   end
 
   def show
-    return render json: {errors: ['User id is not valid']} if params[:id].blank?
+    return render json: {errors: ['User is not valid']}, status: 400 if params[:id].blank?
     user = User.find(params[:id])
     render json: {response: {user: UserSerializer.new(user).serializable_hash}}, status: 200
   end
@@ -70,14 +70,14 @@ class V1::UsersController < ApplicationController
     otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
     return false unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
     user = User.find_by(mob_num: otp_params[:mob_num])
-    return {errors: ['Otp is not valid']} if user.blank?
+    return {errors: ['Mobile number is not registered']}, status: 400 if user.blank?
     otp_record.destroy
     generate_token(user)
     return {response: {user: UserSerializer.new(user).serializable_hash}}
   end
 
   def otp
-    return render json: {errors: ['Please enter valid mobile number']} if otp_params[:mob_num].blank?
+    return render json: {errors: ['Mobile number is not registered']}, status: 400 if otp_params[:mob_num].blank?
     otp_record = Otp.find_by({mob_num: otp_params[:mob_num]})
     return render json: {response: {otp: otp_record.otp_pin}} if otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
     render json: {response: generate_otp_pin(otp_params[:mob_num])}
