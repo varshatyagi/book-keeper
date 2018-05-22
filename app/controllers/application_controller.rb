@@ -1,9 +1,11 @@
 class ApplicationController < ActionController::API
   require 'helper'
   require 'auth'
+  require 'common'
+  require 'uri'
 
   #before_action :ensure_domain
-
+  rescue_from ActiveRecord::RecordInvalid, with: :handle_exception
   @current_user = nil
 
   def require_user
@@ -23,6 +25,10 @@ class ApplicationController < ActionController::API
     @current_user = user
   end
 
+  def handle_exception(exception)
+    render json: {errors: [exception]}, status: :unprocessable_entity
+  end
+
   private
 
   def valid_token?
@@ -32,7 +38,7 @@ class ApplicationController < ActionController::API
       if user.present?
         return false if user.token_expired?
         set_current_user(user)
-        true
+        return true
       end
     end
     false

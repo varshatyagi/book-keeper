@@ -1,0 +1,64 @@
+Description : To get ledger heading information
+Request Url : http://localhost:3000/v1/ledger_headings/
+Method: GET
+Status: 200
+Response :
+
+{
+  "response": [
+      {
+      "id": 1,
+      "name": "Sales",
+      "revenue": true,
+      "asset": false
+      },
+        {
+      "id": 2,
+      "name": "Commission",
+      "revenue": true,
+      "asset": false
+      },
+        {
+      "id": 3,
+      "name": "Salaries",
+      "revenue": true,
+      "asset": false
+      }
+    ]
+}
+
+
+Description : To get ledger heading information
+Request Url : http://localhost:3000/v1/ledger_headings/debit
+Method: GET
+Status: 200
+Response :
+
+{
+"response": [
+    {
+    "id": 3,
+    "name": "Salaries",
+    "revenue": true,
+    "asset": false
+  },
+    {
+    "id": 6,
+    "name": "Prop Capital",
+    "revenue": false,
+    "asset": true
+  },
+    {
+    "id": 7,
+    "name": "Discount",
+    "revenue": true,
+    "asset": false
+  },
+    {
+    "id": 8,
+    "name": "Discount",
+    "revenue": true,
+    "asset": false
+    }
+  ],
+}

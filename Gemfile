@@ -14,6 +14,7 @@ gem 'devise'
 gem 'rails_admin', '~> 1.3'
 gem 'jwt'
 gem 'swagger-docs'
+gem 'active_model_serializers'
 
 
 group :development, :test do

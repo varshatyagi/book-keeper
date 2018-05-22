@@ -1,4 +1,4 @@
-class V1::LedgerHeadingController < ApplicationController
+class V1::LedgerHeadingsController < ApplicationController
 
   before_action :require_user
 
@@ -24,7 +24,8 @@ class V1::LedgerHeadingController < ApplicationController
     end
 
     ledger_headings = scope.to_a
-    ledger_headings.map {|ledger_heading| LedgerHeadingSerializer.new(ledger_heading).serializable_hash}
+    ledger_headings = ledger_headings.map {|ledger_heading| LedgerHeadingSerializer.new(ledger_heading).serializable_hash} if ledger_headings.present?
+    ledger_headings
   end
 
   def ledger_heading_params

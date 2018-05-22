@@ -1,0 +1,71 @@
+Description : Login User with success case
+Request Url : http://localhost:3000/v1/login
+Method: POST
+Status: 200
+Body:
+
+{
+   "user": {
+     "email": "tfhgmail.com",
+     "password": "1234567",
+     "name": "varsha",
+     "mob_num": "2345678905"
+   },
+   "organisation": {
+   	 "name": ""
+  	},
+   "otp": {
+   	  "mob_num": "",
+      "otp_pin": ""
+   }
+}
+
+Response :
+
+{
+  "response": {
+    "user": {
+      "id": 44,
+      "name": "varsha",
+      "mob_num": "2345678905",
+      "email": "tfh@gmail.com",
+      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo0NH0.ajvSfd1zsfo6LmecyCty1pgq1akSkZb55RUwtjJYQmc",
+      "role": "client",
+      "organisation_id": 25,
+      "city": null,
+      "address": null
+    }
+  }
+}
+
+
+
+Description : Login User with invalid details
+Request Url : http://localhost:3000/v1/login
+Method: POST
+Status: 200
+Body:
+
+{
+   "user": {
+     "email": "tfhgmail.com",
+     "password": "1234560",
+     "name": "varsha",
+     "mob_num": "2345678905"
+   },
+   "organisation": {
+   	 "name": ""
+  	},
+   "otp": {
+   	  "mob_num": "",
+      "otp_pin": ""
+   }
+}
+
+Response :
+
+{
+  "errors": [
+    "Your are not authorized to access this resource"
+  ],
+}

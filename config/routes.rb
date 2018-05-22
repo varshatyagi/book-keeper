@@ -1,12 +1,6 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
-    post "register", controller: 'session', action: :sign_up
-    post "login", controller: 'session', action: :login
-    post "get-otp", controller: 'session', action: :getOtp
-
-    # get "ledger-headings", controller: 'ledger_headings', action: 'index'
-    #
     # get "balance-summary/:orgId", controller: 'organisations', action: :getOrganisationMoneyBalance
     #
     # post "transactions/:uid", controller: 'transactions', action: :saveTransaction
@@ -17,17 +11,18 @@ Rails.application.routes.draw do
     # get "banks", controller: 'utility', action: :getBankList
     # get "banks/:orgId", controller: 'utility', action: :getOrganisationBanks
 
-    /users/102.json
+    post "login", controller: 'users', action: :login
+    post "otp", controller: 'users', action: :otp
+    get "ledger_headings/:transaction_type", controller: 'ledger_headings', action: :index
+
     resources :users
-    resources :ledger_headings
-    resources :banks
+    resources :ledger_headings, only: [:index]
+    resources :banks, only: [:index]
 
     resources :organisations do
       resources :org_bank_accounts
       resources :transactions
-
       member do
-        # organisations/1234/balance_summary.json
         get :balance_summary
       end
     end

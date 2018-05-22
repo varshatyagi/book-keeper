@@ -32,7 +32,7 @@ class V1::SessionController < ApplicationController
             end
           end
         rescue StandardError => error
-          render json: {errors: }, status: 400
+          render json: {errors: error}, status: 400
           return
         end
         render json: {errors: nil, status: true, response: {user: generateToken(user)}}, status: Helper::HTTP_CODE[:SUCCESS]
