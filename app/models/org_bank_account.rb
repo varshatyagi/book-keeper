@@ -13,9 +13,8 @@
 #
 
 class OrgBankAccount < ApplicationRecord
-  # belongs_to :organisation
-  # has_many :bank
   has_many :transactions
-  validates_presence_of :account_num
+  validates_presence_of :account_num, message: "Please enter valid Account Number"
+  validates_uniqueness_of :account_num, message: "Account number should be unique"
   validates_presence_of :bank_id
 end

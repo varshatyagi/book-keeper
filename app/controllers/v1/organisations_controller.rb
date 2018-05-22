@@ -4,15 +4,15 @@ class V1::OrganisationsController < ApplicationController
 
   def index
     oraganisations = Organisation.all
-    oraganisations = oraganisations.map {|oraganisation| OrganisationSerializer.new(oraganisation).serializable_hash} if banks.present?
+    oraganisations = oraganisations.map {|oraganisation| OrganisationSerializer.new(oraganisation).serializable_hash} if oraganisations.present?
     render json: {response: oraganisations}
   end
 
   def show
-    oraganisations = Organisation.find(:id)
-    return render json: {errors: ['Oranisation is missing']} unless oraganisations.present?
-    oraganisations = oraganisations.map {|oraganisation| OrganisationSerializer.new(oraganisation).serializable_hash} if banks.present?
-    render json: {response: oraganisations}
+    oraganisation = Organisation.find(params[:id])
+    return render json: {errors: ['Organisation is missing']} unless oraganisation.present?
+    oraganisation = OrganisationSerializer.new(oraganisation).serializable_hash if oraganisation.present?
+    render json: {response: oraganisation}
   end
 
   def balance_summary
@@ -31,52 +31,43 @@ class V1::OrganisationsController < ApplicationController
 
   def update
     render json: {errors: ['Required params are missing']}, status: 400 unless org_params.present?
-    begin
+    errors = []
+    bank_obj = nil
       ApplicationRecord.transaction do
-        organisation = Organisation.find!(params[:id])
-        organisation.update_attributes!({name: org_params[:name]})
+        organisation = Organisation.find(params[:id])
+        organisation[:name] = org_params[:name]
+        if organisation.new_record?
+          organisation.save! if organisation.valid?
+        end
         opening_balance = bank_record(bank_params, params[:id]) if bank_params.present?
         ApplicationRecord.transaction do
           org_balance_rec = OrgBalance.find(params[:id])
           if org_balance_rec.present?
-            orgBalance = org_balance_rec.update_attributes!({
+            org_balance = org_balance_rec.update_attributes!({
               bank_opening_balance: opening_balance,
               financial_year_start: org_params[:financial_year],
               bank_balance: opening_balance
             })
           else
-              orgBalance = OrgBalance.new({
-                organisation_id: params[:id],
-                cash_opening_balance: 0,
-                bank_opening_balance: opening_balance,
-                credit_opening_balance: 0,
-                financial_year_start: org_params[:financial_year],
-                cash_balance: 0,
-                bank_balance: opening_balance,
-                credit_balance: 0
-              })
-              orgBalance.save!
+            update_org_balance_with_opening_balance(opening_balance, params, org_params)
           end
         end
       end
-    rescue StandardError => error
-      render json: {errors: [error]}, status: 404
-      return
-    end
-    render json: {}, status: 404
+    render json: {response: true}, status: 200
   end
 
   def bank_record(bank_params, org_id)
     opening_balance = 0
+    errors = []
     bank_params.each do |bank|
       ApplicationRecord.transaction do
-        org_bank_acc = OrgBankAccount.find_by(organisation_id: org_id)
-        org_bank_acc.update_attributes!({bank_balance: bank[:balance], account_num: bank[:accountNumber]}) if org_bank_acc.present?
+        org_bank_acc = OrgBankAccount.find_by(bank_id: bank[:bank_id], account_num: bank[:account_number])
+        org_bank_acc.update_attributes!({bank_balance: bank[:balance]}) if org_bank_acc.present?
         if org_bank_acc.blank?
-          orgBank = OrgBankAccount.new({
-            organisation_id: params[:org_id], bank_id: bank[:bank_id],
+          org_bank = OrgBankAccount.new({
+            organisation_id: params[:id], bank_id: bank[:bank_id],
             account_num: bank[:account_number], deleted: false, bank_balance: bank[:balance]})
-          orgBank.save!
+          org_bank.save!
         end
       end
       opening_balance += bank[:balance]

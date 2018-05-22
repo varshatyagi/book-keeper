@@ -35,6 +35,7 @@ class V1::UsersController < ApplicationController
       user.role = User::USER_ROLE_CLIENT if user_sign_up_via_email
       user.save!
       organisation.owner_id = user.id
+      organisation.created_by = user.id
       organisation.save!
       user.organisation_id = organisation.id
       user.save(validate: false)
@@ -93,7 +94,9 @@ class V1::UsersController < ApplicationController
 
   def generate_token(current_user)
     jwt = Auth.encode({user: current_user.id}) # get token
-    current_user.update_attributes(token: jwt, reset_token_at: Time.now)
+    current_user.token = jwt
+    current_user.reset_token_at =  Time.now
+    current_user.save(validate: false)
     current_user
   end
 
