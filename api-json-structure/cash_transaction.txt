@@ -1,0 +1,23 @@
+Description : To get cash transaction information
+Request Url : http://localhost:3000/v1/organisations/3/cash_transactions/{deposite | withdrawal}
+Method: POST
+Status: 200
+Body:
+{"cash_transaction": {"org_bank_account_id": 9, "amount": 1000, "remarks": "for study"}}
+
+Response : 200 ok
+
+
+Description : To get cash transaction information
+Request Url : http://localhost:3000/v1/organisations/3/cash_transactions/asddasdsa
+Method: POST
+Status: 200
+Body:
+{"cash_transaction": {"org_bank_account_id": 9, "amount": 1000, "remarks": "for study"}}
+
+Response :
+{
+"errors": [
+  "Transaction is not valid"
+],
+}

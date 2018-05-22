@@ -5,7 +5,10 @@ class ApplicationController < ActionController::API
   require 'uri'
 
   #before_action :ensure_domain
-  rescue_from ActiveRecord::RecordInvalid, with: :handle_exception
+  rescue_from RuntimeError do |e|
+    render json: {errors: [e.message]}, status: 400
+  end
+
   @current_user = nil
 
   def require_user
