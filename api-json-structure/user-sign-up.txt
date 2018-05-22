@@ -13,11 +13,7 @@ Body:
   },
   "organisation": {
     "name": "twe13"
-   },
-  "otp": {
-     "mob_num": "9479674763",
-     "otp_pin": "1231"
-  }
+   }
 }
 
 Response :
@@ -46,11 +42,7 @@ Body:
   },
   "organisation": {
     "name": "twe13"
-   },
-  "otp": {
-     "mob_num": "9479674763",
-     "otp_pin": "1231"
-  }
+   }
 }
 
 Response :
