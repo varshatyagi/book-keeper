@@ -1,12 +1,5 @@
 class Helper
 
-  HTTP_CODE = {
-    "SUCCESS": 200,
-    "BAD_REQUEST": 400,
-    "UNAUTHORIZE": 401,
-    "NOT_FOUND": 404,
-    "NOT_ACCEPTABLE": 406
-  }
   ERROR_MESSAGE = {
     "UNAUTHORIZE": "You are not authorized to access this resource.",
     "NOT_ACCEPTABLE": "Authorization key is missing.",

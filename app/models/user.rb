@@ -1,11 +1,63 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :integer          not null, primary key
+#  org_id             :integer
+#  name               :string
+#  mob_num            :string
+#  email              :string
+#  address            :string
+#  city               :string
+#  state_code         :string
+#  role               :string
+#  status             :string
+#  created_by         :integer
+#  encrypted_password :string
+#  token              :string
+#  reset_token_at     :datetime
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+
 class User < ApplicationRecord
-  has_many :organisations
-
   devise :database_authenticatable, :registerable
-  validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, message: "Email is not in correct format.", :allow_blank => true
-  validates_format_of :mob_num, with: /\A\d{10}\z/, message: "Please enter valid mobile number.", :allow_blank => true
+  has_many :organisations
+  validate :validate_user
 
-  validates_uniqueness_of :email, message: 'Email id is already exist.', allow_blank: true
-  # validates_uniqueness_of :mob_num, allow_blank: true
+  USER_ROLE_CLIENT = 'client'
+  USER_ROLE_ADMIN = 'admin'
+
+  TOKEN_EXPIRATION_TIME = 86400 # In seconds 24 hrs
+
+  def admin?
+    role == USER_ROLE_ADMIN
+  end
+
+  def client?
+    role == USER_ROLE_CLIENT
+  end
+
+  def token_expired?
+    (Time.now.to_i - reset_token_at.to_i) > TOKEN_EXPIRATION_TIME
+  end
+
+  def validate_user
+    if self.email.present? && !self.email.match(URI::MailTo::EMAIL_REGEXP)
+      self.errors.add(:email, message: 'Please provide valid email address')
+    end
+
+    if self.email.present?
+      self.errors.add(:email, message: 'Email id has already been taken') if User.find_by({email: self.email})
+    end
+
+    if self.mob_num.present? && !self.mob_num.match(/\A\d{10}\z/)
+      self.errors.add(:mob_num, :invalid, message: 'Please provide valid mobile number')
+    end
+
+    if self.mob_num.present?
+      self.errors.add(:mob_num, message: 'Mobile number has already been taken') if User.find_by({mob_num: self.mob_num})
+    end
+  end
 
 end

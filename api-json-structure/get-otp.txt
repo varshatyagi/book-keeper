@@ -1,0 +1,20 @@
+Description : To get user information
+Request Url : http://localhost:3000/v1/otp
+Method: POST
+Status: 200
+Body:
+
+{
+	"otp": {
+    	"mob_num": "9479674736"
+    }
+}
+
+Response :
+
+{
+  "response": {
+    "balance": 8,
+    "otp_pin": "5189"
+  }
+}

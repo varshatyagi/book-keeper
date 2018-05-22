@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180517062040) do
+ActiveRecord::Schema.define(version: 20180521125924) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 20180517062040) do
   create_table "ledger_headings", force: :cascade do |t|
     t.string   "name"
     t.boolean  "revenue"
-    t.string   "transcation_type"
+    t.string   "transaction_type"
     t.boolean  "asset"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
@@ -119,7 +119,7 @@ ActiveRecord::Schema.define(version: 20180517062040) do
   end
 
   create_table "otps", force: :cascade do |t|
-    t.string   "mobile_num"
+    t.string   "mob_num"
     t.string   "otp_pin"
     t.datetime "created_at"
   end
@@ -176,7 +176,7 @@ ActiveRecord::Schema.define(version: 20180517062040) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.integer  "org_id"
+    t.integer  "organisation_id"
     t.string   "name"
     t.string   "mob_num"
     t.string   "email"

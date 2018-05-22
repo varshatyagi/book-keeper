@@ -1,19 +1,14 @@
 class V1::TransactionController < ApplicationController
 
-  before_action :authenticate
+  before_action :require_user
   def saveTransaction
     if transactionParams
       ledgerHeading = LedgerHeading.find_by({id: transactionParams[:ledgerHeading]})
-      options = {
-        ledger_heading_id: transactionParams[:ledgerHeading],
-        amount: transactionParams[:amount],
-        remarks: transactionParams[:remarks],
-        payment_mode: transactionParams[:mode],
-        txn_date: transactionParams[:date],
-        status: Helper::STATUS[:COMPLETED],
-        created_by: params[:uid]
-        }
-      if transactionParams[:mode] != "bank"
+      transactionParams[:status] = Helper::STATUS[:COMPLETED]
+      transactionParams[created_by] = params[:uid]
+      options = transactionParams
+
+      if transactionParams[:payment_mode] != "bank"
         createTransaction(options, params[:uid], ledgerHeading)
         return
       end
@@ -77,6 +72,6 @@ class V1::TransactionController < ApplicationController
 
   private
     def transactionParams
-      params.required(:transaction).permit(:ledgerHeading, :amount, :remarks, :mode, :date, :bankId)
+      params.required(:transaction).permit(:ledgerHeading, :amount, :remarks, :payment_mode, :txn_date, :bankId)
     end
 end

@@ -1,23 +1,31 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
-    post "register", controller: 'session', action: :signUp
-    post "login", controller: 'session', action: :login
-    post "get-otp", controller: 'session', action: :getOtp
+    # get "balance-summary/:orgId", controller: 'organisations', action: :getOrganisationMoneyBalance
+    #
+    # post "transactions/:uid", controller: 'transactions', action: :saveTransaction
+    #
+    # get "organisations/:orgId", controller: 'organisations', action: :organisation
+    # put "organisations/:orgId", controller: 'organisations', action: :update
+    #
+    # get "banks", controller: 'utility', action: :getBankList
+    # get "banks/:orgId", controller: 'utility', action: :getOrganisationBanks
 
-    get "ledger-headings/:transaction_type", controller: 'ledger_heading', action: :getLedgerHeadings
-    get "ledger-headings", controller: 'ledger_heading', action: :getLedgerHeadings
+    post "login", controller: 'users', action: :login
+    post "otp", controller: 'users', action: :otp
+    get "ledger_headings/:transaction_type", controller: 'ledger_headings', action: :index
 
-    get "balance-summary/:orgId", controller: 'organisation', action: :getOrganisationMoneyBalance
+    resources :users
+    resources :ledger_headings, only: [:index]
+    resources :banks, only: [:index]
 
-    post "transaction/:uid", controller: 'transaction', action: :saveTransaction
-
-    get "organisation/:orgId", controller: 'organisation', action: :organisation
-    put "organisation/:orgId", controller: 'organisation', action: :update
-
-    get "banks", controller: 'utility', action: :getBankList
-    get "banks/:orgId", controller: 'utility', action: :getOrganisationBanks
-
+    resources :organisations do
+      resources :org_bank_accounts
+      resources :transactions
+      member do
+        get :balance_summary
+      end
+    end
 
   end
 end
