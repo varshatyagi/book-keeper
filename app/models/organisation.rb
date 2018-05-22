@@ -21,7 +21,7 @@
 
 class Organisation < ApplicationRecord
   has_many :org_bank_accounts
-  belongs_to :user, optional: true
+  belongs_to :user, optional: true, foreign_key: 'owner_id'
   has_one :org_balance
 
   after_create :create_org_balance
@@ -43,6 +43,7 @@ class Organisation < ApplicationRecord
   def validate_organisation
     if self.name.blank?
       self.errors.add(:name, message: 'Please provide your organisation name')
+      
     elsif self.name.present?
       self.errors.add(:name, message: 'Organisation name has already been taken') if Organisation.find_by(name: self.name)
     end
