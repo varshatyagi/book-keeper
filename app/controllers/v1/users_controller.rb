@@ -7,14 +7,15 @@ class V1::UsersController < ApplicationController
   # before_action :require_user
 
   def create
-    user_sign_up_via_login = true
-    return render json: {errors: ['You are not authorized to access this resource.']} if user_params.blank? || otp_params.blank?
-    user_sign_up_via_login = false if otp_params.present?
-    user = User.new(user_params)
+    user_sign_up_via_login = false
     organisation = Organisation.new(organisation_params)
-    otp = Otp.new({mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin]})
+    unless otp_params.present?
+      user_sign_up_via_login = true
+      user = User.new(user_params)
+    end
     errors = []
     if !user_sign_up_via_login
+      otp = Otp.new({mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin]})
       errors << otp.errors.values unless otp.valid?
     end
     errors << user.errors.values unless user.valid?
@@ -105,7 +106,7 @@ class V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :mob_num, :name)
+    params.require(:user).permit(:email, :password, :mob_num, :name) if params[:user]
   end
 
   def organisation_params
@@ -113,7 +114,7 @@ class V1::UsersController < ApplicationController
   end
 
   def otp_params
-    params.require(:otp).permit(:mob_num, :otp_pin)
+    params.require(:otp).permit(:mob_num, :otp_pin) if params[:otp]
   end
 
 end

@@ -13,11 +13,7 @@ Body:
    },
    "organisation": {
    	 "name": ""
-  	},
-   "otp": {
-   	  "mob_num": "",
-      "otp_pin": ""
-   }
+  	}
 }
 
 Response :
@@ -55,11 +51,7 @@ Body:
    },
    "organisation": {
    	 "name": ""
-  	},
-   "otp": {
-   	  "mob_num": "",
-      "otp_pin": ""
-   }
+  	}
 }
 
 Response :
