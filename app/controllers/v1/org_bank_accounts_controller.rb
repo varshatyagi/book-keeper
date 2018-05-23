@@ -1,7 +1,7 @@
 class V1::OrgBankAccountsController < ApplicationController
 
   before_action :require_user
-  before_action :require_admin_or_organisation_owner
+  # before_action :require_admin_or_organisation_owner
 
   def index
     org_bank_accounts = OrgBankAccount.where({organisation_id: params[:organisation_id]})
