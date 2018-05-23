@@ -10,14 +10,12 @@ Rails.application.routes.draw do
       resources :transactions
       resources :alliances
       resources :cash_transactions
-      member do
-        get :balance_summary
-      end
     end
 
     post "login", controller: 'users', action: :login
     post "otp", controller: 'users', action: :otp
     get "ledger_headings/:transaction_type", controller: 'ledger_headings', action: :index
     post "organisations/:organisation_id/cash_transactions/:type", controller: 'cash_transactions', action: :create
+    get "organisations/:organisation_id/balance_summary", controller: 'org_balances', action: :balance_summary
   end
 end

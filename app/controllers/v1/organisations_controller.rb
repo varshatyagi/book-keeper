@@ -11,16 +11,9 @@ class V1::OrganisationsController < ApplicationController
 
   def show
     oraganisation = Organisation.find(params[:id])
-    return render json: {errors: ['Organisation is missing']} unless oraganisation.present?
+    return render json: {errors: ['Organisation is missing']}, status: 400 unless oraganisation.present?
     oraganisation = OrganisationSerializer.new(oraganisation).serializable_hash if oraganisation.present?
     render json: {response: oraganisation}
-  end
-
-  def balance_summary
-    org_balance_rec = OrgBalance.find_by(organisation_id: params[:id])
-    return render json: {errors: ['Balanace Summary is not available for this orgnanisation']} if org_balance_rec.blank?
-    org_balance_rec = org_balance_rec.map {|org_balance| OrgBalanceSerializer.new(org_balance).serializable_hash} if org_balance_rec.present?
-    render json: {response: org_balance_rec}
   end
 
   def org_bank_accounts
