@@ -13,6 +13,10 @@ class ApplicationController < ActionController::API
     error = error[:message] if error.kind_of?(Hash)
     render json: {errors: [error]}, status: 422
   end
+  
+  rescue_from RuntimeError do |e|
+    render json: {errors: [e.message]}, status: 400
+  end
 
   def require_user
     return true if valid_token?

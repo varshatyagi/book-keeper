@@ -1,0 +1,30 @@
+Description : To get alliance information
+Request Url : http://localhost:3000/v1/banks
+Method: GET
+Status: 200
+Body:
+
+{
+  "response": [
+    {
+      "id": 1,
+      "name": "State Bank Of India"
+    },
+      {
+      "id": 2,
+      "name": "ICICI Bank"
+    },
+      {
+      "id": 3,
+      "name": "Bank Of India"
+    },
+      {
+      "id": 4,
+      "name": "Corporation Bank"
+    },
+      {
+      "id": 5,
+      "name": "Oriental Bank"
+    }
+  ],
+}
