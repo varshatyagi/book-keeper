@@ -40,6 +40,19 @@ class Organisation < ApplicationRecord
       })
   end
 
+  def update_org_balance_with_opening_balance(opening_balance, params, org_params)
+    OrgBalance.create({
+        organisation_id: params[:id],
+        cash_opening_balance: 0,
+        bank_opening_balance: opening_balance,
+        credit_opening_balance: 0,
+        financial_year_start: org_params[:financial_year],
+        cash_balance: 0,
+        bank_balance: opening_balance,
+        credit_balance: 0
+    })
+  end
+
   def validate_organisation
     if self.name.blank?
       self.errors.add(:name, message: 'Please provide your organisation name')

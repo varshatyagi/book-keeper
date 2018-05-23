@@ -1,0 +1,76 @@
+Description : To get organisation information
+Request Url : http://localhost:3000/v1/organisations
+Method: GET
+Status: 200
+Response :
+
+{
+  "response": [
+    {
+    "id": 1,
+    "name": "org1",
+    "owner_id": 1,
+    "created_by": null
+    },
+      {
+    "id": 2,
+    "name": "org2",
+    "owner_id": 2,
+    "created_by": null
+    },
+      {
+    "id": 3,
+    "name": "ogr3",
+    "owner_id": 3,
+    "created_by": null
+    },
+      {
+    "id": 4,
+    "name": "org4",
+    "owner_id": 4,
+    "created_by": null
+    }
+  ],
+}
+
+
+
+Description : To get single organisation information
+Request Url : http://localhost:3000/v1/organisations/3
+Method: GET
+Status: 200
+Response :
+
+{
+  "response": {
+    "id": 3,
+    "name": "ogr3",
+    "owner_id": 3,
+    "created_by": null
+  }
+}
+
+
+Description : To update organisation information
+Request Url : http://localhost:3000/v1/organisations/3
+Method: PUT
+Status: 200
+Body:
+
+{
+  "organisation": {
+  	"name": "hi"
+  },
+  "org_bank_accounts": [
+    {"bank": {"bank_id": 4, "account_number": "200304558650", "balance": 1300.56}},
+    { "bank": {"bank_id": 5, "account_number": "100304559094", "balance": 2300.56}}
+  ]
+}
+
+Response :
+
+{
+  "response": {
+    true
+  }
+}
