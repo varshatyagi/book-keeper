@@ -1,33 +1,45 @@
 class V1::AlliancesController < ApplicationController
 
+  before_action :require_user
+
   def index
-    alliances = Alliance.find_by(organisation_id: params[:organisation_id])
-    alliances = alliances.map {|alliance| AllianceSerializer.new(alliance).serializable_hash} if alliances.present?
+    alliances = Alliance.where(organisation_id: params[:organisation_id])
+    return render json: {errors: ['Organisation has no Alliance']}, status: 400 unless alliances.present?
+    alliances = alliances.map {|alliance| AllianceSerializer.new(alliance).serializable_hash}
     render json: {response: alliances}
   end
 
-  def show # need to check again
-    alliances = Alliance.where(params)
+  def show
+    raise 'Request Allaince is not registered for this Organisation' unless Alliance.find_by(id: params[:id]).present?
+    alliance = Alliance.find(params[:id])
     render json: {response: AllianceSerializer.new(alliance).serializable_hash}
   end
 
   def create
     return render json: {errors: ['Required params are missing']} unless alliance_params.present?
     alliance = Alliance.new(alliance_params)
+    alliance.organisation_id = params[:organisation_id]
     return render json: {errors: alliance.errors.values} unless alliance.valid?
     alliance.save
     render json: {response: AllianceSerializer.new(alliance).serializable_hash}
   end
 
   def destroy
+    raise 'Request Allaince is not registered for this Organisation' unless Alliance.find_by(id: params[:id]).present?
     alliance = Alliance.find(params[:id])
-    render json: {errors: ['Alliance is not registered']} unless alliance.present?
-    alliance.destory
+    alliance.delete
     render json: {response: true}
+  end
+
+  def search_by_type
+    raise "Alliance of #{params[:type]} is not found" unless Alliance.find_by(alliance_type: params[:type]).present?
+    alliances = Alliance.where(alliance_type: params[:type])
+    alliances = alliances.map {|alliance| AllianceSerializer.new(alliance).serializable_hash}
+    render json: {response: alliances}
   end
 
   private
   def alliance_params
-    params.required(:alliance).permit(:name, :gstin, :alliance_type, :email)
+    params.required(:alliance).permit(:name, :gstin, :alliance_type)
   end
 end

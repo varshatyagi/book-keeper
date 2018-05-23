@@ -18,6 +18,7 @@
 class Transaction < ApplicationRecord
   belongs_to :ledger_heading, optional: true
   belongs_to :org_bank_account, optional: true
+  belongs_to :alliances, optional: true
 
   after_create :update_balance
 

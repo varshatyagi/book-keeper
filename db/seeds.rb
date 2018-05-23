@@ -37,3 +37,11 @@
 # Bank.create(name: "Corporation Bank")
 # Bank.create(name: "Oriental Bank")
 #### End of Bank seed data ####
+
+#### alliance seed data ####
+Alliance.create(name: "John", alliance_type: "creditors")
+Alliance.create(name: "Robert", alliance_type: "debitors")
+Alliance.create(name: "Heena", alliance_type: "creditors")
+Alliance.create(name: "Roncie", alliance_type: "debitors")
+Alliance.create(name: "Shorey", alliance_type: "creditors")
+#### End of alliance seed data ####

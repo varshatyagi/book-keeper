@@ -10,7 +10,8 @@ Body:
       	"amount": 100,
       	"remarks": "study",
       	"payment_mode": "cash",
-      	"org_bank_account_id": 9
+      	"org_bank_account_id": 9,
+				"alliance_id": 1
     }
 }
 

@@ -20,6 +20,6 @@ class V1::TransactionsController < ApplicationController
 
   private
     def transaction_params
-      params.required(:transaction).permit(:ledger_heading_id, :amount, :remarks, :payment_mode, :txn_date, :org_bank_account_id)
+      params.required(:transaction).permit(:ledger_heading_id, :amount, :remarks, :payment_mode, :txn_date, :org_bank_account_id, :alliance_id)
     end
 end
