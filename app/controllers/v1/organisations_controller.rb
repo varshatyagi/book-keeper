@@ -1,6 +1,7 @@
 class V1::OrganisationsController < ApplicationController
 
   before_action :require_user
+  before_action :require_admin_or_organisation_owner
 
   def index
     oraganisations = Organisation.all
@@ -49,7 +50,7 @@ class V1::OrganisationsController < ApplicationController
               bank_balance: opening_balance
             })
           else
-            update_org_balance_with_opening_balance(opening_balance, params, org_params)
+            organisation.update_org_balance_with_opening_balance(opening_balance, params, org_params)
           end
         end
       end
