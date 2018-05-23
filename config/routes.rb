@@ -12,7 +12,6 @@ Rails.application.routes.draw do
       resources :cash_transactions
       member do
         get :balance_summary
-        get :org_bank_accounts
       end
     end
 
@@ -20,6 +19,5 @@ Rails.application.routes.draw do
     post "otp", controller: 'users', action: :otp
     get "ledger_headings/:transaction_type", controller: 'ledger_headings', action: :index
     post "organisations/:organisation_id/cash_transactions/:type", controller: 'cash_transactions', action: :create
-
   end
 end

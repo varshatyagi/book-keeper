@@ -1,0 +1,20 @@
+Description : Transaction
+Request Url : http://localhost:3000/v1/organisations/3/transactions
+Method: POST
+Status: 200
+Body:
+
+{
+	"transaction": {
+    	"ledger_heading_id": 1,
+      	"amount": 100,
+      	"remarks": "study",
+      	"payment_mode": "cash",
+      	"org_bank_account_id": 9
+    }
+}
+
+Response :
+{
+"response": true
+}
