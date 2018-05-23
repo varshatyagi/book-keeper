@@ -1,7 +1,7 @@
 class V1::OrganisationsController < ApplicationController
 
   before_action :require_user
-  before_action :require_admin_or_organisation_owner
+  # before_action :require_admin_or_organisation_owner
 
   def index
     oraganisations = Organisation.all
@@ -11,6 +11,7 @@ class V1::OrganisationsController < ApplicationController
 
   def show
     oraganisation = Organisation.find(params[:id])
+    byebug
     return render json: {errors: ['Organisation is missing']} unless oraganisation.present?
     oraganisation = OrganisationSerializer.new(oraganisation).serializable_hash if oraganisation.present?
     render json: {response: oraganisation}

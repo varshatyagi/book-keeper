@@ -1,7 +1,7 @@
 class V1::CashTransactionsController < ApplicationController
 
   before_action :require_user
-  before_action :require_admin_or_organisation_owner
+  # before_action :require_admin_or_organisation_owner
 
   def create
     return render json: {errors: ['Required parameter is missing']} unless cash_transactions_params.present?
