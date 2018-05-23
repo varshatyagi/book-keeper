@@ -9,5 +9,5 @@
 #
 
 class Bank < ApplicationRecord
-  # belongs_to :org_bank_account
+  has_many :org_bank_accounts
 end

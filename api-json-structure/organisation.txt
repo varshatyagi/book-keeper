@@ -87,18 +87,24 @@ Response :
   "response": [
     {
     "id": 2,
-    "bank_id": 3,
     "bank_balance": "2300.56",
     "account_num": "200304559092",
-    "organisation_id": 3
+    "organisation_id": 3,
+    "bank": {
+    "id": 3,
+    "name": "Bank Of India"
+    }
     },
       {
     "id": 3,
-    "bank_id": 2,
     "bank_balance": "2300.56",
     "account_num": "200304559093",
-    "organisation_id": 3
-    },
+    "organisation_id": 3,
+    "bank": {
+    "id": 2,
+    "name": "ICICI Bank"
+    }
+    }
   ]
 }
 
