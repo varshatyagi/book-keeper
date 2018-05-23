@@ -13,7 +13,7 @@ class ApplicationController < ActionController::API
     error = error[:message] if error.kind_of?(Hash)
     render json: {errors: [error]}, status: 422
   end
-  
+
   rescue_from RuntimeError do |e|
     render json: {errors: [e.message]}, status: 400
   end
@@ -33,6 +33,13 @@ class ApplicationController < ActionController::API
 
   def set_current_user(user)
     @current_user = user
+  end
+
+  def require_admin_or_organisation_owner
+    return render json: {errors: ['Organisation is missing']} unless params[:organisation_id].present?
+    organisation = Organisation.find(params[:organisation_id])
+    return true if organisation.role == User::USER_ROLE_ADMIN || organisation.owner_id == @current_user[:id]
+    render json: {errors: ['You are not authorized to access this resources']}
   end
 
   private
