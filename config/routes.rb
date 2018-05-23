@@ -17,5 +17,6 @@ Rails.application.routes.draw do
     get "ledger_headings/:transaction_type", controller: 'ledger_headings', action: :index
     post "organisations/:organisation_id/cash_transactions/:type", controller: 'cash_transactions', action: :create
     get "organisations/:organisation_id/balance_summary", controller: 'org_balances', action: :balance_summary
+    get "organisations/:organisation_id/alliances/search/:type", controller: 'alliances', action: :search_by_type
   end
 end

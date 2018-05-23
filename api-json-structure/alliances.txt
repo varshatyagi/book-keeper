@@ -1,30 +1,104 @@
 Description : To get alliance information
-Request Url : http://localhost:3000/v1/banks
+Request Url : http://localhost:3000/v1/organisations/3/alliances
 Method: GET
 Status: 200
-Body:
+Response:
 
 {
   "response": [
     {
-      "id": 1,
-      "name": "State Bank Of India"
+    "id": 1,
+    "name": "John",
+    "gstin": null,
+    "alliance_type": "creditors"
     },
       {
-      "id": 2,
-      "name": "ICICI Bank"
+    "id": 2,
+    "name": "Robert",
+    "gstin": null,
+    "alliance_type": "creditors"
     },
       {
-      "id": 3,
-      "name": "Bank Of India"
-    },
-      {
-      "id": 4,
-      "name": "Corporation Bank"
-    },
-      {
-      "id": 5,
-      "name": "Oriental Bank"
+    "id": 3,
+    "name": "Heena",
+    "gstin": null,
+    "alliance_type": "creditors"
+    }
+  ]
+}
+
+
+Description : To get single alliance information
+Request Url : http://localhost:3000/v1/organisations/3/alliances/1
+Method: GET
+Status: 200
+Response:
+
+{
+  "response": {
+    "id": 1,
+    "name": "John",
+    "gstin": null,
+    "alliance_type": "creditors"
+  }
+}
+
+Description : To create alliance
+Request Url : http://localhost:3000/v1/organisations/3/alliances
+Method: POST
+Status: 200
+Body:
+{
+	"alliance": {
+    	"name": "j1",
+      	"gstin": "123345678",
+      	"alliance_type": "debitors"
+    }
+}
+
+Response:
+
+{
+  "response": {
+    "id": 6,
+    "name": "j1",
+    "gstin": "123345678",
+    "alliance_type": "debitors"
+  }
+}
+
+
+Description : To delete alliance
+Request Url : http://localhost:3000/v1/organisations/3/alliances/1
+Method: DELETE
+Status: 200
+
+Response:
+
+{
+  "response": {
+    true
+  }
+}
+
+Description : search alliance
+Request Url : http://localhost:3000/v1/organisations/3/alliances/search/creditors
+Method: GET
+Status: 200
+
+{
+"response": [
+    {
+    "id": 4,
+    "name": "Roncie",
+    "gstin": null,
+    "alliance_type": "creditors"
+  },
+    {
+    "id": 5,
+    "name": "Shorey",
+    "gstin": null,
+    "alliance_type": "creditors"
     }
   ],
 }
