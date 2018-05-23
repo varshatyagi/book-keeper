@@ -47,7 +47,7 @@ class V1::UsersController < ApplicationController
   end
 
   def show
-    return render json: {errors: ['User is not valid']}, status: 400 if params[:id].blank?
+    raise 'User is not found' unless User.find_by(id: params[:id]).present?
     user = User.find(params[:id])
     render json: {response: {user: UserSerializer.new(user).serializable_hash}}, status: 200
   end

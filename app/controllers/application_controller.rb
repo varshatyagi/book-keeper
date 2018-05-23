@@ -7,6 +7,13 @@ class ApplicationController < ActionController::API
   #before_action :ensure_domain
   @current_user = nil
 
+  rescue_from ActiveRecord::RecordNotFound do |e|
+    error = e.record.errors.values.flatten(2)
+    error = error[0] if error.kind_of?(Array)
+    error = error[:message] if error.kind_of?(Hash)
+    render json: {errors: [error]}, status: 422
+  end
+
   rescue_from ActiveRecord::RecordInvalid do |e|
     error = e.record.errors.values.flatten(2)
     error = error[0] if error.kind_of?(Array)
