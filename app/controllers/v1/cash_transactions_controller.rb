@@ -4,7 +4,7 @@ class V1::CashTransactionsController < ApplicationController
   # before_action :require_admin_or_organisation_owner
 
   def create
-    return render json: {errors: ['Required parameter is missing']} unless cash_transactions_params.present?
+    return render json: {errors: ['Required parameter is missing']}, status: 400 unless cash_transactions_params.present?
     ApplicationRecord.transaction do
       unless params[:type] == "withdrawal" || params[:type] == "deposite"
         return render json: {errors: ['Transaction is not valid']}, status: 400

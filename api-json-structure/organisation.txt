@@ -101,3 +101,25 @@ Response :
     },
   ]
 }
+
+
+
+Description : To get organisation bank balance summary
+Request Url : http://localhost:3000/v1/organisations/3/balance_summary
+Method: GET
+Status: 200
+Response :
+
+{
+  "response": {
+    "id": 3,
+    "organisation_id": 3,
+    "cash_opening_balance": "0.0",
+    "bank_opening_balance": "3601.12",
+    "credit_opening_balance": "0.0",
+    "cash_balance": "-800.0",
+    "credit_balance": "100.0",
+    "bank_balance": "4601.12",
+    "financial_year_start": null
+  }
+}
