@@ -4,7 +4,7 @@ class V1::UsersController < ApplicationController
   require "net/https"
   require "uri"
   require "json"
-  # before_action :require_user
+
 
   def create
     user_sign_up_via_email = false
@@ -93,7 +93,7 @@ class V1::UsersController < ApplicationController
   private
 
   def generate_token(current_user)
-    jwt = Auth.encode({user: current_user.id}) # get token
+    jwt = Auth.encode({user: current_user.id, time: Time.now}) # get token
     current_user.token = jwt
     current_user.reset_token_at =  Time.now
     current_user.save(validate: false)
@@ -113,7 +113,6 @@ class V1::UsersController < ApplicationController
     return response
   end
 
-  private
   def user_params
     params.require(:user).permit(:email, :password, :mob_num, :name) if params[:user]
   end
