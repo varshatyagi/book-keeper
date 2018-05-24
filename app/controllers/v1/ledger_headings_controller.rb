@@ -15,12 +15,11 @@ class V1::LedgerHeadingsController < ApplicationController
     end
     if params[:revenue].present?
       # TODO: except internal heading return all
-      scope = scope.where(revenue: params[:revenue])
+      scope = scope.where(revenue: true?(params[:revenue]))
     end
-
     if params[:asset].present?
       # TODO: except internal heading return all
-      scope = scope.where(asset: params[:asset])
+      scope = scope.where(asset: true?(params[:asset]))
     end
 
     ledger_headings = scope.to_a
@@ -28,7 +27,12 @@ class V1::LedgerHeadingsController < ApplicationController
     ledger_headings
   end
 
+  private
   def ledger_heading_params
     params.permit([:name, :revenue, :transaction_type, :asset])
+  end
+
+  def true?(obj)
+    obj.to_s == "true"
   end
 end

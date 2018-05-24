@@ -13,7 +13,8 @@
 #
 
 class CashTransaction < ApplicationRecord
-  after_create :update_balance
+  belongs_to :Organisation
+  # after_create :update_balance
 
   def update_balance
     org_bank_acc = OrgBankAccount.find(self.org_bank_account_id)

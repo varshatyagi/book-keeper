@@ -1,3 +1,3 @@
 class AllianceSerializer < ActiveModel::Serializer
-  attributes :id, :name, :gstin, :alliance_type
+  attributes :id, :name, :gstin, :alliance_type, :mob_num
 end

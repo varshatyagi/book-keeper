@@ -29,7 +29,7 @@ Response :
 
 
 Description : To get ledger heading information
-Request Url : http://localhost:3000/v1/ledger_headings/debit
+Request Url : http://localhost:3000/v1/ledger_headings?transaction_type=debit&asset=true
 Method: GET
 Status: 200
 Response :

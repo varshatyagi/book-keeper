@@ -23,6 +23,7 @@ class Organisation < ApplicationRecord
   has_many :org_bank_accounts
   belongs_to :user, optional: true, foreign_key: 'owner_id'
   has_one :org_balance
+  has_many :cash_transactions
 
   after_create :create_org_balance
   validate :validate_organisation
