@@ -32,7 +32,6 @@ class Transaction < ApplicationRecord
   }
 
   def update_balance
-    byebug
     if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
         organisation.org_balance.bank_balance += amount
