@@ -15,6 +15,7 @@ class V1::CashTransactionsController < ApplicationController
       cash_transaction.txn_date = Time.now unless cash_transactions_params[:txn_date].present?
       cash_transaction.organisation_id = params[:organisation_id]
       cash_transaction.save!
+      render json: {response: [true]}
     end
   end
 
