@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::API
-  require 'helper'
   require 'auth'
   require 'common'
   require 'uri'

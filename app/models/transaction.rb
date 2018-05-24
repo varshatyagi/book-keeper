@@ -22,6 +22,12 @@ class Transaction < ApplicationRecord
 
   after_create :update_balance
 
+  STATUS = {
+    "COMPLETED": "Completed",
+    "PENDING": "Pending",
+    "FAILED": "Failed"
+  }
+
   def update_balance
     org_bank_account = OrgBankAccount.find(self.org_bank_account_id)
     raise 'Organisation Bank is not exist' unless org_bank_account.present?

@@ -82,7 +82,7 @@ Response:
 }
 
 Description : search alliance
-Request Url : http://localhost:3000/v1/organisations/3/alliances/search/creditors
+Request Url : http://localhost:3000/v1/organisations/3/alliances?alliance_type=debitors{creditors}
 Method: GET
 Status: 200
 
