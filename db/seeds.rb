@@ -39,10 +39,9 @@
 #### End of Bank seed data ####
 
 #### alliance seed data ####
-Alliance.destroy_all
-Alliance.create(name: "John", alliance_type: "creditors", organisation_id: 7)
-Alliance.create(name: "Robert", alliance_type: "debitors", organisation_id: 7)
-Alliance.create(name: "Heena", alliance_type: "creditors", organisation_id: 7)
-Alliance.create(name: "Roncie", alliance_type: "debitors", organisation_id: 7)
-Alliance.create(name: "Shorey", alliance_type: "creditors", organisation_id: 7)
+# Alliance.create(name: "John", alliance_type: "creditors")
+# Alliance.create(name: "Robert", alliance_type: "debitors")
+# Alliance.create(name: "Heena", alliance_type: "creditors")
+# Alliance.create(name: "Roncie", alliance_type: "debitors")
+# Alliance.create(name: "Shorey", alliance_type: "creditors")
 #### End of alliance seed data ####

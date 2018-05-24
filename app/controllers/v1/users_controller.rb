@@ -113,6 +113,7 @@ class V1::UsersController < ApplicationController
     return response
   end
 
+  private
   def user_params
     params.require(:user).permit(:email, :password, :mob_num, :name) if params[:user]
   end
