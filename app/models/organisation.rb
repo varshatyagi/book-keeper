@@ -10,13 +10,14 @@
 #  state_code :string
 #  status     :string
 #  created_by :integer
-#  user_id    :integer
+#  owner_id   :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 # Indexes
 #
-#  index_organisations_on_name  (name) UNIQUE
+#  index_organisations_on_name      (name) UNIQUE
+#  index_organisations_on_owner_id  (owner_id)
 #
 
 class Organisation < ApplicationRecord
@@ -24,9 +25,14 @@ class Organisation < ApplicationRecord
   belongs_to :user, optional: true, foreign_key: 'owner_id'
   has_one :org_balance
   has_many :cash_transactions
+  has_many :transactions
+
+  accepts_nested_attributes_for :org_bank_accounts
 
   after_create :create_org_balance
-  validate :validate_organisation
+
+  validates_presence_of :name, message: "Please provide your Business name"
+  validates_uniqueness_of :name, message: "Business name has already been taken"
 
   def create_org_balance
     OrgBalance.create({
@@ -52,14 +58,5 @@ class Organisation < ApplicationRecord
         bank_balance: opening_balance,
         credit_balance: 0
     })
-  end
-
-  def validate_organisation
-    if self.name.blank?
-      self.errors.add(:name, message: 'Please provide your organisation name')
-
-    elsif self.name.present?
-      self.errors.add(:name, message: 'Organisation name has already been taken') if Organisation.find_by(name: self.name)
-    end
   end
 end

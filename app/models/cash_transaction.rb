@@ -10,34 +10,27 @@
 #  remarks             :string
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  organisation_id     :integer
 #
 
 class CashTransaction < ApplicationRecord
-  belongs_to :Organisation
+  belongs_to :organisation
+  belongs_to :org_bank_account
+
   # after_create :update_balance
 
   def update_balance
-    org_bank_acc = OrgBankAccount.find(self.org_bank_account_id)
-    raise 'Organisation Bank account is not present' unless org_bank_acc.present?
-    bank_balance = org_bank_acc.bank_balance + self.amount if self.withdrawal == false
-    bank_balance = org_bank_acc.bank_balance - self.amount if self.withdrawal == true
-
-    org_bank_acc.bank_balance = bank_balance
-    org_bank_acc.save!
-
-    org_balance = OrgBalance.find_by(organisation_id: self.organisation_id)
-    raise 'Organisation Bank balance record is not found' unless org_balance.present?
-
-    if self.withdrawal == false
-      cash_balance = org_balance.cash_balance - self.amount
-      bank_balance = org_balance.bank_balance + self.amount
-    elsif self.withdrawal == true
-      cash_balance = org_balance.cash_balance + self.amount
-      bank_balance = org_balance.bank_balance - self.amount
+    if withdrawal?
+      org_bank_account.bank_balance += amount
+      organisation.org_balance.cash_balance += amount
+      organisation.org_balance.bank_balance -= amount
+    else
+      org_bank_account.bank_balance -= amount
+      organisation.org_balance.cash_balance -= amount
+      organisation.org_balance.bank_balance += amount
     end
-    org_balance.bank_balance = bank_balance
-    org_balance.cash_balance = cash_balance
-    org_balance.save!
+    
+    org_bank_account.save!
+    organisation.org_balance.save!
   end
-
 end

@@ -52,6 +52,13 @@ class V1::UsersController < ApplicationController
     render json: {response: {user: UserSerializer.new(user).serializable_hash}}, status: 200
   end
 
+  def update
+    raise 'Requested Uesr is not found' unless User.find_by!(id: params[:id]).present?
+    user = User.find_by(id: params[:id])
+    user = user.update_attributes!(user_params)
+    render json: {response: user}
+  end
+
   def login
     if otp_params.present?
       has_user_obj = login_via_otp(otp_params)

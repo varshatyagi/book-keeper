@@ -3,7 +3,7 @@
 # Table name: org_balances
 #
 #  id                     :integer          not null, primary key
-#  org_id                 :integer
+#  organisation_id        :integer
 #  cash_opening_balance   :decimal(, )
 #  bank_opening_balance   :decimal(, )
 #  credit_opening_balance :decimal(, )
@@ -16,6 +16,5 @@
 #
 
 class OrgBalance < ApplicationRecord
-  belongs_to :organisation, optional: true
-  # validates_presence_of :financial_year_start
+  belongs_to :organisation
 end

@@ -21,7 +21,7 @@ class V1::AlliancesController < ApplicationController
     return render json: {errors: ['Required params are missing']} unless alliance_params.present?
     alliance = Alliance.new(alliance_params)
     alliance.organisation_id = params[:organisation_id]
-    return render json: {errors: alliance.errors.values} unless alliance.valid?
+    return render json: {errors: alliance.errors.values.flatten(2)}, status: 400 unless alliance.valid?
     alliance.save
     render json: {response: AllianceSerializer.new(alliance).serializable_hash}
   end
