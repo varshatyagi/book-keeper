@@ -7,5 +7,7 @@
 #
 
 class PaymentMode < ApplicationRecord
-  has_many :transactions
+  PAYMENT_MODE_BANK = 'bank'
+  PAYMENT_MODE_CREDIT = 'credit'
+  PAYMENT_MODE_CASH = 'cash'
 end

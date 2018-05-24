@@ -3,7 +3,7 @@
 # Table name: transactions
 #
 #  id                  :integer          not null, primary key
-#  ledger_heading_id   :integer
+#  ledger_heading_id   :string
 #  amount              :decimal(, )
 #  remarks             :string
 #  payment_mode        :string
@@ -13,12 +13,15 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  org_bank_account_id :integer
+#  organisation_id     :integer
+#  alliance_id         :integer
 #
 
 class Transaction < ApplicationRecord
-  belongs_to :ledger_heading, optional: true
+  belongs_to :ledger_heading
+  belongs_to :organisation
   belongs_to :org_bank_account, optional: true
-  belongs_to :alliances, optional: true
+  belongs_to :alliance, optional: true
 
   after_create :update_balance
 
@@ -29,40 +32,30 @@ class Transaction < ApplicationRecord
   }
 
   def update_balance
-    org_bank_account = OrgBankAccount.find(self.org_bank_account_id)
-    raise 'Organisation Bank is not exist' unless org_bank_account.present?
-
-    org_balance = OrgBalance.find_by(organisation_id: self.organisation_id)
-    raise 'Organisation Opening balance record is not exist' unless org_balance.present?
-
-    ledger_heading = LedgerHeading.find(self.ledger_heading_id)
-    raise 'Ledger Heading is not exist' unless ledger_heading.present?
-
-    if ledger_heading[:transaction_type] == "credit"
-      if self.payment_mode == 'bank'
-        org_balance.bank_balance = org_balance[:bank_balance] + self.amount
-        org_bank_account.bank_balance = org_bank_account[:bank_balance] + self.amount
-        org_bank_account.save!
-      elsif self.payment_mode == 'credit'
-        org_balance.credit_balance = org_balance[:credit_balance] + self.amount
-      elsif self.payment_mode == 'cash'
-        org_balance.cash_balance = org_balance[:cash_balance] + self.amount
+    byebug
+    if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
+      if payment_mode == PaymentMode::PAYMENT_MODE_BANK
+        organisation.org_balance.bank_balance += amount
+        organisation.org_bank_account.bank_balance += amount
+        organisation.org_bank_account.save!
+      elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
+        organisation.org_balance.credit_balance += amount
+      elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
+        organisation.org_balance.cash_balance += amount
+      end
+    elsif ledger_heading[:transaction_type] == LedgerHeading::TRANSACTION_TYPE_DEBIT
+      if payment_mode == PaymentMode::PAYMENT_MODE_BANK
+        organisation.org_balance.bank_balance -= amount
+        organisation.org_bank_account.bank_balance -= amount
+        organisation.org_bank_account.save!
+      elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
+        organisation.org_balance.credit_balance -= amount
+      elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
+        organisation.org_balance.cash_balance -= amount
       end
     end
 
-    if ledger_heading[:transaction_type] == "debit"
-      if self.payment_mode == 'bank'
-        org_bank_account.bank_balance = org_bank_account[:bank_balance] - self.amount
-        org_balance.bank_balance = org_balance[:bank_balance] - self.amount
-        org_bank_account.save!
-      elsif self.payment_mode == 'credit'
-        org_balance.credit_balance = org_balance[:credit_balance] - self.amount
-      elsif self.payment_mode == 'cash'
-        org_balance.cash_balance = org_balance[:cash_balance] - self.amount
-      end
-    end
-
-    org_balance.save!
+    organisation.org_balance.save!
   end
 
 end

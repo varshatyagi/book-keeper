@@ -10,17 +10,9 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def show
-    oraganisation = Organisation.find(params[:id])
-    return render json: {errors: ['Organisation is missing']}, status: 400 unless oraganisation.present?
-    oraganisation = OrganisationSerializer.new(oraganisation).serializable_hash if oraganisation.present?
+    oraganisation = Organisation.find(params[:id]) || not_found
+    oraganisation = OrganisationSerializer.new(oraganisation).serializable_hash
     render json: {response: oraganisation}
-  end
-
-  def org_bank_accounts
-    org_bank_accnts = OrgBankAccount.where({organisation_id: params[:id]})
-    return render json: {error: ['Banks accounts are not available for this Organisation']} if org_bank_accnts.blank?
-    render json: {response: org_bank_accnts}
-
   end
 
   def balance_summary
@@ -30,54 +22,17 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def update
-    render json: {errors: ['Required params are missing']}, status: 400 unless org_params.present?
-    @organisation = Organisation.find(params[:id]) || not_found
-    errors = []
-    bank_obj = nil
+    render json: {errors: ['Required params are missing']}, status: 400 unless organisation_params.present?
+    organisation = Organisation.find(params[:id]) || not_found
     ApplicationRecord.transaction do
-      organisation[:name] = org_params[:name]
-      if organisation.new_record?
-        organisation.save! if organisation.valid?
-      end
-      ApplicationRecord.transaction do
-        opening_balance = bank_records(bank_params) if bank_params.present?
-        org_balance_rec = OrgBalance.find(params[:id])
-        if org_balance_rec.present?
-          org_balance = org_balance_rec.update_attributes!({
-            bank_opening_balance: opening_balance,
-            financial_year_start: org_params[:financial_year],
-            bank_balance: opening_balance
-          })
-        else
-          organisation.update_org_balance_with_opening_balance(opening_balance, params, org_params)
-        end
-      end
+      organisation.update_attributes!(organisation_params)
     end
     render json: {response: true}, status: 200
   end
 
-  def bank_records(bank_params)
-    errors = []
-    bank_params.each do |bank|
-      org_bank_acc = OrgBankAccount.find_by(bank_id: bank[:bank_id], account_num: bank[:account_number])
-      if org_bank_acc.blank?
-        org_bank = OrgBankAccount.new(bank)
-        org_bank.organisation_id = @organisation.id
-        org_bank.save!
-      else
-        org_bank_acc.update_attributes!(bank_balance: bank[:balance])
-      end
-    end
-  end
-
   private
-  def org_params
-    params.required(:organisation).permit(:name)
-  end
-  def org_balance_params
-    params.required(:org_balance).permit(:financial_year)
-  end
-  def bank_params
-    params.require(:org_bank_accounts).map { |m| m.require(:bank).permit(:bank_id, :balance, :account_number)}
+
+  def organisation_params
+    params.require(:organisation).permit(:name, org_bank_accounts_attributes: [:id, :bank_id, :account_num, :bank_balance, :organisation_id])
   end
 end

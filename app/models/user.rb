@@ -3,7 +3,7 @@
 # Table name: users
 #
 #  id                 :integer          not null, primary key
-#  org_id             :integer
+#  organisation_id    :integer
 #  name               :string
 #  mob_num            :string
 #  email              :string
@@ -23,7 +23,13 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable
   has_many :organisations
-  validate :validate_user
+
+  validates_uniqueness_of :mob_num, message: "Mobile Number has already been taken", allow_blank: true
+  validates_uniqueness_of :email, message: "Email has already been taken", allow_blank: true
+
+  validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, message: "Please provide valid email address", allow_blank: true
+  validates_format_of :mob_num, with: /\A\d{10}\z/, message: "Please provide valid mobile number.", allow_blank: true
+
 
   USER_ROLE_CLIENT = 'client'
   USER_ROLE_ADMIN = 'admin'
@@ -40,24 +46,6 @@ class User < ApplicationRecord
 
   def token_expired?
     (Time.now.to_i - reset_token_at.to_i) > TOKEN_EXPIRATION_TIME
-  end
-
-  def validate_user
-    if self.email.present? && !self.email.match(URI::MailTo::EMAIL_REGEXP)
-      self.errors.add(:email, message: 'Please provide valid email address')
-    end
-
-    if self.email.present?
-      self.errors.add(:email, message: 'Email id has already been taken') if User.find_by({email: self.email})
-    end
-
-    if self.mob_num.present? && !self.mob_num.match(/\A\d{10}\z/)
-      self.errors.add(:mob_num, :invalid, message: 'Please provide valid mobile number')
-    end
-
-    if self.mob_num.present?
-      self.errors.add(:mob_num, message: 'Mobile number has already been taken') if User.find_by({mob_num: self.mob_num})
-    end
   end
 
 end
