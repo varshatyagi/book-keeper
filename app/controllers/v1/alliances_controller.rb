@@ -33,13 +33,6 @@ class V1::AlliancesController < ApplicationController
     render json: {response: true}
   end
 
-  def search_by_type
-    raise "Alliance of #{params[:type]} is not found" unless Alliance.find_by(alliance_type: params[:type]).present?
-    alliances = Alliance.where(alliance_type: params[:type])
-    alliances = alliances.map {|alliance| AllianceSerializer.new(alliance).serializable_hash}
-    render json: {response: alliances}
-  end
-
   private
   def alliance_params
     params.require(:alliance).permit(:name, :gstin, :alliance_type, :mob_num)
