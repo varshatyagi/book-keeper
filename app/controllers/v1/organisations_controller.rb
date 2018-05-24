@@ -71,13 +71,13 @@ class V1::OrganisationsController < ApplicationController
   end
 
   private
-    def org_params
-      params.required(:organisation).permit(:name)
-    end
-    def org_balance_params
-      params.required(:org_balance).permit(:financial_year)
-    end
-    def bank_params
-      params.require(:org_bank_accounts).map { |m| m.require(:bank).permit(:bank_id, :balance, :account_number)}
-    end
+  def org_params
+    params.required(:organisation).permit(:name)
+  end
+  def org_balance_params
+    params.required(:org_balance).permit(:financial_year)
+  end
+  def bank_params
+    params.require(:org_bank_accounts).map { |m| m.require(:bank).permit(:bank_id, :balance, :account_number)}
+  end
 end
