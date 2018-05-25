@@ -36,7 +36,7 @@ class User < ApplicationRecord
   USER_ROLE_CLIENT = 'client'
   USER_ROLE_ADMIN = 'admin'
 
-  TOKEN_EXPIRATION_TIME = 60 # In seconds 24 hrs
+  TOKEN_EXPIRATION_TIME = 86400 # In seconds 24 hrs
 
   def admin?
     role == USER_ROLE_ADMIN
