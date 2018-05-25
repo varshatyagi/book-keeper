@@ -59,12 +59,12 @@ Body:
 
 {
   "organisation": {
-  	"name": "hi"
-  },
-  "org_bank_accounts": [
-    {"bank": {"bank_id": 4, "account_number": "200304558650", "balance": 1300.56}},
-    { "bank": {"bank_id": 5, "account_number": "100304559094", "balance": 2300.56}}
-  ]
+  	"name": "hi",
+    "org_bank_accounts_attributes": [
+    	{"id": 4 ,"bank_id": 3, "bank_balance": 2300.56}
+    ]
+  }
+
 }
 
 Response :
