@@ -93,3 +93,47 @@
 # City.create(state_code: "MP", name: "Gwalior")
 # City.create(state_code: "MP", name: "Bhopal")
 #### End of states seed data ####
+
+# [Alliance, Bank, CashTransaction, City, LedgerHeading, OrgBalance, OrgBankAccount, Organisation, Otp, Transaction, User].each do |table|
+#   ActiveRecord::Base.connection.execute("TRUNCATE #{table.table_name}")
+# end
+
+
+ActiveRecord::Migration.drop_table(:cash_transactions)
+ActiveRecord::Migration.create_table(:cash_transactions)
+
+ActiveRecord::Migration.drop_table(:otps)
+ActiveRecord::Migration.create_table(:otps)
+
+ActiveRecord::Migration.drop_table(:users)
+ActiveRecord::Migration.create_table(:users)
+
+ActiveRecord::Migration.drop_table(:alliances)
+ActiveRecord::Migration.create_table(:alliances)
+
+ActiveRecord::Migration.drop_table(:banks)
+ActiveRecord::Migration.create_table(:banks)
+
+ActiveRecord::Migration.drop_table(:cash_transactions)
+ActiveRecord::Migration.create_table(:cash_transactions)
+
+ActiveRecord::Migration.drop_table(:cities)
+ActiveRecord::Migration.create_table(:cities)
+
+ActiveRecord::Migration.drop_table(:ledger_headings)
+ActiveRecord::Migration.create_table(:ledger_headings)
+
+ActiveRecord::Migration.drop_table(:org_balances)
+ActiveRecord::Migration.create_table(:org_balances)
+
+ActiveRecord::Migration.drop_table(:org_bank_accounts)
+ActiveRecord::Migration.create_table(:org_bank_accounts)
+
+ActiveRecord::Migration.drop_table(:transactions)
+ActiveRecord::Migration.create_table(:transactions)
+
+ActiveRecord::Migration.drop_table(:organisations)
+ActiveRecord::Migration.create_table(:organisations)
+
+ActiveRecord::Migration.drop_table(:states)
+ActiveRecord::Migration.create_table(:states)
