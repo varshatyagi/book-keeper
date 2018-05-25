@@ -121,7 +121,7 @@ class V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :mob_num, :name) if params[:user]
+    params.require(:user).permit(:email, :password, :mob_num, :name, :address, :city, :state) if params[:user]
   end
 
   def organisation_params
