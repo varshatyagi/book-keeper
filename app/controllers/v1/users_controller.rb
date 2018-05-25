@@ -15,7 +15,6 @@ class V1::UsersController < ApplicationController
       user = User.new(user_params)
       errors << user.errors.values unless user.valid?
     end
-
     if !user_sign_up_via_email
       otp = Otp.new({mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin]})
       user = User.new(mob_num: otp_params[:mob_num])
@@ -23,7 +22,6 @@ class V1::UsersController < ApplicationController
     end
     errors << organisation.errors.values unless organisation.valid?
     errors = errors.flatten(3)
-    errors = Common.process_errors(errors)
     return render json: {errors: errors}, status: 400 if errors.present?
     ApplicationRecord.transaction do
       unless user_sign_up_via_email
