@@ -22,7 +22,9 @@
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable
-  has_many :organisations
+  has_many :organisations, foreign_key: :owner_id
+  belongs_to :city
+  belongs_to :state
 
   validates_uniqueness_of :mob_num, message: "Mobile Number has already been taken", allow_blank: true
   validates_uniqueness_of :email, message: "Email has already been taken", allow_blank: true
@@ -34,7 +36,7 @@ class User < ApplicationRecord
   USER_ROLE_CLIENT = 'client'
   USER_ROLE_ADMIN = 'admin'
 
-  TOKEN_EXPIRATION_TIME = 86400 # In seconds 24 hrs
+  TOKEN_EXPIRATION_TIME = 60 # In seconds 24 hrs
 
   def admin?
     role == USER_ROLE_ADMIN
