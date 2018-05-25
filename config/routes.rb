@@ -17,7 +17,8 @@ Rails.application.routes.draw do
 
     post "login", controller: 'users', action: :login
     post "otp", controller: 'users', action: :otp
-    # post "organisations/:organisation_id/cash_transactions/:type", controller: 'cash_transactions', action: :create
+    get "states", controller: 'states', action: :index
+    get "cities", controller: 'cities', action: :index
 
   end
 end

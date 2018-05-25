@@ -23,6 +23,8 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable
   has_many :organisations
+  belongs_to :state, foreign_key: :state_code, optional: true
+  belongs_to :city, foreign_key: :city, optional: true
 
   validates_uniqueness_of :mob_num, message: "Mobile Number has already been taken", allow_blank: true
   validates_uniqueness_of :email, message: "Email has already been taken", allow_blank: true

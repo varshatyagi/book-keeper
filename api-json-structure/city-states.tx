@@ -1,0 +1,55 @@
+Description : To get state information
+Request Url : http://localhost:3000/v1/states
+Method: GET
+Status: 200
+Body:
+
+{
+"response": [
+  {
+"code": "JK",
+"name": "Jammu & Kashmir"
+},
+  {
+"code": "HP",
+"name": "Himachal Pradesh"
+},
+  {
+"code": "PB",
+"name": "Punjab"
+},
+  {
+"code": "CH",
+"name": "Chandigarh"
+}
+],
+}
+
+
+
+Description : To get city information
+Request Url : http://localhost:3000/v1/cities
+Method: GET
+Status: 200
+Body:
+
+{
+"response": [
+{
+"state_code": "MH",
+"name": "Pune"
+},
+{
+"state_code": "MH",
+"name": "Nagpur"
+},
+{
+"state_code": "MH",
+"name": "Thane"
+},
+{
+"state_code": "MH",
+"name": "Nashik"
+},
+],
+}
