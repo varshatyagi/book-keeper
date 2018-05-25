@@ -26,7 +26,7 @@ class ApplicationController < ActionController::API
 
   def require_user
     return true if valid_token?
-    render json: Helper::ACCESS_DENIED, status: 401
+    render json: {errors: ['You are not authorized to access this resources']}, status: 401
   end
 
   def require_admin

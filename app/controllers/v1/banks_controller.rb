@@ -1,6 +1,6 @@
 class V1::BanksController < ApplicationController
 
-  before_action :require_user
+  # before_action :require_user
 
   def index
     banks = Bank.all

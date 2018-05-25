@@ -17,19 +17,19 @@ class CashTransaction < ApplicationRecord
   belongs_to :organisation
   belongs_to :org_bank_account
 
-  # after_create :update_balance
+  after_create :update_balance
 
   def update_balance
     if withdrawal?
-      org_bank_account.bank_balance += amount
+      org_bank_account.bank_balance -= amount
       organisation.org_balance.cash_balance += amount
       organisation.org_balance.bank_balance -= amount
     else
-      org_bank_account.bank_balance -= amount
+      org_bank_account.bank_balance += amount
       organisation.org_balance.cash_balance -= amount
       organisation.org_balance.bank_balance += amount
     end
-    
+
     org_bank_account.save!
     organisation.org_balance.save!
   end
