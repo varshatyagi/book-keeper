@@ -32,7 +32,7 @@ class V1::UsersController < ApplicationController
         otp_record = Otp.find_by({mob_num: otp_params[:mob_num]})
         otp_record.destroy!
       end
-      user.role = User::USER_ROLE_CLIENT if user_sign_up_via_email
+      user.role = User::USER_ROLE_CLIENT
       user.save!
       organisation.owner_id = user.id
       organisation.created_by = user.id
