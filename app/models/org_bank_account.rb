@@ -14,7 +14,7 @@
 
 class OrgBankAccount < ApplicationRecord
   belongs_to :orgnanisation, optional: true
-  belongs_to :bank
+  belongs_to :bank, optional: true
 
   validates_presence_of :account_num, message: "Please enter valid Account Number"
   validates_uniqueness_of :account_num, message: "Account number should be unique"

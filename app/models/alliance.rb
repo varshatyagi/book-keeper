@@ -24,7 +24,7 @@
 #
 
 class Alliance < ApplicationRecord
-  belongs_to :organisation
+  belongs_to :organisation, optional: true
   has_many :transactions
 
   validates_uniqueness_of :mob_num, message: "Mobile Number has already been taken", allow_blank: true

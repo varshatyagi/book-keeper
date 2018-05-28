@@ -18,8 +18,8 @@
 #
 
 class Transaction < ApplicationRecord
-  belongs_to :ledger_heading
-  belongs_to :organisation
+  belongs_to :ledger_heading, optional: true
+  belongs_to :organisation, optional: true
   belongs_to :org_bank_account, optional: true
   belongs_to :alliance, optional: true
 

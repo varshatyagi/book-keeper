@@ -14,8 +14,8 @@
 #
 
 class CashTransaction < ApplicationRecord
-  belongs_to :organisation
-  belongs_to :org_bank_account
+  belongs_to :organisation, optional: true
+  belongs_to :org_bank_account, optional: true
 
   after_create :update_balance
 
