@@ -26,7 +26,7 @@ class Organisation < ApplicationRecord
   has_one :org_balance
   has_many :cash_transactions
   has_many :transactions
-  # belongs_to :plan # need to create table for plan
+  belongs_to :plan # need to create table for plan
 
   accepts_nested_attributes_for :org_bank_accounts
 
