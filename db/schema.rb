@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180525115438) do
+ActiveRecord::Schema.define(version: 20180528054834) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -192,8 +192,6 @@ ActiveRecord::Schema.define(version: 20180525115438) do
     t.datetime "reset_token_at"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
-    t.index ["city"], name: "index_users_on_city"
-    t.index ["state_code"], name: "index_users_on_state_code"
   end
 
 end
