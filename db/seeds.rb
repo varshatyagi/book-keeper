@@ -44,7 +44,7 @@
 # State.create(code: "MH", name: "Maharashtra")
 # State.create(code: "MN", name: "Manipur")
 # State.create(code: "ML", name: "Meghalaya")
-State.create(code: "MP", name: "Madhya Pradesh")
+# State.create(code: "MP", name: "Madhya Pradesh")
 #### End of states seed data ####
 
 
