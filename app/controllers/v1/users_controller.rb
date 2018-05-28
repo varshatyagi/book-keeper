@@ -26,9 +26,9 @@ class V1::UsersController < ApplicationController
     return render json: {errors: errors}, status: 400 if errors.present?
     ApplicationRecord.transaction do
       unless user_sign_up_via_email
+        raise 'Either Mobile number or Otp is not correct' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
         otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
-        return render json:  {errors: ['You are not authorized to access this resource']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
-        otp_record = Otp.find_by({mob_num: otp_params[:mob_num]})
+        return render json:  {errors: ['Token is expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
         otp_record.destroy!
       end
       user.role = User::USER_ROLE_CLIENT
@@ -61,11 +61,11 @@ class V1::UsersController < ApplicationController
   def login
     if otp_params.present?
       has_user_obj = login_via_otp(otp_params)
-      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless has_user_obj
+      render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
       render json: has_user_obj
     elsif user_params.present?
       has_user_obj = login_via_email(user_params)
-      return render json: {errors: ['Your are not authorized to access this resource']}, status: 401 unless has_user_obj
+      render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
       render json: has_user_obj
     else
       render json: {errors: ['Your are not authorized to access this resource']}, status: 401
@@ -73,17 +73,19 @@ class V1::UsersController < ApplicationController
   end
 
   def login_via_email(options)
+    raise 'User is not registered with provided email id' unless User.find_by!(email: options[:email])
     user = User.find_by(email: options[:email])
-     return false unless user.present? && (user.valid_password? options[:password])
-     generate_token(user)
-     return {response: {user: UserSerializer.new(user).serializable_hash}}
+    return {errors: ['password is not valid']} unless user.present? && (user.valid_password? options[:password])
+    generate_token(user)
+    return {response: {user: UserSerializer.new(user).serializable_hash}}
   end
 
   def login_via_otp(otp_params)
+    raise 'Either Mobile Number or otp is invalid' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
     otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
-    return false unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
+    return {errors: ['Token is expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
+    raise 'User is not registered with this mobile number' unless User.find_by(mob_num: otp_params[:mob_num])
     user = User.find_by(mob_num: otp_params[:mob_num])
-    return {errors: ['Mobile number is not registered']} if user.blank?
     otp_record.destroy
     generate_token(user)
     return {response: {user: UserSerializer.new(user).serializable_hash}}
@@ -124,7 +126,7 @@ class V1::UsersController < ApplicationController
   end
 
   def organisation_params
-    params.require(:organisation).permit(:name)
+    params.require(:organisation).permit(:name) if params[:organisation]
   end
 
   def otp_params
