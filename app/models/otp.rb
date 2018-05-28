@@ -12,6 +12,10 @@ class Otp < ApplicationRecord
   # TODO fix this
   validate :validate_otp
 
+  validates_presence_of :mob_num, with: /\A\d{10}\z/, message: "Please provide mobile number."
+  validates_format_of :mob_num, with: /\A\d{10}\z/, message: "Please provide valid mobile number."
+  validates_presence_of :otp_pin, message: "Please provide otp."
+
   OTP_EXPIRATION_TIME = 3600 # In seconds 24 hrs
 
   def validate_otp

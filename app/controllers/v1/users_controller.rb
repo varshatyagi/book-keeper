@@ -10,6 +10,7 @@ class V1::UsersController < ApplicationController
     user_sign_up_via_email = false
     organisation = Organisation.new(organisation_params)
     errors = []
+
     unless otp_params.present?
       user_sign_up_via_email = true
       user = User.new(user_params)

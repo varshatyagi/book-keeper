@@ -16,5 +16,5 @@
 #
 
 class OrgBalance < ApplicationRecord
-  belongs_to :organisation
+  belongs_to :organisation, optional: true
 end
