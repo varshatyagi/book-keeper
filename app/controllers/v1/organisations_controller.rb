@@ -43,7 +43,7 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def sum_of_total_rec(records)
-    return nil if records.blank?
+    # return nil if records.blank?
     transaction_records = []
     transactions = records.group_by(&:ledger_heading_id)
     transactions.each do |transaction|
