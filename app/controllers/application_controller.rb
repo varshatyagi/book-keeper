@@ -10,14 +10,14 @@ class ApplicationController < ActionController::API
     error = e.record.errors.values.flatten(2)
     error = error[0] if error.kind_of?(Array)
     error = error[:message] if error.kind_of?(Hash)
-    render json: {errors: [error]}, status: 422
+    render json: {errors: [error]}, status: 400
   end
 
   rescue_from ActiveRecord::RecordInvalid do |e|
     error = e.record.errors.values.flatten(2)
     error = error[0] if error.kind_of?(Array)
     error = error[:message] if error.kind_of?(Hash)
-    render json: {errors: [error]}, status: 422
+    render json: {errors: [error]}, status: 400
   end
 
   rescue_from RuntimeError do |e|

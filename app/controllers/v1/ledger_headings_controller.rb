@@ -6,6 +6,23 @@ class V1::LedgerHeadingsController < ApplicationController
     render json: {response: prepare_ledger_headings}
   end
 
+  def create
+    ledger_heading = LedgerHeading.new(ledger_heading_params)
+    ledger_heading.save!
+    render json: {response: true}
+  end
+
+  def update
+    ledger_heading = LedgerHeading.find(params[:id])
+    ledger_heading = ledger_heading.update_attributes!(ledger_heading_params)
+    render json: {response: true}
+  end
+
+  def destroy
+    LedgerHeading.find(params[:id]).destroy
+    render json: {response: true}
+  end
+
   private
 
   def prepare_ledger_headings
@@ -29,7 +46,7 @@ class V1::LedgerHeadingsController < ApplicationController
 
   private
   def ledger_heading_params
-    params.permit([:name, :revenue, :transaction_type, :asset])
+    params.require(:ledger_heading).permit(:name, :revenue, :transaction_type, :asset)
   end
 
   def true?(obj)

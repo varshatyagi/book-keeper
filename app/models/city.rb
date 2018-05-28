@@ -8,5 +8,5 @@
 #
 
 class City < ApplicationRecord
-  # belongs_to :state, optional: true, foreign_key: 'code'
+  belongs_to :state, foreign_key: 'code'
 end

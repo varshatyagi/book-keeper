@@ -15,7 +15,6 @@ class V1::UsersController < ApplicationController
       user = User.new(user_params)
       errors << user.errors.values unless user.valid?
     end
-
     if !user_sign_up_via_email
       otp = Otp.new({mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin]})
       user = User.new(mob_num: otp_params[:mob_num])
@@ -23,7 +22,6 @@ class V1::UsersController < ApplicationController
     end
     errors << organisation.errors.values unless organisation.valid?
     errors = errors.flatten(3)
-    errors = Common.process_errors(errors)
     return render json: {errors: errors}, status: 400 if errors.present?
     ApplicationRecord.transaction do
       unless user_sign_up_via_email
@@ -32,7 +30,7 @@ class V1::UsersController < ApplicationController
         otp_record = Otp.find_by({mob_num: otp_params[:mob_num]})
         otp_record.destroy!
       end
-      user.role = User::USER_ROLE_CLIENT if user_sign_up_via_email
+      user.role = User::USER_ROLE_CLIENT
       user.save!
       organisation.owner_id = user.id
       organisation.created_by = user.id
@@ -121,7 +119,7 @@ class V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :mob_num, :name) if params[:user]
+    params.require(:user).permit(:email, :password, :mob_num, :name, :address, :city, :state_code) if params[:user]
   end
 
   def organisation_params

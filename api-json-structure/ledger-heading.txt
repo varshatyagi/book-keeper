@@ -62,3 +62,57 @@ Response :
     }
   ],
 }
+
+
+Description : To create ledger headings
+Request Url : http://localhost:3000/v1/ledger_headings
+Method: POST
+Status: 200
+Body:
+{
+	"ledger_heading": {
+    	"name": "income",
+      	"transaction_type": "debit",
+      	"revenue": "",
+      	"asset": ""
+    }
+}
+Response :
+
+{
+"response": true
+}
+
+
+
+Description : To update ledger headings
+Request Url : http://localhost:3000/v1/ledger_headings
+Method: PUT
+Status: 200
+Body:
+{
+	"ledger_heading": {
+    	"name": "income",
+      	"transaction_type": "debit",
+      	"revenue": "",
+      	"asset": ""
+    }
+}
+Response :
+
+{
+"response": true
+}
+
+
+
+Description : To delete ledger headings
+Request Url : http://localhost:3000/v1/ledger_headings/1
+Method: Delete
+Status: 200
+Body:
+Response :
+
+{
+"response": true
+}

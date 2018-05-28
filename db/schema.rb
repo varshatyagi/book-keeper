@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180523101756) do
+ActiveRecord::Schema.define(version: 20180525115438) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -70,11 +70,11 @@ ActiveRecord::Schema.define(version: 20180523101756) do
 
   create_table "ledger_headings", force: :cascade do |t|
     t.string   "name"
-    t.boolean  "revenue"
+    t.boolean  "revenue",          default: false
     t.string   "transaction_type"
-    t.boolean  "asset"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.boolean  "asset",            default: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   create_table "org_balances", force: :cascade do |t|
@@ -94,10 +94,12 @@ ActiveRecord::Schema.define(version: 20180523101756) do
     t.integer  "organisation_id"
     t.integer  "bank_id"
     t.string   "account_num"
-    t.boolean  "deleted"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.boolean  "deleted",         default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.decimal  "bank_balance"
+    t.decimal  "initial_balance", default: "0.0"
+    t.decimal  "financial_year"
   end
 
   create_table "organisations", force: :cascade do |t|
@@ -190,6 +192,8 @@ ActiveRecord::Schema.define(version: 20180523101756) do
     t.datetime "reset_token_at"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.index ["city"], name: "index_users_on_city"
+    t.index ["state_code"], name: "index_users_on_state_code"
   end
 
 end

@@ -33,6 +33,6 @@ class V1::OrganisationsController < ApplicationController
   private
 
   def organisation_params
-    params.require(:organisation).permit(:name, org_bank_accounts_attributes: [:id, :bank_id, :account_num, :bank_balance, :organisation_id])
+    params.require(:organisation).permit(:name, org_bank_accounts_attributes: [:id, :bank_id, :account_num, :bank_balance, :initial_balance, :organisation_id])
   end
 end
