@@ -30,9 +30,27 @@ class V1::OrganisationsController < ApplicationController
     render json: {response: true}, status: 200
   end
 
+  def pl_reports
+    revenue = sum_of_total_rec(Transaction.joins(:ledger_heading).where(ledger_headings: {revenue: true}))
+    asset = sum_of_total_rec(Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true}))
+    render json: {response: {revenue: revenue, asset: asset}}
+  end
+
   private
 
   def organisation_params
     params.require(:organisation).permit(:name, org_bank_accounts_attributes: [:id, :bank_id, :account_num, :bank_balance, :initial_balance, :organisation_id])
+  end
+
+  def sum_of_total_rec(records)
+    return nil if records.blank?
+    transaction_records = []
+    transactions = records.group_by(&:ledger_heading_id)
+    transactions.each do |transaction|
+      transaction[1].collect(&:amount).sum
+      heading = LedgerHeading.find_by(transaction[0]).name
+      transaction_records << {ledger_heading: heading, amount: transaction[1].collect(&:amount).sum}
+    end
+    transaction_records
   end
 end

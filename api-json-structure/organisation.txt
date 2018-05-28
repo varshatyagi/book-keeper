@@ -120,3 +120,35 @@ Response :
     "financial_year_start": null
   }
 }
+
+
+Description : To get organisation P&l report
+Request Url : http://localhost:3000/v1/organisations/1/pl_reports
+Method: GET
+Status: 200
+Response :
+
+{
+    "response": {
+        "revenue": [
+            {
+                "ledger_heading": "salary",
+                "amount": "200.0"
+            },
+            {
+                "ledger_heading": "salary",
+                "amount": "300.0"
+            }
+        ],
+        "asset": [
+            {
+                "ledger_heading": "salary",
+                "amount": "200.0"
+            },
+            {
+                "ledger_heading": "salary",
+                "amount": "100.0"
+            }
+        ]
+    }
+}
