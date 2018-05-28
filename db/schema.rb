@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180528063619) do
+ActiveRecord::Schema.define(version: 20180528104715) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -170,7 +170,7 @@ ActiveRecord::Schema.define(version: 20180528063619) do
   end
 
   create_table "transactions", force: :cascade do |t|
-    t.string   "ledger_heading_id"
+    t.integer  "ledger_heading_id"
     t.decimal  "amount"
     t.string   "remarks"
     t.string   "payment_mode"
