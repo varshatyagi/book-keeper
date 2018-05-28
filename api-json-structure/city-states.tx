@@ -28,7 +28,7 @@ Body:
 
 
 Description : To get city information
-Request Url : http://localhost:3000/v1/cities
+Request Url : http://localhost:3000/v1/cities {?state_code=mh}
 Method: GET
 Status: 200
 Body:

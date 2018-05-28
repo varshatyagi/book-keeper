@@ -1,4 +1,5 @@
 class Plan < ApplicationRecord
+  has_many :organisations
 
   PLAN = {
     "BASIC": "Basic",

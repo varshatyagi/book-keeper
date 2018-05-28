@@ -19,6 +19,11 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #
+# Indexes
+#
+#  index_users_on_city        (city)
+#  index_users_on_state_code  (state_code)
+#
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable

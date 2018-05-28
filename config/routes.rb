@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :cash_transactions
       member do
         get :balance_summary
+        get :pl_reports
       end
     end
 

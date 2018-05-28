@@ -6,7 +6,7 @@
 #  organisation_id :integer
 #  bank_id         :integer
 #  account_num     :string
-#  deleted         :boolean
+#  deleted         :boolean          default(FALSE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  bank_balance    :decimal(, )

@@ -36,7 +36,7 @@ Response :
 
 
 Description : To get single organisation information
-Request Url : http://localhost:3000/v1/organisations/3
+Request Url : http://localhost:3000/v1/organisations/1
 Method: GET
 Status: 200
 Response :
@@ -82,32 +82,23 @@ Request Url : http://localhost:3000/v1/organisations/3/org_bank_accounts
 Method: GET
 Status: 200
 Response :
-
 {
-  "response": [
-    {
-    "id": 2,
-    "bank_balance": "2300.56",
-    "account_num": "200304559092",
-    "organisation_id": 3,
-    "bank": {
-    "id": 3,
-    "name": "Bank Of India"
+  "response": {
+  "id": 1,
+  "name": "org1",
+  "owner_id": 1,
+  "created_by": 1,
+    "owner": {
+    "id": 1,
+    "name": null,
+    "mob_num": "2345678901",
+    "email": null,
+    "role": "client",
+    "city": null,
+    "state": null
     }
-    },
-      {
-    "id": 3,
-    "bank_balance": "2300.56",
-    "account_num": "200304559093",
-    "organisation_id": 3,
-    "bank": {
-    "id": 2,
-    "name": "ICICI Bank"
-    }
-    }
-  ]
+  }
 }
-
 
 
 Description : To get organisation bank balance summary
