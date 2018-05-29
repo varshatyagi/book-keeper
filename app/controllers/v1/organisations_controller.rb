@@ -31,8 +31,8 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def reports
-    to = Time.at(params[:to].to_i) if params[:to].present?
-    from = Time.at(params[:from].to_i) if params[:from].present?
+    to = Time.at(params[:to].to_i/1000) if params[:to].present?
+    from = Time.at(params[:from].to_i/1000) if params[:from].present?
 
     case params[:type]
     when "pl"
