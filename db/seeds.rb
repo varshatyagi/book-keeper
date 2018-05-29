@@ -102,7 +102,7 @@ City.create(state_code: "MP", name: "Bhopal")
 # ActiveRecord::Migration.drop_table(:org_bank_accounts)
 # ActiveRecord::Migration.create_table(:org_bank_accounts)
 #
-ActiveRecord::Migration.drop_table(:transactions)
+# ActiveRecord::Migration.drop_table(:transactions)
 # ActiveRecord::Migration.create_table(:transactions)
 #
 # ActiveRecord::Migration.drop_table(:organisations)
