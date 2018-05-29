@@ -87,7 +87,7 @@ class V1::OrganisationsController < ApplicationController
     transaction_records = []
     transactions.each do |transaction|
       transaction[1].collect(&:amount).sum
-      heading = LedgerHeading.find_by(transaction[0]).name
+      heading = LedgerHeading.find_by(transaction[0].to_s).name
       transaction_records << {ledger_heading: heading, amount: transaction[1].collect(&:amount).sum}
     end
     transaction_records
