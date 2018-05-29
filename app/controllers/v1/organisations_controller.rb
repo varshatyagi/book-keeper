@@ -1,6 +1,6 @@
 class V1::OrganisationsController < ApplicationController
 
-  before_action :require_user
+  # before_action :require_user
   # before_action :require_admin_or_organisation_owner
 
   def index
@@ -39,8 +39,8 @@ class V1::OrganisationsController < ApplicationController
       data = pl_report(to, from)
       return render json: {response: data}
     when "ledger"
-      ledger_heading_report(to, from)
-      return render json: {response: data.flatten(2)}
+      data = ledger_heading_report(to, from)
+      return render json: {response: data}
     when "balance_sheet"
       balance_sheet_report
     else
@@ -76,8 +76,8 @@ class V1::OrganisationsController < ApplicationController
       scope = scope.where(created_at: from..to)
     end
     transactions = []
-    records.each do |record|
-      heading = LedgerHeading.find_by(record.ledger_heading_id.to_s)
+    scope.each do |record|
+      heading = LedgerHeading.find_by(record.ledger_heading_id)
       transactions << {ledger_heading: heading.name, txn_date: record.txn_date, transaction_type: heading.transaction_type}
     end
     transactions
@@ -87,7 +87,7 @@ class V1::OrganisationsController < ApplicationController
     transaction_records = []
     transactions.each do |transaction|
       transaction[1].collect(&:amount).sum
-      heading = LedgerHeading.find_by(transaction[0].to_s).name
+      heading = LedgerHeading.find_by(transaction[0]).name
       transaction_records << {ledger_heading: heading, amount: transaction[1].collect(&:amount).sum}
     end
     transaction_records
