@@ -171,21 +171,6 @@ ActiveRecord::Schema.define(version: 20180529052520) do
     t.string "name"
   end
 
-  create_table "transactions", force: :cascade do |t|
-    t.integer  "ledger_heading_id"
-    t.decimal  "amount"
-    t.string   "remarks"
-    t.string   "payment_mode"
-    t.datetime "txn_date"
-    t.string   "status"
-    t.integer  "created_by"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.integer  "org_bank_account_id"
-    t.integer  "organisation_id"
-    t.integer  "alliance_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.integer  "organisation_id"
     t.string   "name"
