@@ -19,7 +19,7 @@ class OrgBankAccount < ApplicationRecord
   validates_presence_of :account_num, message: "Please enter valid Account Number"
   validates_presence_of :bank_id
 
-  after_commit :update_total_bank_balance
+  after_create :update_total_bank_balance
 
   private
   def update_total_bank_balance
