@@ -60,8 +60,8 @@ class V1::OrganisationsController < ApplicationController
     rec_hash[:revenue] = Transaction.joins(:ledger_heading).where(ledger_headings: {revenue: true})
     rec_hash[:asset] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true})
     if to.present? && from.present?
-      rec_hash[:revenue] = rec_hash[:revenue].where(created_at: from..to)
-      rec_hash[:asset] = rec_hash[:asset].where(created_at: from..to)
+      rec_hash[:revenue] = rec_hash[:revenue].where(txn_date: from..to)
+      rec_hash[:asset] = rec_hash[:asset].where(txn_date: from..to)
     end
     return nil if rec_hash.blank?
     rec_hash.each do |key, value|
