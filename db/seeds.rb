@@ -88,9 +88,7 @@
 #
 # ActiveRecord::Migration.drop_table(:banks)
 # ActiveRecord::Migration.create_table(:banks)
-#
-# ActiveRecord::Migration.drop_table(:cash_transactions)
-# ActiveRecord::Migration.create_table(:cash_transactions)
+
 #
 # ActiveRecord::Migration.drop_table(:cities)
 # ActiveRecord::Migration.create_table(:cities)
@@ -104,8 +102,8 @@
 # ActiveRecord::Migration.drop_table(:org_bank_accounts)
 # ActiveRecord::Migration.create_table(:org_bank_accounts)
 #
-# ActiveRecord::Migration.drop_table(:transactions)
-# ActiveRecord::Migration.create_table(:transactions)
+ActiveRecord::Migration.drop_table(:transactions)
+ActiveRecord::Migration.create_table(:transactions)
 #
 # ActiveRecord::Migration.drop_table(:organisations)
 # ActiveRecord::Migration.create_table(:organisations)

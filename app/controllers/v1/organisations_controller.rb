@@ -40,17 +40,12 @@ class V1::OrganisationsController < ApplicationController
       return render json: {response: data}
     when "ledger"
       ledger_heading_report(to, from)
-      # data = []
-      # rec_hash.each do |key, value|
-      #   data << ledger_heading_report(key, value)
-      # end
       return render json: {response: data.flatten(2)}
     when "balance_sheet"
       balance_sheet_report
     else
       return render json: {errors: ['Please provide report type']}
     end
-    render json: {revenue: revenue_rec, asset: asset_rec}
   end
 
   private
@@ -97,4 +92,5 @@ class V1::OrganisationsController < ApplicationController
     end
     transaction_records
   end
+
 end
