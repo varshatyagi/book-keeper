@@ -61,12 +61,12 @@ class V1::UsersController < ApplicationController
   def login
     if otp_params.present?
       has_user_obj = login_via_otp(otp_params)
-      render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
-      render json: has_user_obj
+      return render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
+      return render json: has_user_obj
     elsif user_params.present?
       has_user_obj = login_via_email(user_params)
-      render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
-      render json: has_user_obj
+      return render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
+      return render json: has_user_obj
     else
       render json: {errors: ['Your are not authorized to access this resource']}, status: 401
     end
