@@ -10,8 +10,8 @@
 # LedgerHeading.create(name: 'Prop Capital', revenue: 0, transaction_type: 'debit' , asset: 1)
 # LedgerHeading.create(name: 'Discount', revenue: true, transaction_type: 'debit' , asset: false)
 # LedgerHeading.create(name: 'xyz', revenue: true, transaction_type: 'credit' , asset: false)
-LedgerHeading.create(name: 'Debit Transaction', revenue: false, transaction_type: 'cash_transaction' , asset: false)
-LedgerHeading.create(name: 'Credit Transaction', revenue: false, transaction_type: 'cash_transaction' , asset: false)
+# LedgerHeading.create(name: 'Debit Transaction', revenue: false, transaction_type: 'cash_transaction' , asset: false)
+# LedgerHeading.create(name: 'Credit Transaction', revenue: false, transaction_type: 'cash_transaction' , asset: false)
 #### End of LedgerHeading seed data ####
 
 

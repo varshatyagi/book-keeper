@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180528104715) do
+ActiveRecord::Schema.define(version: 20180529052520) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -111,8 +111,9 @@ ActiveRecord::Schema.define(version: 20180528104715) do
     t.string   "status"
     t.integer  "created_by"
     t.integer  "owner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.integer  "active_plan_id"
     t.index ["name"], name: "index_organisations_on_name", unique: true
     t.index ["owner_id"], name: "index_organisations_on_owner_id"
   end
@@ -133,6 +134,7 @@ ActiveRecord::Schema.define(version: 20180528104715) do
     t.datetime "plan_start_date"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.datetime "plan_end_date"
   end
 
   create_table "sp_entries", force: :cascade do |t|
