@@ -10,7 +10,7 @@ class V1::TransactionsController < ApplicationController
       transaction.created_by = @current_user[:id]
       transaction.txn_date = Time.now unless transaction_params[:txn_date].present?
       transaction.organisation_id = params[:organisation_id]
-      transaction.ledger_heading_id = transaction_params[:ledger_heading_id].to_i
+      # transaction.ledger_heading_id = transaction_params[:ledger_heading_id].to_i
       transaction.save!
       render json: {response: true}
     end
