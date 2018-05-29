@@ -46,7 +46,6 @@ class V1::OrganisationsController < ApplicationController
     else
       return render json: {errors: ['Please provide report type']}
     end
-    render json: {revenue: revenue_rec, asset: asset_rec}
   end
 
   private
@@ -93,4 +92,5 @@ class V1::OrganisationsController < ApplicationController
     end
     transaction_records
   end
+
 end
