@@ -94,7 +94,15 @@ class V1::UsersController < ApplicationController
   def otp
     return render json: {errors: ['Mobile number is not registered']}, status: 400 if otp_params[:mob_num].blank?
     otp_record = Otp.find_by({mob_num: otp_params[:mob_num]})
-    return render json: {response: {otp_pin: otp_record.otp_pin}} if otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
+    is_expired = false
+    if otp_record.present?
+      is_expired = (Time.now.to_i - otp_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
+    end
+    if is_expired
+      otp_record.destroy
+      return render json: {errors: ['Otp has been expired']}
+    end
+    return render json: {response: {otp_pin: otp_record.otp_pin}} if !is_expired && otp_record.present?
     render json: {response: generate_otp_pin(otp_params[:mob_num])}
   end
 
