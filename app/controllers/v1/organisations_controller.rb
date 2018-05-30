@@ -42,7 +42,7 @@ class V1::OrganisationsController < ApplicationController
       data = prepare_report_records(to, from, rec_hash)
       return render json: {response: data}
 
-    when "ledger_headings"
+    when "ledger"
       data = []
       data = ledger_heading_report(to, from)
       org_rec = OrgBalance.find_by(organisation_id: params[:id])
