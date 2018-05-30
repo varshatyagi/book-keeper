@@ -43,7 +43,6 @@ class V1::OrganisationsController < ApplicationController
       return render json: {response: data}
 
     when "ledger"
-      data = []
       data = ledger_heading_report(to, from)
       return render json: {response: data}
 
@@ -89,7 +88,7 @@ class V1::OrganisationsController < ApplicationController
     transactions = []
     scope.each do |record|
       heading = LedgerHeading.find_by(id: record.ledger_heading_id)
-      transactions << {ledger_heading: heading.name, txn_date: record.txn_date, transaction_type: heading.transaction_type}
+      transactions << {ledger_heading: heading.name, txn_date: record.txn_date, transaction_type: heading.transaction_type, amount: record.amount}
     end
     transactions
   end
