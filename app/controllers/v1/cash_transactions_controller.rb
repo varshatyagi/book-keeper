@@ -17,7 +17,7 @@ class V1::CashTransactionsController < ApplicationController
         cash_transaction.ledger_heading_id = ledger_id
       else
         cash_transaction.withdrawal = false
-        ledger_id = LedgerHeading.find_by(name: "credit Transaction").id
+        ledger_id = LedgerHeading.find_by(name: "Credit Transaction").id
         cash_transaction.ledger_heading_id = ledger_id
       end
       cash_transaction.txn_date = Time.now unless cash_transactions_params[:txn_date].present?
