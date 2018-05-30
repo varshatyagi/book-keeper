@@ -31,8 +31,8 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def reports
-    to = params[:to] if params[:to].present?
-    from = params[:from] if params[:from].present?
+    to = Time.at(params[:to].to_i/1000) if params[:to].present?
+    from = Time.at(params[:from].to_i/1000) if params[:from].present?
     rec_hash = Hash.new
 
     case params[:type]
@@ -66,6 +66,7 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def prepare_report_records(to, from, rec_hash)
+    byebug
     data = Hash.new
     if to.present? && from.present?
       rec_hash[:income] = rec_hash[:income].where(txn_date: from..to)
