@@ -52,7 +52,7 @@ class V1::UsersController < ApplicationController
   end
 
   def update
-    raise 'Requested Uesr is not found' unless User.find_by!(id: params[:id]).present?
+    raise 'Requested Uesr is not found' unless User.find_by(id: params[:id]).present?
     user = User.find_by(id: params[:id])
     user = user.update_attributes!(user_params)
     render json: {response: user}
@@ -73,7 +73,7 @@ class V1::UsersController < ApplicationController
   end
 
   def login_via_email(options)
-    raise 'User is not registered with provided email id' if User.find_by!(email: options[:email])
+    raise 'User is not registered with provided email id' unless User.find_by(email: options[:email])
     user = User.find_by(email: options[:email])
     return {errors: ['password is not valid']} unless user.present? && (user.valid_password? options[:password])
     generate_token(user)
