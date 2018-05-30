@@ -23,6 +23,10 @@
 # Bank.create(name: "Oriental Bank")
 #### End of Bank seed data ####
 
+# PaymentMode.create(name: "credit")
+# PaymentMode.create(name: "debit")
+# PaymentMode.create(name: "bank")
+
 
 #### states seed data ####
 # State.create(code: "JK", name: "Jammu & Kashmir")
