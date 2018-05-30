@@ -66,7 +66,6 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def prepare_report_records(to, from, rec_hash)
-    byebug
     data = Hash.new
     if to.present? && from.present?
       rec_hash[:income] = rec_hash[:income].where(txn_date: from..to)
