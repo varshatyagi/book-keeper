@@ -43,8 +43,11 @@ class V1::OrganisationsController < ApplicationController
       return render json: {response: data}
 
     when "ledger_headings"
+      data = []
       data = ledger_heading_report(to, from)
-      return render json: {response: data}
+      org_rec = OrgBalance.find_by(organisation_id: params[:id])
+      bank_details = {cash_balance: org_rec.cash_balance, bank_balance: org_rec.bank_balance}
+      return render json: {response: {ledger_heads: data, bank_details: bank_details}}
 
     when "balance_sheet"
       rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "credit"})
