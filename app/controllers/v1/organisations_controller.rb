@@ -31,8 +31,8 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def reports
-    to = Time.at(params[:to].to_i/1000) if params[:to].present?
-    from = Time.at(params[:from].to_i/1000) if params[:from].present?
+    to = params[:to] if params[:to].present?
+    from = params[:from] if params[:from].present?
     rec_hash = Hash.new
 
     case params[:type]

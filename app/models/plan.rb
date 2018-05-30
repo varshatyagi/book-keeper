@@ -1,4 +1,4 @@
 class Plan < ApplicationRecord
   has_many :organisations
-  enum plan: [ :basic, :essential, :accountant, :enterprise ]
+  enum status: {basic: 1, essential: 2, accountant: 3, enterprise: 4}
 end
