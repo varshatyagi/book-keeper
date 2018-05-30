@@ -31,30 +31,25 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def reports
-    to = Date.parse(params[:to]) if params[:to].present?
-    from = Date.parse(params[:from]) if params[:from].present?
-    rec_hash = Hash.new
-    case params[:type]
+    from_date = Date.parse(params[:from]) if params[:from].present?
+    to_date = Date.parse(params[:to]) if params[:to].present?
+
+    case params[:report_type]
     when "pl"
-      rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {revenue: true, transaction_type: "credit"})
-      rec_hash[:expense] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "debit"})
-      data = prepare_report_records(to, from, rec_hash)
-      return render json: {response: data}
-
-    when "ledger"
-      data = ledger_heading_report(to, from)
-      return render json: {response: data}
-
+      render json: {response: prepare_pl_report_data(from_date, to_date)}
+    when "account_ledger"
+      data = prepare_account_ledger_report_data(from_date, to_date)
+      render json: {response: data}
     when "balance_sheet"
       rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "credit"})
       rec_hash[:expense] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "debit"})
       data = prepare_report_records(to, from, rec_hash)
       org_rec = OrgBalance.find_by(organisation_id: params[:id])
       bank_details = {cash_balance: org_rec.cash_balance, bank_balance: org_rec.bank_balance}
-      return render json: {response: {data: data, bank_details: bank_details}}
 
+      render json: {response: {data: data, bank_details: bank_details}}
     else
-      return render json: {errors: ['Please provide report type']}
+      render json: {errors: ['Please provide report type']}
     end
   end
 
@@ -64,45 +59,50 @@ class V1::OrganisationsController < ApplicationController
     params.require(:organisation).permit(:name, org_bank_accounts_attributes: [:id, :bank_id, :account_num, :bank_balance, :initial_balance, :organisation_id])
   end
 
-  def prepare_report_records(to, from, rec_hash)
-    data = Hash.new
-    if to.present? && from.present?
-      rec_hash[:income] = rec_hash[:income].where("date(txn_date) >= ? and date(txn_date) <= ?", from, to)
-      rec_hash[:expense] = rec_hash[:expense].where("date(txn_date) >= ? and date(txn_date) <= ?", from, to)
-    end
-    return nil if rec_hash.blank?
-    rec_hash.each do |key, value|
-      data[key] = calculate_total_sum(value.group_by(&:ledger_heading_id))
-    end
-    data
-  end
+  def prepare_pl_report_data(from_date, to_date)
+    transactions = {incomes: [], expenses: []}
+    results = Transaction.joins(:ledger_heading).where(ledger_headings: {revenue: true}).group(:ledger_heading_id).sum(:amount)
+    results = results.where("txn_date >= ?", from_date) if from_date.present?
+    results = results.where("txn_date <= ?", to_date) if to_date.present?
 
-  def ledger_heading_report(to, from)
-    if params[:ledger_headings].present?
-      scope = Transaction.where(ledger_heading_id: params[:ledger_headings])
-    else
-      scope = Transaction.all
-    end
-    if to.present? && from.present?
-      scope = scope.where("date(txn_date) >= ? and date(txn_date) <= ?", from, to)
+    ledger_heading_ids = results.keys
+    ledger_heading_by_ids = {}
+    if ledger_heading_ids.present?
+      ledger_headings = LedgerHeading.where(id: ledger_heading_ids)
+      ledger_headings.each do |ledger_heading|
+        ledger_heading_by_ids[ledger_heading.id.to_s] = ledger_heading
+      end
     end
 
-    transactions = []
-    scope.each do |record|
-      heading = LedgerHeading.find_by(id: record.ledger_heading_id)
-      transactions << {ledger_heading: heading.name, txn_date: record.txn_date, transaction_type: heading.transaction_type, amount: record.amount}
+    results.each do |ledger_heading_id, total|
+      ledger_heading = ledger_heading_by_ids[ledger_heading_id.to_s]
+      info = {ledger_heading: ledger_heading.name, amount: total.to_f}
+      if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
+        transactions[:incomes] << info
+      else
+        transactions[:expenses] << info
+      end
     end
     transactions
   end
 
-  def calculate_total_sum(transactions)
-    transaction_records = []
-    transactions.each do |transaction|
-      transaction[1].collect(&:amount).sum
-      heading = LedgerHeading.find(transaction[0]).name
-      transaction_records << {ledger_heading: heading, amount: transaction[1].collect(&:amount).sum}
+  def prepare_account_ledger_report_data(from_date, to_date)
+    scope = Transaction.includes(:ledger_heading).joins(:ledger_heading)
+    if params[:ledger_heading_ids].present?
+      scope = scope.where(ledger_heading_id: params[:ledger_heading_ids])
     end
-    transaction_records
-  end
+    scope = scope.where("txn_date >= ?", from_date) if from_date.present?
+    scope = scope.where("txn_date <= ?", to_date) if to_date.present?
+    scope.order(txn_date: :asc)
 
+    transactions = []
+    scope.each do |transaction|
+      transactions << {
+        ledger_heading: transaction.ledger_heading.name,
+        txn_date: transaction.txn_date.strftime("%d-%m-%Y"),
+        transaction_type: transaction.ledger_heading.transaction_type,
+        amount: transaction.amount.to_f}
+    end
+    transactions
+  end
 end

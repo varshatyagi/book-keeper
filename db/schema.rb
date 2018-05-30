@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180530054711) do
+ActiveRecord::Schema.define(version: 20180530122101) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -76,6 +76,10 @@ ActiveRecord::Schema.define(version: 20180530054711) do
     t.boolean  "asset",            default: false
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
+    t.index ["asset"], name: "index_ledger_headings_on_asset"
+    t.index ["name"], name: "index_ledger_headings_on_name"
+    t.index ["revenue"], name: "index_ledger_headings_on_revenue"
+    t.index ["transaction_type"], name: "index_ledger_headings_on_transaction_type"
   end
 
   create_table "org_balances", force: :cascade do |t|
@@ -89,6 +93,7 @@ ActiveRecord::Schema.define(version: 20180530054711) do
     t.decimal  "credit_balance"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.index ["organisation_id"], name: "index_org_balances_on_organisation_id"
   end
 
   create_table "org_bank_accounts", force: :cascade do |t|
@@ -123,6 +128,7 @@ ActiveRecord::Schema.define(version: 20180530054711) do
     t.string   "mob_num"
     t.string   "otp_pin"
     t.datetime "created_at"
+    t.index ["mob_num", "otp_pin"], name: "index_otps_on_mob_num_and_otp_pin", unique: true
   end
 
   create_table "payment_modes", force: :cascade do |t|
@@ -185,6 +191,8 @@ ActiveRecord::Schema.define(version: 20180530054711) do
     t.integer  "org_bank_account_id"
     t.integer  "organisation_id"
     t.integer  "alliance_id"
+    t.index ["ledger_heading_id"], name: "index_transactions_on_ledger_heading_id"
+    t.index ["txn_date"], name: "index_transactions_on_txn_date"
   end
 
   create_table "users", force: :cascade do |t|
