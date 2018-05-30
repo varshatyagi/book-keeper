@@ -33,17 +33,25 @@ class V1::OrganisationsController < ApplicationController
   def reports
     to = Time.at(params[:to].to_i/1000) if params[:to].present?
     from = Time.at(params[:from].to_i/1000) if params[:from].present?
+    rec_hash = Hash.new
 
     case params[:type]
     when "pl"
-      data = pl_report(to, from)
+      rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {revenue: true, transaction_type: "credit"})
+      rec_hash[:expense] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "debit"})
+      data = prepare_report_records(to, from, rec_hash)
       return render json: {response: data}
+
     when "ledger_headings"
       data = ledger_heading_report(to, from)
       return render json: {response: data}
+
     when "balance_sheet"
-      data = balance_sheet_report(to, from)
+      rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "credit"})
+      rec_hash[:expense] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "debit"})
+      data = prepare_report_records(to, from, rec_hash)
       return render json: {response: data}
+
     else
       return render json: {errors: ['Please provide report type']}
     end
@@ -55,27 +63,8 @@ class V1::OrganisationsController < ApplicationController
     params.require(:organisation).permit(:name, org_bank_accounts_attributes: [:id, :bank_id, :account_num, :bank_balance, :initial_balance, :organisation_id])
   end
 
-  def pl_report(to, from)
-    rec_hash = Hash.new
+  def prepare_report_records(to, from, rec_hash)
     data = Hash.new
-    rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {revenue: true, transaction_type: "credit"})
-    rec_hash[:expense] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "debit"})
-    if to.present? && from.present?
-      rec_hash[:income] = rec_hash[:income].where(txn_date: from..to)
-      rec_hash[:expense] = rec_hash[:expense].where(txn_date: from..to)
-    end
-    return nil if rec_hash.blank?
-    rec_hash.each do |key, value|
-      data[key] = calculate_total_sum(value.group_by(&:ledger_heading_id))
-    end
-    data
-  end
-
-  def balance_sheet_report(to, from)
-    rec_hash = Hash.new
-    data = Hash.new
-    rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "credit"})
-    rec_hash[:expense] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "debit"})
     if to.present? && from.present?
       rec_hash[:income] = rec_hash[:income].where(txn_date: from..to)
       rec_hash[:expense] = rec_hash[:expense].where(txn_date: from..to)
@@ -90,7 +79,6 @@ class V1::OrganisationsController < ApplicationController
   def ledger_heading_report(to, from)
     raise 'Ledger Headings are not found' unless params[:ledger_headings].present?
     scope = Transaction.where(ledger_heading_id: params[:ledger_headings])
-    byebug
     if to.present? && from.present?
       scope = scope.where(created_at: from..to)
     end
