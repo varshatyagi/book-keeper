@@ -10,8 +10,8 @@
 # LedgerHeading.create(name: 'Prop Capital', revenue: 0, transaction_type: 'debit' , asset: 1)
 # LedgerHeading.create(name: 'Discount', revenue: true, transaction_type: 'debit' , asset: false)
 # LedgerHeading.create(name: 'xyz', revenue: true, transaction_type: 'credit' , asset: false)
-LedgerHeading.create(name: 'Debit Transaction', revenue: false, transaction_type: 'cash_transaction' , asset: false)
-LedgerHeading.create(name: 'Credit Transaction', revenue: false, transaction_type: 'cash_transaction' , asset: false)
+# LedgerHeading.create(name: 'Debit Transaction', revenue: 1, transaction_type: 'cash_transaction' , asset: 1)
+# LedgerHeading.create(name: 'Credit Transaction', revenue: 1, transaction_type: 'cash_transaction' , asset: 1)
 #### End of LedgerHeading seed data ####
 
 
@@ -22,6 +22,10 @@ LedgerHeading.create(name: 'Credit Transaction', revenue: false, transaction_typ
 # Bank.create(name: "Corporation Bank")
 # Bank.create(name: "Oriental Bank")
 #### End of Bank seed data ####
+
+# PaymentMode.create(name: "credit")
+# PaymentMode.create(name: "debit")
+# PaymentMode.create(name: "bank")
 
 
 #### states seed data ####
@@ -88,9 +92,7 @@ LedgerHeading.create(name: 'Credit Transaction', revenue: false, transaction_typ
 #
 # ActiveRecord::Migration.drop_table(:banks)
 # ActiveRecord::Migration.create_table(:banks)
-#
-# ActiveRecord::Migration.drop_table(:cash_transactions)
-# ActiveRecord::Migration.create_table(:cash_transactions)
+
 #
 # ActiveRecord::Migration.drop_table(:cities)
 # ActiveRecord::Migration.create_table(:cities)

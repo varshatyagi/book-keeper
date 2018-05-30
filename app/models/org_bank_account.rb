@@ -17,10 +17,9 @@ class OrgBankAccount < ApplicationRecord
   belongs_to :bank, optional: true
 
   validates_presence_of :account_num, message: "Please enter valid Account Number"
-  validates_uniqueness_of :account_num, message: "Account number should be unique"
   validates_presence_of :bank_id
 
-  after_commit :update_total_bank_balance
+  after_create :update_total_bank_balance
 
   private
   def update_total_bank_balance

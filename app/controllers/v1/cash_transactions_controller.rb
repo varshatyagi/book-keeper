@@ -10,8 +10,16 @@ class V1::CashTransactionsController < ApplicationController
         return render json: {errors: ['Transaction is not valid']}, status: 400
       end
       cash_transaction = CashTransaction.new(cash_transactions_params)
-      cash_transaction.withdrawal = true
-      cash_transaction.withdrawal = false unless params[:type] == "withdrawal"
+
+      if params[:type] == "withdrawal"
+        cash_transaction.withdrawal = true
+        ledger_id = LedgerHeading.find_by(name: "Debit Transaction").id
+        cash_transaction.ledger_heading_id = ledger_id
+      else
+        cash_transaction.withdrawal = false
+        ledger_id = LedgerHeading.find_by(name: "Credit Transaction").id
+        cash_transaction.ledger_heading_id = ledger_id
+      end
       cash_transaction.txn_date = Time.now unless cash_transactions_params[:txn_date].present?
       cash_transaction.organisation_id = params[:organisation_id]
       cash_transaction.save!

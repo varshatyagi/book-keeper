@@ -20,6 +20,7 @@ class CashTransaction < ApplicationRecord
   after_create :update_balance
 
   def update_balance
+    raise 'Organisation not found' unless Organisation.find_by!(id: organisation.id)
     if withdrawal?
       org_bank_account.bank_balance -= amount
       organisation.org_balance.cash_balance += amount

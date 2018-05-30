@@ -27,15 +27,14 @@ class V1::LedgerHeadingsController < ApplicationController
 
   def prepare_ledger_headings
     scope = LedgerHeading.all
+    scope = scope.where.not(transaction_type: "cash_transaction")
     if params[:transaction_type].present?
       scope = scope.where(transaction_type: params[:transaction_type])
     end
     if params[:revenue].present?
-      # TODO: except internal heading return all
       scope = scope.where(revenue: true?(params[:revenue]))
     end
     if params[:asset].present?
-      # TODO: except internal heading return all
       scope = scope.where(asset: true?(params[:asset]))
     end
 
