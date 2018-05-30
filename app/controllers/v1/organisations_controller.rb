@@ -45,15 +45,15 @@ class V1::OrganisationsController < ApplicationController
     when "ledger"
       data = []
       data = ledger_heading_report(to, from)
-      org_rec = OrgBalance.find_by(organisation_id: params[:id])
-      bank_details = {cash_balance: org_rec.cash_balance, bank_balance: org_rec.bank_balance}
-      return render json: {response: {ledger_heads: data, bank_details: bank_details}}
+      return render json: {response: data}
 
     when "balance_sheet"
       rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "credit"})
       rec_hash[:expense] = Transaction.joins(:ledger_heading).where(ledger_headings: {asset: true, transaction_type: "debit"})
       data = prepare_report_records(to, from, rec_hash)
-      return render json: {response: data}
+      org_rec = OrgBalance.find_by(organisation_id: params[:id])
+      bank_details = {cash_balance: org_rec.cash_balance, bank_balance: org_rec.bank_balance}
+      return render json: {response: {data: data, bank_details: bank_details}}
 
     else
       return render json: {errors: ['Please provide report type']}
