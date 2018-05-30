@@ -31,10 +31,9 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def reports
-    to = Time.at(params[:to].to_i/1000) if params[:to].present?
-    from = Time.at(params[:from].to_i/1000) if params[:from].present?
+    to = Date.parse(params[:to]) if params[:to].present?
+    from = Date.parse(params[:from]) if params[:from].present?
     rec_hash = Hash.new
-
     case params[:type]
     when "pl"
       rec_hash[:income] = Transaction.joins(:ledger_heading).where(ledger_headings: {revenue: true, transaction_type: "credit"})
@@ -68,8 +67,8 @@ class V1::OrganisationsController < ApplicationController
   def prepare_report_records(to, from, rec_hash)
     data = Hash.new
     if to.present? && from.present?
-      rec_hash[:income] = rec_hash[:income].where(txn_date: from..to)
-      rec_hash[:expense] = rec_hash[:expense].where(txn_date: from..to)
+      rec_hash[:income] = rec_hash[:income].where("date(txn_date) >= ? and date(txn_date) <= ?", from, to)
+      rec_hash[:expense] = rec_hash[:expense].where("date(txn_date) >= ? and date(txn_date) <= ?", from, to)
     end
     return nil if rec_hash.blank?
     rec_hash.each do |key, value|
@@ -85,7 +84,7 @@ class V1::OrganisationsController < ApplicationController
       scope = Transaction.all
     end
     if to.present? && from.present?
-      scope = scope.where(created_at: from..to)
+      scope = scope.where("date(txn_date) >= ? and date(txn_date) <= ?", from, to)
     end
 
     transactions = []
