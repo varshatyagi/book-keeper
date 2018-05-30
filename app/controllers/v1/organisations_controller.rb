@@ -1,6 +1,6 @@
 class V1::OrganisationsController < ApplicationController
 
-  # before_action :require_user
+  before_action :require_user
   # before_action :require_admin_or_organisation_owner
 
   def index
@@ -79,8 +79,11 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def ledger_heading_report(to, from)
-    raise 'Ledger Headings are not found' unless params[:ledger_headings].present?
-    scope = Transaction.where(ledger_heading_id: params[:ledger_headings])
+    if params[:ledger_headings].present?
+      scope = Transaction.where(ledger_heading_id: params[:ledger_headings])
+    else
+      scope = Transaction.all
+    end
     if to.present? && from.present?
       scope = scope.where(created_at: from..to)
     end
