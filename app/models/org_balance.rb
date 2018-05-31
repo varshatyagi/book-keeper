@@ -14,6 +14,10 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
+# Indexes
+#
+#  index_org_balances_on_organisation_id  (organisation_id)
+#
 
 class OrgBalance < ApplicationRecord
   belongs_to :organisation, optional: true

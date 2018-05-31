@@ -10,6 +10,13 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
+# Indexes
+#
+#  index_ledger_headings_on_asset             (asset)
+#  index_ledger_headings_on_name              (name)
+#  index_ledger_headings_on_revenue           (revenue)
+#  index_ledger_headings_on_transaction_type  (transaction_type)
+#
 
 class LedgerHeading < ApplicationRecord
 

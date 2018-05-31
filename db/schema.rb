@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180530122101) do
+ActiveRecord::Schema.define(version: 20180531035451) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20180530122101) do
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
     t.integer  "organisation_id"
+    t.index ["organisation_id"], name: "index_alliances_on_organisation_id"
   end
 
   create_table "banks", force: :cascade do |t|
@@ -49,6 +50,10 @@ ActiveRecord::Schema.define(version: 20180530122101) do
     t.datetime "updated_at",          null: false
     t.integer  "organisation_id"
     t.integer  "ledger_heading_id"
+    t.index ["ledger_heading_id"], name: "index_cash_transactions_on_ledger_heading_id"
+    t.index ["org_bank_account_id"], name: "index_cash_transactions_on_org_bank_account_id"
+    t.index ["organisation_id"], name: "index_cash_transactions_on_organisation_id"
+    t.index ["txn_date"], name: "index_cash_transactions_on_txn_date"
   end
 
   create_table "cities", force: :cascade do |t|
@@ -120,6 +125,7 @@ ActiveRecord::Schema.define(version: 20180530122101) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "active_plan_id"
+    t.index ["active_plan_id"], name: "index_organisations_on_active_plan_id"
     t.index ["name"], name: "index_organisations_on_name", unique: true
     t.index ["owner_id"], name: "index_organisations_on_owner_id"
   end
@@ -142,6 +148,8 @@ ActiveRecord::Schema.define(version: 20180530122101) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.datetime "plan_end_date"
+    t.index ["organisation_id"], name: "index_plans_on_organisation_id"
+    t.index ["plan_start_date"], name: "index_plans_on_plan_start_date"
   end
 
   create_table "sp_entries", force: :cascade do |t|
@@ -211,6 +219,7 @@ ActiveRecord::Schema.define(version: 20180530122101) do
     t.datetime "reset_token_at"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.index ["organisation_id"], name: "index_users_on_organisation_id"
   end
 
 end

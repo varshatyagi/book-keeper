@@ -21,8 +21,7 @@
 #
 # Indexes
 #
-#  index_users_on_city        (city)
-#  index_users_on_state_code  (state_code)
+#  index_users_on_organisation_id  (organisation_id)
 #
 
 class User < ApplicationRecord

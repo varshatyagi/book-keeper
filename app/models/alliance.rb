@@ -22,6 +22,10 @@
 #  updated_at           :datetime         not null
 #  organisation_id      :integer
 #
+# Indexes
+#
+#  index_alliances_on_organisation_id  (organisation_id)
+#
 
 class Alliance < ApplicationRecord
   belongs_to :organisation, optional: true

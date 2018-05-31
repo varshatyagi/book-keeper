@@ -3,7 +3,7 @@
 # Table name: transactions
 #
 #  id                  :integer          not null, primary key
-#  ledger_heading_id   :string
+#  ledger_heading_id   :integer
 #  amount              :decimal(, )
 #  remarks             :string
 #  payment_mode        :string
@@ -15,6 +15,11 @@
 #  org_bank_account_id :integer
 #  organisation_id     :integer
 #  alliance_id         :integer
+#
+# Indexes
+#
+#  index_transactions_on_ledger_heading_id  (ledger_heading_id)
+#  index_transactions_on_txn_date           (txn_date)
 #
 
 class Transaction < ApplicationRecord

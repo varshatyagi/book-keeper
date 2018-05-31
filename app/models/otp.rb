@@ -7,6 +7,10 @@
 #  otp_pin    :string
 #  created_at :datetime
 #
+# Indexes
+#
+#  index_otps_on_mob_num_and_otp_pin  (mob_num,otp_pin) UNIQUE
+#
 
 class Otp < ApplicationRecord
 
