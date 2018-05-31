@@ -3,7 +3,7 @@
 # Table name: cash_transactions
 #
 #  id                  :integer          not null, primary key
-#  amount              :decimal(, )
+#  amount              :decimal(10, 2)
 #  org_bank_account_id :integer
 #  withdrawal          :boolean
 #  txn_date            :datetime

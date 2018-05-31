@@ -4,13 +4,13 @@
 #
 #  id                     :integer          not null, primary key
 #  organisation_id        :integer
-#  cash_opening_balance   :decimal(, )
-#  bank_opening_balance   :decimal(, )
-#  credit_opening_balance :decimal(, )
+#  cash_opening_balance   :decimal(10, 2)
+#  bank_opening_balance   :decimal(10, 2)
+#  credit_opening_balance :decimal(10, 2)
 #  financial_year_start   :datetime
-#  cash_balance           :decimal(, )
-#  bank_balance           :decimal(, )
-#  credit_balance         :decimal(, )
+#  cash_balance           :decimal(10, 2)
+#  bank_balance           :decimal(10, 2)
+#  credit_balance         :decimal(10, 2)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
