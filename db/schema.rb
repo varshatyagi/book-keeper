@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180531035451) do
+ActiveRecord::Schema.define(version: 20180531081947) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -41,13 +41,13 @@ ActiveRecord::Schema.define(version: 20180531035451) do
   end
 
   create_table "cash_transactions", force: :cascade do |t|
-    t.decimal  "amount"
+    t.decimal  "amount",              precision: 10, scale: 2
     t.integer  "org_bank_account_id"
     t.boolean  "withdrawal"
     t.datetime "txn_date"
     t.string   "remarks"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
     t.integer  "organisation_id"
     t.integer  "ledger_heading_id"
     t.index ["ledger_heading_id"], name: "index_cash_transactions_on_ledger_heading_id"
@@ -69,9 +69,9 @@ ActiveRecord::Schema.define(version: 20180531035451) do
     t.string   "name"
     t.integer  "categaory_id"
     t.boolean  "goods"
-    t.decimal  "rate"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.decimal  "rate",         precision: 10, scale: 2
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
   create_table "ledger_headings", force: :cascade do |t|
@@ -89,15 +89,15 @@ ActiveRecord::Schema.define(version: 20180531035451) do
 
   create_table "org_balances", force: :cascade do |t|
     t.integer  "organisation_id"
-    t.decimal  "cash_opening_balance"
-    t.decimal  "bank_opening_balance"
-    t.decimal  "credit_opening_balance"
+    t.decimal  "cash_opening_balance",   precision: 10, scale: 2
+    t.decimal  "bank_opening_balance",   precision: 10, scale: 2
+    t.decimal  "credit_opening_balance", precision: 10, scale: 2
     t.datetime "financial_year_start"
-    t.decimal  "cash_balance"
-    t.decimal  "bank_balance"
-    t.decimal  "credit_balance"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.decimal  "cash_balance",           precision: 10, scale: 2
+    t.decimal  "bank_balance",           precision: 10, scale: 2
+    t.decimal  "credit_balance",         precision: 10, scale: 2
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.index ["organisation_id"], name: "index_org_balances_on_organisation_id"
   end
 
@@ -160,10 +160,10 @@ ActiveRecord::Schema.define(version: 20180531035451) do
     t.string   "party"
     t.string   "mob_num"
     t.string   "payment_mode"
-    t.decimal  "gst_total"
+    t.decimal  "gst_total",    precision: 10, scale: 2
     t.integer  "created_by"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
   end
 
   create_table "sp_entry_items", force: :cascade do |t|
@@ -171,14 +171,14 @@ ActiveRecord::Schema.define(version: 20180531035451) do
     t.string   "item_name"
     t.string   "status"
     t.integer  "quanity"
-    t.decimal  "amount"
+    t.decimal  "amount",                precision: 10, scale: 2
     t.integer  "gst_master_id"
-    t.decimal  "gst_amt"
-    t.decimal  "gst_rate"
+    t.decimal  "gst_amt",               precision: 10, scale: 2
+    t.decimal  "gst_rate",              precision: 10, scale: 2
     t.datetime "gst_rate_updated_when"
     t.integer  "created_by"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
   create_table "states", force: :cascade do |t|
@@ -188,14 +188,14 @@ ActiveRecord::Schema.define(version: 20180531035451) do
 
   create_table "transactions", force: :cascade do |t|
     t.integer  "ledger_heading_id"
-    t.decimal  "amount"
+    t.decimal  "amount",              precision: 10, scale: 2
     t.string   "remarks"
     t.string   "payment_mode"
     t.datetime "txn_date"
     t.string   "status"
     t.integer  "created_by"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
     t.integer  "org_bank_account_id"
     t.integer  "organisation_id"
     t.integer  "alliance_id"

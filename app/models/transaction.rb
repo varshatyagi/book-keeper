@@ -4,7 +4,7 @@
 #
 #  id                  :integer          not null, primary key
 #  ledger_heading_id   :integer
-#  amount              :decimal(, )
+#  amount              :decimal(10, 2)
 #  remarks             :string
 #  payment_mode        :string
 #  txn_date            :datetime
