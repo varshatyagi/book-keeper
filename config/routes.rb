@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     post "otp", controller: 'users', action: :otp
     get "states", controller: 'states', action: :index
     get "cities", controller: 'cities', action: :index
+    get "export_report", controller: 'export_reports', action: :show
 
   end
 end

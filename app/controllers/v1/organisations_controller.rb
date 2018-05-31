@@ -50,6 +50,19 @@ class V1::OrganisationsController < ApplicationController
     end
   end
 
+  def ledger_heading_report_pdf
+    respond_to do |format|
+      format.pdf do
+        pdf = Prawn::Document.new
+        pdf.text "Hellow World!"
+        send_data pdf.render,
+          filename: "export.pdf",
+          type: 'application/pdf',
+          disposition: 'inline'
+      end
+    end
+  end
+
   private
 
   def organisation_params

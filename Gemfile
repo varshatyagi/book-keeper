@@ -15,7 +15,8 @@ gem 'rails_admin', '~> 1.3'
 gem 'jwt'
 gem 'swagger-docs'
 gem 'active_model_serializers'
-
+gem 'prawn'
+gem 'responders'
 
 group :development, :test do
   gem 'sqlite3'
