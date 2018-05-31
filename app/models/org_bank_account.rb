@@ -10,6 +10,8 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  bank_balance    :decimal(, )
+#  initial_balance :decimal(, )      default(0.0)
+#  financial_year  :decimal(, )
 #
 
 class OrgBankAccount < ApplicationRecord

@@ -2,22 +2,24 @@
 #
 # Table name: organisations
 #
-#  id         :integer          not null, primary key
-#  name       :string
-#  org_type   :string
-#  address    :string
-#  city       :string
-#  state_code :string
-#  status     :string
-#  created_by :integer
-#  owner_id   :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id             :integer          not null, primary key
+#  name           :string
+#  org_type       :string
+#  address        :string
+#  city           :string
+#  state_code     :string
+#  status         :string
+#  created_by     :integer
+#  owner_id       :integer
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  active_plan_id :integer
 #
 # Indexes
 #
-#  index_organisations_on_name      (name) UNIQUE
-#  index_organisations_on_owner_id  (owner_id)
+#  index_organisations_on_active_plan_id  (active_plan_id)
+#  index_organisations_on_name            (name) UNIQUE
+#  index_organisations_on_owner_id        (owner_id)
 #
 
 class Organisation < ApplicationRecord

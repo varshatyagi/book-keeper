@@ -11,6 +11,14 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  organisation_id     :integer
+#  ledger_heading_id   :integer
+#
+# Indexes
+#
+#  index_cash_transactions_on_ledger_heading_id    (ledger_heading_id)
+#  index_cash_transactions_on_org_bank_account_id  (org_bank_account_id)
+#  index_cash_transactions_on_organisation_id      (organisation_id)
+#  index_cash_transactions_on_txn_date             (txn_date)
 #
 
 class CashTransaction < ApplicationRecord
