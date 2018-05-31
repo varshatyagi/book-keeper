@@ -34,6 +34,7 @@ class User < ApplicationRecord
   validates_format_of :email, with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, message: "Please provide valid email address", allow_blank: true
   validates_format_of :mob_num, with: /\A\d{10}\z/, message: "Please provide valid mobile number.", allow_blank: true
 
+  before_save :downcase_fields
 
   USER_ROLE_CLIENT = 'client'
   USER_ROLE_ADMIN = 'admin'
@@ -52,4 +53,7 @@ class User < ApplicationRecord
     (Time.now.to_i - reset_token_at.to_i) > TOKEN_EXPIRATION_TIME
   end
 
+  def downcase_fields
+    email.downcase!
+  end
 end
