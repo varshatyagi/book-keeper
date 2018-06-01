@@ -26,7 +26,7 @@ class V1::UsersController < ApplicationController
     return render json: {errors: errors}, status: 400 if errors.present?
     ApplicationRecord.transaction do
       unless user_sign_up_via_email
-        raise 'Either Mobile number or Otp is not correct' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
+        raise 'Mobile Number and OTP combination is invalid' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
         otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
         return render json:  {errors: ['Token is expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
         otp_record.destroy!
@@ -81,9 +81,9 @@ class V1::UsersController < ApplicationController
   end
 
   def login_via_otp(otp_params)
-    raise 'Either Mobile Number or otp is invalid' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
+    raise 'Mobile Number and OTP combination is invalid' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
     otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
-    return {errors: ['Token is expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
+    return {errors: ['OTP has been expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
     raise 'User is not registered with this mobile number' unless User.find_by(mob_num: otp_params[:mob_num])
     user = User.find_by(mob_num: otp_params[:mob_num])
     otp_record.destroy
@@ -93,17 +93,21 @@ class V1::UsersController < ApplicationController
 
   def otp
     return render json: {errors: ['Mobile number is not registered']}, status: 400 if otp_params[:mob_num].blank?
-    otp_record = Otp.find_by({mob_num: otp_params[:mob_num]})
+    otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
     is_expired = false
     if otp_record.present?
       is_expired = (Time.now.to_i - otp_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
     end
     if is_expired
       otp_record.destroy
-      return render json: {errors: ['Otp has been expired']}
     end
-    return render json: {response: {otp_pin: otp_record.otp_pin}} if !is_expired && otp_record.present?
-    render json: {response: generate_otp_pin(otp_params[:mob_num])}
+
+    if !is_expired && otp_record.present?
+      otp_pin = otp_record.otp_pin
+    else
+      otp_pin = generate_otp_pin(otp_params[:mob_num])
+    end
+    render json: {response: {otp_pin: otp_pin}}
   end
 
   private
@@ -125,7 +129,7 @@ class V1::UsersController < ApplicationController
     send_sms.save
     res = Net::HTTP.post_form(uri, 'apikey' => Rails.configuration.SMS[:API_KEY], 'message' => send_sms[:otp_pin], 'numbers' => mob_num, 'test' => true)
     response = JSON.parse(res.body)
-    return {balance: response["balance"], otp_pin: response["message"]["content"]} if response["status"] == "success"
+    return response["message"]["content"] if response["status"] == "success"
     return response
   end
 
