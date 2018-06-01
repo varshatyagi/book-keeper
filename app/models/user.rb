@@ -54,6 +54,6 @@ class User < ApplicationRecord
   end
 
   def downcase_fields
-    email.downcase!
+    email.downcase! if email.present?
   end
 end
