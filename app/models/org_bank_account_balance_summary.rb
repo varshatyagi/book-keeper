@@ -16,7 +16,16 @@ class OrgBankAccountBalanceSummary < ApplicationRecord
   end
 
   def set_financial_year
-    self.financial_year = Time.now if self.financial_year.blank?
+    self.financial_year = calulate_current_financial_year(financial_year) if self.financial_year.blank?
+  end
+
+  def calulate_current_financial_year(financial_year)
+    if financial_year_start.present?
+      financial_year = Time.parse(financial_year).year
+      financial_year = DateTime.new(financial_year, 4, 1, 00, 00, 0)
+    else
+      financial_year = DateTime.new(Date.today.year, 4, 1, 00, 00, 0)
+    end
   end
 
 end

@@ -26,7 +26,10 @@ class OrgBalance < ApplicationRecord
 
   def calulate_current_financial_year
     if financial_year_start.present?
-      financial_year
+      financial_year = Time.parse(financial_year).year
+      financial_year = DateTime.new(financial_year, 4, 1, 00, 00, 0)
+    else
+      financial_year = DateTime.new(Date.today.year, 4, 1, 00, 00, 0)
     end
   end
 end
