@@ -7,17 +7,12 @@ class ApplicationController < ActionController::API
   @current_user = nil
 
   rescue_from ActiveRecord::RecordNotFound do |e|
-    error = e.record.errors.values.flatten(2)
-    error = error[0] if error.kind_of?(Array)
-    error = error[:message] if error.kind_of?(Hash)
-    render json: {errors: [error]}, status: 400
+    render json: {errors: ['Record not found']}, status: 400
   end
 
   rescue_from ActiveRecord::RecordInvalid do |e|
-    error = e.record.errors.values.flatten(2)
-    error = error[0] if error.kind_of?(Array)
-    error = error[:message] if error.kind_of?(Hash)
-    render json: {errors: [error]}, status: 400
+    puts e
+    render json: {errors: ['Record is Invalid']}, status: 400
   end
 
   rescue_from RuntimeError do |e|

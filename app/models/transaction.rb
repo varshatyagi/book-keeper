@@ -37,13 +37,14 @@ class Transaction < ApplicationRecord
   }
 
   def update_balance
-    org_bank_rec = OrgBankAccount.find_by(organisation_id: organisation.id)
+    org_bank_rec = OrgBankAccount.find(org_bank_account_id)
+    org_bank_balance_summary_rec = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_rec.id)
 
     if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
         organisation.org_balance.bank_balance += amount
-        org_bank_rec.bank_balance += amount
-        org_bank_rec.save!
+        org_bank_balance_summary_rec.bank_balance += amount
+        org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
         organisation.org_balance.credit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
@@ -52,8 +53,8 @@ class Transaction < ApplicationRecord
     elsif ledger_heading[:transaction_type] == LedgerHeading::TRANSACTION_TYPE_DEBIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
         organisation.org_balance.bank_balance -= amount
-        org_bank_rec.bank_balance -= amount
-        org_bank_rec.save!
+        org_bank_balance_summary_rec.bank_balance -= amount
+        org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
         organisation.org_balance.credit_balance -= amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH

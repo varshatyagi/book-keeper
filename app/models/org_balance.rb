@@ -21,4 +21,12 @@
 
 class OrgBalance < ApplicationRecord
   belongs_to :organisation, optional: true
+
+  before_create :calulate_current_financial_year
+
+  def calulate_current_financial_year
+    if financial_year_start.present?
+      financial_year
+    end
+  end
 end
