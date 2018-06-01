@@ -124,8 +124,8 @@ class V1::OrganisationsController < ApplicationController
     end
     # add creditors to liabilities
     if credit_debit_transactions.present?
-      transactions[:liabilities] << {ledger_heading: "Creditors", amount: credit_debit_transactions[0].to_f}
-      transactions[:assets] << {ledger_heading: "Debitors", amount: credit_debit_transactions[1].to_f}
+      transactions[:liabilities] << {ledger_heading: "Creditors", amount: credit_debit_transactions["creditors"].to_f}
+      transactions[:assets] << {ledger_heading: "Debitors", amount: credit_debit_transactions["debitors"].to_f}
     end
 
     transactions
