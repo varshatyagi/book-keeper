@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180531122938) do
+ActiveRecord::Schema.define(version: 20180603093134) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -102,13 +102,11 @@ ActiveRecord::Schema.define(version: 20180531122938) do
   end
 
   create_table "org_bank_account_balance_summaries", force: :cascade do |t|
-    t.datetime "financial_year"
     t.integer  "org_bank_account_id"
     t.decimal  "bank_balance"
     t.decimal  "initial_balance"
     t.datetime "created_at",          null: false
     t.datetime "updated_at",          null: false
-    t.index ["financial_year"], name: "index_org_bank_account_balance_summaries_on_financial_year"
   end
 
   create_table "org_bank_accounts", force: :cascade do |t|
@@ -118,6 +116,7 @@ ActiveRecord::Schema.define(version: 20180531122938) do
     t.boolean  "deleted",         default: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.datetime "financial_year"
   end
 
   create_table "organisations", force: :cascade do |t|

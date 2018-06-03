@@ -22,14 +22,10 @@
 class OrgBalance < ApplicationRecord
   belongs_to :organisation, optional: true
 
-  before_create :calulate_current_financial_year
+  before_create :calulate_financial_year
 
-  def calulate_current_financial_year
-    if financial_year_start.present?
-      financial_year = Time.parse(financial_year).year
-      financial_year = DateTime.new(financial_year, 4, 1, 00, 00, 0)
-    else
-      financial_year = DateTime.new(Date.today.year, 4, 1, 00, 00, 0)
-    end
+  def calulate_financial_year
+    Common.calulate_current_financial_year
   end
+
 end

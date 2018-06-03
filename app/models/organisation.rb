@@ -43,7 +43,7 @@ class Organisation < ApplicationRecord
         cash_opening_balance: 0.0,
         bank_opening_balance: 0.0,
         credit_opening_balance: 0.0,
-        financial_year_start: Time.now,
+        financial_year_start: Common.calulate_current_financial_year,
         cash_balance: 0.0,
         bank_balance: 0.0,
         credit_balance: 0.0
