@@ -18,7 +18,6 @@
 # Indexes
 #
 #  index_organisations_on_active_plan_id  (active_plan_id)
-#  index_organisations_on_name            (name) UNIQUE
 #  index_organisations_on_owner_id        (owner_id)
 #
 
@@ -34,7 +33,11 @@ class Organisation < ApplicationRecord
 
   after_create :create_org_balance
 
-  validates_uniqueness_of :name, message: "Business name has already been taken", allow_blank: true
+  validates_uniqueness_of :name, message: "Business name has already been taken", if: :name_present?
+
+  def name_present?
+    name.present?
+  end
 
   def create_org_balance
     OrgBalance.create({

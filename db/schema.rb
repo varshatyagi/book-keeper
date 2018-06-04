@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180603093134) do
+ActiveRecord::Schema.define(version: 20180604052241) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -132,7 +132,6 @@ ActiveRecord::Schema.define(version: 20180603093134) do
     t.datetime "updated_at",     null: false
     t.integer  "active_plan_id"
     t.index ["active_plan_id"], name: "index_organisations_on_active_plan_id"
-    t.index ["name"], name: "index_organisations_on_name", unique: true
     t.index ["owner_id"], name: "index_organisations_on_owner_id"
   end
 
