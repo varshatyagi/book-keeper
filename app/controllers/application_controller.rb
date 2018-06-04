@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   require 'auth'
   require 'common'
   require 'uri'
-
+  
   #before_action :ensure_domain
   @current_user = nil
 
