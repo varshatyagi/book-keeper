@@ -29,17 +29,18 @@ class CashTransaction < ApplicationRecord
 
   def update_balance
     raise 'Organisation not found' unless Organisation.find_by!(id: organisation.id)
+    org_bank_acnt_balance = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_account.id)
     if withdrawal?
-      org_bank_account.bank_balance -= amount
+      org_bank_acnt_balance.bank_balance -= amount
       organisation.org_balance.cash_balance += amount
       organisation.org_balance.bank_balance -= amount
     else
-      org_bank_account.bank_balance += amount
+      org_bank_acnt_balance.bank_balance += amount
       organisation.org_balance.cash_balance -= amount
       organisation.org_balance.bank_balance += amount
     end
 
-    org_bank_account.save!
+    org_bank_acnt_balance.save!
     organisation.org_balance.save!
   end
 end
