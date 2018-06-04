@@ -136,7 +136,15 @@ class V1::UsersController < ApplicationController
   def register_user_via_otp_login(otp_params)
     user = User.new(mob_num: otp_params[:mob_num])
     raise 'Mobile Number is already register' unless user.valid?
-    user.save!
+    if organisation_params.present?
+      organisation = Organisation.new(organisation_params)
+      organisation.valid?
+    end
+    organisation = Organisation.create
+    organisation.owner_id = user.id
+    organisation.save
+    user.organisation_id = organisation.id
+    user.save
   end
 
   def user_params

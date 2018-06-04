@@ -27,7 +27,7 @@ class OrgBankAccount < ApplicationRecord
 
 
   def set_financial_year
-    self.financial_year = Common.calulate_current_financial_year(financial_year) if self.financial_year.blank?
+    self.financial_year = Common.calulate_current_financial_year(fy: financial_year) if self.financial_year.blank?
   end
 
 end

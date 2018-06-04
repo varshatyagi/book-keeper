@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180604052241) do
+ActiveRecord::Schema.define(version: 20180604052848) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -98,6 +98,8 @@ ActiveRecord::Schema.define(version: 20180604052241) do
     t.decimal  "credit_balance",         precision: 10, scale: 2
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
+    t.decimal  "debit_balance",          precision: 10, scale: 2
+    t.decimal  "debit_opening_balance",  precision: 10, scale: 2
     t.index ["organisation_id"], name: "index_org_balances_on_organisation_id"
   end
 

@@ -48,7 +48,9 @@ class Organisation < ApplicationRecord
         financial_year_start: Common.calulate_current_financial_year,
         cash_balance: 0.0,
         bank_balance: 0.0,
-        credit_balance: 0.0
+        credit_balance: 0.0,
+        debit_balance: 0.0,
+        debit_opening_balance: 0.0
       })
   end
 end
