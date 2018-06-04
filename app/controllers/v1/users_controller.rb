@@ -84,7 +84,7 @@ class V1::UsersController < ApplicationController
     raise 'Mobile Number and OTP combination is invalid' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
     otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
     return {errors: ['OTP has been expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
-    raise 'User is not registered with this mobile number' unless User.find_by(mob_num: otp_params[:mob_num])
+    register_user(otp_params) unless User.find_by(mob_num: otp_params[:mob_num])
     user = User.find_by(mob_num: otp_params[:mob_num])
     otp_record.destroy
     generate_token(user)
@@ -131,6 +131,12 @@ class V1::UsersController < ApplicationController
     response = JSON.parse(res.body)
     return response["message"]["content"] if response["status"] == "success"
     return response
+  end
+
+  def register_user(otp_params)
+    user = User.new(mob_num: otp_params[:mob_num])
+    raise 'Mobile Number is already register' unless user.valid?
+    user.save!
   end
 
   def user_params
