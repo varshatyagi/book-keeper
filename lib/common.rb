@@ -1,17 +1,12 @@
 class Common
 
-  STATUS = {
-    "COMPLETED": "Completed",
-    "PENDING": "Pending",
-    "FAILED": "Failed"
-  }
-
-  def self.process_errors(errors)
-    errors.map { |error|  error[:message] }
+  def self.calulate_current_financial_year(fy: nil)
+    if fy.present?
+      fy = Date.parse(fy).year
+      fy = DateTime.new(fy, 4, 1, 00, 00, 0)
+    else
+      fy = DateTime.new(Date.today.year, 4, 1, 00, 00, 0)
+    end
+    fy.to_date
   end
-
-  def self.true?(obj)
-    obj.to_s == "true"
-  end
-
 end

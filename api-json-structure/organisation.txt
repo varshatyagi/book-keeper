@@ -61,10 +61,14 @@ Body:
   "organisation": {
   	"name": "hi",
     "org_bank_accounts_attributes": [
-    	{"id": 4 ,"bank_id": 3, "bank_balance": 2300.56}
+    	{"id": null ,"bank_id": 1, "account_num": "1234567856",
+        "org_bank_account_balance_summaries_attributes": [{"id": null, "initial_balance": 2000, "bank_balance": 2000}]
+      },
+    	{ "id": null ,"bank_id": 1, "account_num": "1234567856",
+        "org_bank_account_balance_summaries_attributes": [{"id": null, "initial_balance": 2000, "bank_balance": 2000}]
+    	}
     ]
   }
-
 }
 
 Response :
