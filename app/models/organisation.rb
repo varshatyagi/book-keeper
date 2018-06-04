@@ -34,8 +34,7 @@ class Organisation < ApplicationRecord
 
   after_create :create_org_balance
 
-  validates_presence_of :name, message: "Please provide your Business name"
-  validates_uniqueness_of :name, message: "Business name has already been taken"
+  validates_uniqueness_of :name, message: "Business name has already been taken", allow_blank: true
 
   def create_org_balance
     OrgBalance.create({
