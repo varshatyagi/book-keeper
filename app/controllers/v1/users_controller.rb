@@ -21,7 +21,7 @@ class V1::UsersController < ApplicationController
       user.status = User::USER_STATUS_PENDING
       user.save
       organisation = Organisation.find(user.organisations.collect(&:id)[0])
-      organisation.update_attributes!(owner_id: user.id)
+      organisation.update_attributes!(owner_id: user.id, is_setup_complete: false)
       user.update_attributes!(organisation_id: organisation.id)
     end
     # TODO do alternate things for email and messages
