@@ -17,13 +17,8 @@ class V1::Admin::PlansController < ApplicationController
       plan.update_attributes!(options)
       organisation.update_attributes!(active_plan_id: plan.plan)
       user = User.find(organisation.owner_id)
-      user.update_attributes!({
-        status: Plan::USER_STATUS_ACTIVE,
-        password: Common.generate_string,
-        password_confirmation: Common.generate_string,
-        is_temporary_password: true
-      })
-      # TODO: send mail to user to send the temporary password
+      user_signup_via_mobile(user) if user.mob_num.present?
+      user_signup_via_email(user) if user.email.present?
     end
     render json: {response: [true]}
   end
@@ -32,5 +27,20 @@ class V1::Admin::PlansController < ApplicationController
 
   def plan_params
     params.require(:plan).permit(:amount, :plan_start_date, :plan_end_date, :plan) if params[:plan]
+  end
+
+  def user_signup_via_mobile(user)
+    # TODO: send mail to user to sign up the user
+    user.update_attributes!(status: Plan::USER_STATUS_ACTIVE)
+  end
+
+  def user_signup_via_email(user)
+    # TODO: send mail to user to sign up the user with is_temporary_password
+    user.update_attributes!({
+      status: Plan::USER_STATUS_ACTIVE,
+      password: Common.generate_string,
+      password_confirmation: Common.generate_string,
+      is_temporary_password: true
+    })
   end
 end

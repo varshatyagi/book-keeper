@@ -8,7 +8,11 @@ Rails.application.routes.draw do
         end
       end
     end
-    resources :users
+    resources :users do
+      member do
+        post :change_password
+      end
+    end
     resources :ledger_headings
     resources :banks
 
