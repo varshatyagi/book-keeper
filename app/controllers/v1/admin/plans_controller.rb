@@ -18,7 +18,7 @@ class V1::Admin::PlansController < ApplicationController
       organisation.update_attributes!(active_plan_id: plan.plan)
       user = User.find(organisation.owner_id)
       user.update_attributes!({
-        status: Plan::USER_STATUS_ACTIVE,
+        status: "active",
         password: Common.generate_string,
         password_confirmation: Common.generate_string,
         is_temporary_password: true

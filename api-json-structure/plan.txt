@@ -6,17 +6,12 @@ Response :
 
 {
   "response": {
-    "user": {
-      "id": 44,
-      "name": "varsha",
-      "mob_num": "2345678905",
-      "email": "tfh@gmail.com",
-      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo0NH0.ajvSfd1zsfo6LmecyCty1pgq1akSkZb55RUwtjJYQmc",
-      "role": "client",
-      "organisation_id": 25,
-      "city": null,
-      "address": null
-    }
+    "id": 1,
+    "organisation_id": 24,
+    "plan_start_date": "2018-06-04T00:00:00.000Z",
+    "plan_end_date": "2019-06-04T00:00:00.000Z",
+    "amount": "3000.0",
+    "plan": 2
   }
 }
 
