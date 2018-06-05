@@ -1,7 +1,7 @@
 class OrgBalanceSerializer < ActiveModel::Serializer
   attributes :id, :organisation_id, :financial_year_start
   attributes :cash_opening_balance, :bank_opening_balance, :credit_opening_balance, :cash_balance
-  attributes :credit_balance, :bank_balance
+  attributes :credit_balance, :bank_balance, :debit_balance, :debit_opening_balance
 
 
   def cash_opening_balance
@@ -26,6 +26,14 @@ class OrgBalanceSerializer < ActiveModel::Serializer
 
   def bank_balance
     object.bank_balance = object.bank_balance.to_f
+  end
+
+  def debit_balance
+    object.debit_balance = object.debit_balance.to_f
+  end
+
+  def debit_opening_balance
+    object.debit_opening_balance = object.debit_opening_balance.to_f
   end
 
 end

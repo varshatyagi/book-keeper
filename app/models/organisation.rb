@@ -27,7 +27,7 @@ class Organisation < ApplicationRecord
   has_many :org_balances, -> { where('org_balances.financial_year_start == ?', Common.calulate_current_financial_year) }
   has_many :cash_transactions
   has_many :transactions
-  belongs_to :plan, optional: true
+  has_one :plan
 
   accepts_nested_attributes_for :org_bank_accounts
   accepts_nested_attributes_for :org_balances

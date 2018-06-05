@@ -16,14 +16,10 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def balance_summary
-    financial_year = Common.calulate_current_financial_year
-    if params[:financial_year].present?
-      financial_year = Common.calulate_current_financial_year(fy: params[:financial_year])
-    end
-    financial_year_end = financial_year + 1.year - 1.day
-    org_balance_rec = OrgBalance.where("organisation_id = ? and (financial_year_start > ? and financial_year_start < ?)", params[:id], financial_year, financial_year_end)
-    return render json: {errors: ['Balanace Summary is not available for this orgnanisation']}, status: 400 if org_balance_rec.blank?
-    render json: {response: org_balance_rec}
+    organisation = Organisation.find(params[:id])
+    org_balances = organisation.org_balances.first
+    return render json: {errors: ['Balanace Summary is not available for this orgnanisation']}, status: 400 if org_balances.blank?
+    render json: {response: OrgBalanceSerializer.new(org_balances).serializable_hash}
   end
 
   def update
