@@ -35,6 +35,6 @@ class V1::AlliancesController < ApplicationController
 
   private
   def alliance_params
-    params.require(:alliance).permit(:name, :gstin, :alliance_type, :mob_num)
+    params.require(:alliance).permit(:name, :gstin, :alliance_type, :mob_num, :email)
   end
 end
