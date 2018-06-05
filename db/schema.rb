@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180604052848) do
+ActiveRecord::Schema.define(version: 20180604114026) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -130,9 +130,12 @@ ActiveRecord::Schema.define(version: 20180604052848) do
     t.string   "status"
     t.integer  "created_by"
     t.integer  "owner_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.integer  "active_plan_id"
+    t.boolean  "is_setup_complete"
+    t.integer  "preferred_plan_id"
+    t.datetime "business_start_date"
     t.index ["active_plan_id"], name: "index_organisations_on_active_plan_id"
     t.index ["owner_id"], name: "index_organisations_on_owner_id"
   end
@@ -152,9 +155,10 @@ ActiveRecord::Schema.define(version: 20180604052848) do
     t.integer  "organisation_id"
     t.integer  "plan"
     t.datetime "plan_start_date"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.datetime "plan_end_date"
+    t.decimal  "amount",          precision: 10, scale: 2
     t.index ["organisation_id"], name: "index_plans_on_organisation_id"
     t.index ["plan_start_date"], name: "index_plans_on_plan_start_date"
   end
@@ -224,8 +228,9 @@ ActiveRecord::Schema.define(version: 20180604052848) do
     t.string   "encrypted_password"
     t.string   "token"
     t.datetime "reset_token_at"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.boolean  "is_temporary_password"
     t.index ["organisation_id"], name: "index_users_on_organisation_id"
   end
 

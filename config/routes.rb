@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
+    namespace :admin do
+      resources :plans do
+        member do
+          get :plan_info
+        end
+      end
+    end
     resources :users
     resources :ledger_headings
     resources :banks
@@ -16,6 +23,7 @@ Rails.application.routes.draw do
       end
     end
 
+    post "signup", controller: 'users', action: :signup
     post "login", controller: 'users', action: :login
     post "otp", controller: 'users', action: :otp
     get "states", controller: 'states', action: :index

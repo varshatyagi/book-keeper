@@ -1,0 +1,42 @@
+Description : To get plan
+Request Url : localhost:3000/v1/admin/plans/1/plan_info
+Method: GET
+Status: 200
+Response :
+
+{
+  "response": {
+    "user": {
+      "id": 44,
+      "name": "varsha",
+      "mob_num": "2345678905",
+      "email": "tfh@gmail.com",
+      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo0NH0.ajvSfd1zsfo6LmecyCty1pgq1akSkZb55RUwtjJYQmc",
+      "role": "client",
+      "organisation_id": 25,
+      "city": null,
+      "address": null
+    }
+  }
+}
+
+Description : To update plan
+Request Url : http://localhost:3000/v1/admin/plans/1
+Method: PUT
+Status: 200
+Body:
+{
+	"plan": {
+		"amount": 3000,
+		"plan_start_date": "4/06/2018",
+		"plan_end_date": null,
+		"plan": 2
+	}
+}
+Response :
+
+{
+  "response": {
+    true
+  }
+}

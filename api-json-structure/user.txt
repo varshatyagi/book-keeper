@@ -108,66 +108,41 @@ Response :
 }
 
 
-Description : To sign up user with email/mobile/otp
-Request Url : http://localhost:3000/v1/users
+Description : To sign up user with email/mobile
+Request Url : http://localhost:3000/v1/signup
 Method: POST
 Status: 400
 Body:
 
 {
-  "user": {
-    "email": "tfh@gmail.com",
-    "password": "1234567",
-    "name": "varsha",
-    "mob_num": "2345678905"
-  },
-  "organisation": {
-    "name": "twe13"
-   }
+	"user": {
+		"mob_num": null,
+		"email": "eeweeee@gmail.com",
+		"organisations_attributes": {
+			"id": null,
+			"preferred_plan_id": 1
+		}
+	}
 }
 
 Response :
 {
-  "errors": [
-      "Please provide valid email address",
-      "Email id has already been taken",
-      "Mobile number has already been taken",
-      "Organisation name has already been taken"
-  ],
-}
-
-
-Description : To sign up user with email/mobile/otp
-Request Url : http://localhost:3000/v1/users
-Method: POST
-Status: 200
-Body:
-
-{
-  "user": {
-    "email": "tfh@gmail.com",
-    "password": "1234567",
-    "name": "varsha",
-    "mob_num": "2345678905"
-  },
-  "organisation": {
-    "name": "twe13"
-   }
-}
-
-Response :
-{
-  "response": {
-    "user": {
-      "id": 44,
-      "name": "varsha",
-      "mob_num": "2345678905",
-      "email": "tfh@gmail.com",
-      "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjo0NH0.ajvSfd1zsfo6LmecyCty1pgq1akSkZb55RUwtjJYQmc",
-      "role": "client",
-      "organisation_id": 25,
-      "city": null,
-      "address": null
+    "response": {
+        "id": 25,
+        "name": null,
+        "mob_num": null,
+        "email": "eeweeee@gmail.com",
+        "token": null,
+        "role": "client",
+        "organisation_id": 22,
+        "city": null,
+        "address": null,
+        "state_code": null,
+        "status": "pending",
+        "is_temporary_password": null,
+        "plan_info": {
+            "preferred_plan_id": 1,
+            "active_plan_id": null
+        }
     }
-  }
 }
