@@ -22,14 +22,15 @@
 #
 
 class Organisation < ApplicationRecord
-  has_many :org_bank_accounts
+  has_many :org_bank_accounts, -> { where('org_bank_account.financial_year == ?', Common.calulate_current_financial_year) }
   belongs_to :user, optional: true, foreign_key: 'owner_id'
-  has_one :org_balance
+  has_many :org_balances, -> { where('org_balances.financial_year_start == ?', Common.calulate_current_financial_year) }
   has_many :cash_transactions
   has_many :transactions
   belongs_to :plan, optional: true
 
   accepts_nested_attributes_for :org_bank_accounts
+  accepts_nested_attributes_for :org_balances
 
   after_create :create_org_balance, :initialize_plan
 

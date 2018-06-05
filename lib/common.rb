@@ -7,7 +7,7 @@ class Common
     else
       fy = DateTime.new(Date.today.year, 4, 1, 00, 00, 0)
     end
-    fy.to_date
+    fy
   end
 
   def self.generate_string

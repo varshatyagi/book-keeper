@@ -4,15 +4,15 @@ class V1::OrganisationsController < ApplicationController
   # before_action :require_admin_or_organisation_owner
 
   def index
-    oraganisations = Organisation.all
-    oraganisations = oraganisations.map {|oraganisation| OrganisationSerializer.new(oraganisation).serializable_hash} if oraganisations.present?
-    render json: {response: oraganisations}
+    organisations = Organisation.all
+    organisations = organisations.map {|organisation| OrganisationSerializer.new(organisation).serializable_hash} if oraganisations.present?
+    render json: {response: organisations}
   end
 
   def show
-    oraganisation = Organisation.find(params[:id]) || not_found
-    oraganisation = OrganisationSerializer.new(oraganisation).serializable_hash
-    render json: {response: oraganisation}
+    organisation = Organisation.find(params[:id]) || not_found
+    organisation = OrganisationSerializer.new(organisation).serializable_hash
+    render json: {response: organisation}
   end
 
   def balance_summary
@@ -27,10 +27,18 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def update
-    render json: {errors: ['Required params are missing']}, status: 400 unless organisation_params.present?
     organisation = Organisation.find(params[:id]) || not_found
+    # here checking the name manually because we are updating the values by nesteda ttributes which throws
+    # errors, cant handle
+    multiple_name_exist = Organisation.where("name = ? and id <> ?", organisation_params[:name], organisation.id)
+    if multiple_name_exist.present?
+      return render json: {errors: ['Organisation name has already been exist']}
+    end
+    options = organisation_params
+    options[:org_balances_attributes][:id] = organisation.org_balances.first.id
+    options[:is_setup_complete] = true
     ApplicationRecord.transaction do
-      organisation.update_attributes!(organisation_params)
+      organisation.update_attributes!(options)
     end
     render json: {response: true}, status: 200
   end
@@ -62,7 +70,7 @@ class V1::OrganisationsController < ApplicationController
   private
 
   def organisation_params
-    params.require(:organisation).permit(:name, org_bank_accounts_attributes: [:id, :bank_id, :account_num, :organisation_id, :financial_year, org_bank_account_balance_summaries_attributes: [:id, :bank_balance, :initial_balance]])
+    params.require(:organisation).permit(:name, :is_setup_complete, :business_start_date, org_balances_attributes: [:id, :cash_balance, :cash_opening_balance], org_bank_accounts_attributes: [:id, :bank_id, :account_num, :organisation_id, :opening_date, :financial_year, org_bank_account_balance_summaries_attributes: [:id, :bank_balance, :opening_balance]])
   end
 
   def prepare_pl_report_data(from_date, to_date, organisation, financial_year_start)
