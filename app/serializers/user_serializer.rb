@@ -12,7 +12,7 @@ class UserSerializer < ActiveModel::Serializer
     if object.status == User::USER_STATUS_PENDING
       return {preferred_plan_id: preferred_id, active_plan_id: active_id}
     elsif object.status == User::USER_STATUS_ACTIVE
-      plan_detail = Plan.find(object.organisation_id)
+      plan_detail = Plan.find_by(organisation_id: object.organisation_id)
       return { preferred_plan_id: preferred_id,
               active_plan_id: active_id,
               plan_start_date: plan_detail.plan_start_date,

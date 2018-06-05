@@ -43,52 +43,82 @@ class V1::UsersController < ApplicationController
 
   def login
     if otp_params.present?
-      has_user_obj = login_via_otp(otp_params)
-      return render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
-      return render json: has_user_obj
+      response = login_via_otp(otp_params)
+      return render json: response, status: 401 if response.kind_of?(Hash) && response[:errors].present?
+      return render json: response
     elsif user_params.present?
-      has_user_obj = login_via_email(user_params)
-      return render json: has_user_obj, status: 401 if has_user_obj.kind_of?(Hash) && has_user_obj[:errors].present?
-      return render json: has_user_obj
+      response = login_via_email(user_params)
+      return render json: response, status: 401 if response.kind_of?(Hash) && response[:errors].present?
+      return render json: response
     else
       render json: {errors: ['Your are not authorized to access this resource']}, status: 401
     end
   end
 
   def login_via_email(options)
-    raise 'User is not registered with provided email id' unless User.find_by(email: options[:email])
     user = User.find_by(email: options[:email])
-    return {errors: ['password is not valid']} unless user.present? && (user.valid_password? options[:password])
-    generate_token(user)
-    return {response: {user: UserSerializer.new(user).serializable_hash}}
+    unless user.present?
+      return render json: {errors: ['User is not registered with provided email id']}
+    end
+
+    unless user.valid_password? options[:password]
+      return render json: {errors: ['password is not valid']}
+    end
+    user.token = generate_token(user)
+    {response: UserSerializer.new(user).serializable_hash}
   end
 
   def login_via_otp(otp_params)
-    raise 'Mobile Number and OTP combination is invalid' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
-    otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
-    return {errors: ['OTP has been expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
-    register_user_via_otp_login(otp_params) unless User.find_by(mob_num: otp_params[:mob_num])
+    # check for present of otp and its validity
+    otp_existing_record = Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
+    unless otp_existing_record.present?
+      return {errors: ['Mobile Number and OTP combination is invalid']}
+    end
+
+    if (Time.now.to_i - otp_existing_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
+      return {errors: ['OTP has been expired']}
+    end
+    # check for present user if it exist
     user = User.find_by(mob_num: otp_params[:mob_num])
-    otp_record.destroy
-    generate_token(user)
-    return {response: {user: UserSerializer.new(user).serializable_hash}}
+    raise 'This mobile number is not register' unless user.present?
+    user.token = generate_token(user)
+    user.is_temporary_password = false
+    {response: UserSerializer.new(user).serializable_hash}
+  end
+
+  def change_password
+    user = User.find(params[:id])
+    options = {}
+    unless user.present?
+      return render json: {errors: ['User is not found']}
+    end
+    if user.is_temporary_password
+      options[:is_temporary_password] = false
+    end
+    options[:password] = user_params[:password]
+    options[:password_confirmation] = user_params[:password]
+    user.update_attributes!(options)
+    render json: {response: UserSerializer.new(user).serializable_hash}
   end
 
   def otp
-    return render json: {errors: ['Mobile number is not registered']}, status: 400 if otp_params[:mob_num].blank?
-    otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
-    is_expired = false
-    if otp_record.present?
-      is_expired = (Time.now.to_i - otp_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
-    end
-    if is_expired
-      otp_record.destroy
-    end
-
-    if !is_expired && otp_record.present?
-      otp_pin = otp_record.otp_pin
+    raise 'Please provide Mobile Number to send otp' unless otp_params[:mob_num].present?
+    otp_existing_record = Otp.find_by(mob_num: otp_params[:mob_num])
+    if otp_existing_record.present?
+      is_expired = (Time.now.to_i - otp_existing_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
+      if is_expired
+        otp_record.destroy
+      elsif !is_expired && otp_existing_record.present?
+        otp_pin = otp_existing_record.otp_pin
+      end
     else
-      otp_pin = generate_otp_pin(otp_params[:mob_num])
+      otp_record = Otp.new(mob_num: otp_params[:mob_num], created_at: Time.now, otp_pin: Common.otp)
+      msg_response = Common.send_sms(otp_record)
+      if msg_response["status"] == "failure"
+        return render json: {errors: msg_response["warnings"]}
+      end
+      otp_pin = msg_response["message"]["content"]
+      otp_record.save!
     end
     render json: {response: {otp_pin: otp_pin}}
   end
@@ -99,43 +129,12 @@ class V1::UsersController < ApplicationController
     jwt = Auth.encode({user: current_user.id, time: Time.now}) # get token
     current_user.token = jwt
     current_user.reset_token_at =  Time.now
-    current_user.save(validate: false)
+    current_user.save()
     current_user
-  end
-
-  def generate_otp_pin(mob_num)
-    requested_url = Rails.configuration.SMS[:URI]
-    uri = URI.parse(requested_url)
-    http = Net::HTTP.start(uri.host, uri.port)
-    request = Net::HTTP::Get.new(uri.request_uri)
-    send_sms = Otp.new(mob_num: mob_num, created_at: Time.now, otp_pin: rand(0000..9999).to_s.rjust(4, "0"))
-    send_sms.save
-    res = Net::HTTP.post_form(uri, 'apikey' => Rails.configuration.SMS[:API_KEY], 'message' => send_sms[:otp_pin], 'numbers' => mob_num, 'test' => true)
-    response = JSON.parse(res.body)
-    return response["message"]["content"] if response["status"] == "success"
-    return response
-  end
-
-  def register_user_via_otp_login(otp_params)
-    user = User.new(mob_num: otp_params[:mob_num])
-    raise 'Mobile Number is already register' unless user.valid?
-    if organisation_params.present?
-      organisation = Organisation.new(organisation_params)
-      organisation.valid?
-    end
-    organisation = Organisation.create
-    organisation.owner_id = user.id
-    organisation.save
-    user.organisation_id = organisation.id
-    user.save
   end
 
   def user_params
     params.require(:user).permit(:email, :password, :mob_num, :name, :address, :city, :state_code) if params[:user]
-  end
-
-  def organisation_params
-    params.require(:organisation).permit(:name) if params[:organisation]
   end
 
   def otp_params
