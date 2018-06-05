@@ -22,7 +22,7 @@
 #
 
 class Organisation < ApplicationRecord
-  has_many :org_bank_accounts, -> { where('org_bank_account.financial_year == ?', Common.calulate_current_financial_year) }
+  has_many :org_bank_accounts, -> { where('org_bank_accounts.financial_year == ?', Common.calulate_current_financial_year) }
   belongs_to :user, optional: true, foreign_key: 'owner_id'
   has_many :org_balances, -> { where('org_balances.financial_year_start == ?', Common.calulate_current_financial_year) }
   has_many :cash_transactions
