@@ -42,30 +42,27 @@ class Transaction < ApplicationRecord
 
     if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
-        organisation.org_balance.bank_balance += amount
+        organisation.org_balance.first.bank_balance += amount
         org_bank_balance_summary_rec.bank_balance += amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_DEBIT
-        organisation.org_balance.debit_balance += amount
+        organisation.org_balance.first.debit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
-        organisation.org_balance.cash_balance += amount
-        # TODO to be discussed
-        # organisation.org_balance.bank_balance -= amount
-        # org_bank_balance_summary_rec.bank_balance -= amount
+        organisation.org_balance.first.cash_balance += amount
       end
     elsif ledger_heading[:transaction_type] == LedgerHeading::TRANSACTION_TYPE_DEBIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
-        organisation.org_balance.bank_balance -= amount
+        organisation.org_balance.first.bank_balance -= amount
         org_bank_balance_summary_rec.bank_balance -= amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
-        organisation.org_balance.credit_balance += amount
+        organisation.org_balance.first.credit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
-        organisation.org_balance.cash_balance -= amount
+        organisation.org_balance.first.cash_balance -= amount
       end
     end
 
-    organisation.org_balance.save!
+    organisation.org_balance.first.save!
   end
 
 end
