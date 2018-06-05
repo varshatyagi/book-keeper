@@ -59,16 +59,24 @@ Body:
 
 {
   "organisation": {
-  	"name": "hi",
+  	"name": "xvf",
+  	"business_start_date": "05/06/2018",
+  	"org_balances_attributes": {
+  		"cash_balance": 5600,
+  		"cash_opening_balance": 7800
+  	},
     "org_bank_accounts_attributes": [
-    	{"id": null ,"bank_id": 1, "account_num": "1234567856",
-        "org_bank_account_balance_summaries_attributes": [{"id": null, "initial_balance": 2000, "bank_balance": 2000}]
-      },
-    	{ "id": null ,"bank_id": 1, "account_num": "1234567856",
-        "org_bank_account_balance_summaries_attributes": [{"id": null, "initial_balance": 2000, "bank_balance": 2000}]
+    	{"id": null ,"bank_id": 1, "account_num": "1234567856", "org_bank_account_balance_summaries_attributes": [{
+    		"id": null, "opening_balance": 2000, "bank_balance": 2000}]
+
+    	},
+    	{ "id": null ,"bank_id": 1, "account_num": "1234567856", "org_bank_account_balance_summaries_attributes": [{
+    		"id": null, "opening_balance": 2000, "bank_balance": 2000}]
     	}
+
     ]
   }
+
 }
 
 Response :
