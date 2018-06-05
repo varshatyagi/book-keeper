@@ -5,44 +5,27 @@ class V1::UsersController < ApplicationController
   require "uri"
   require "json"
 
-
-  def create
-    user_sign_up_via_email = false
-    organisation = Organisation.new(organisation_params)
-    errors = []
-
-    unless otp_params.present?
-      user_sign_up_via_email = true
-      user = User.new(user_params)
-      errors << user.errors.values unless user.valid?
+  def signup
+    user = nil
+    if signup_params[:mob_num].present?
+      user = User.find_by(mob_num: signup_params[:mob_num])
+    elsif signup_params[:email].present?
+      user = User.find_by(email: signup_params[:email])
     end
-    if !user_sign_up_via_email
-      otp = Otp.new({mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin]})
-      user = User.new(mob_num: otp_params[:mob_num])
-      errors << otp.errors.values unless otp.valid?
+    if user.present?
+      return render json: {response: ['Thank you. Admin will contact you for further communication.']}
     end
-    errors << organisation.errors.values unless organisation.valid?
-    errors = errors.flatten(3)
-    return render json: {errors: errors}, status: 400 if errors.present?
     ApplicationRecord.transaction do
-      unless user_sign_up_via_email
-        raise 'Mobile Number and OTP combination is invalid' unless Otp.find_by(mob_num: otp_params[:mob_num], otp_pin: otp_params[:otp_pin])
-        otp_record = Otp.find_by(mob_num: otp_params[:mob_num])
-        return render json:  {errors: ['Token is expired']} unless otp_record.present? && (Time.now.to_i - otp_record.created_at.to_i) < Otp::OTP_EXPIRATION_TIME
-        otp_record.destroy!
-      end
+      user = User.new(signup_params)
       user.role = User::USER_ROLE_CLIENT
-      user.save!
-      organisation.owner_id = user.id
-      organisation.created_by = user.id
-      organisation.save!
-      user.organisation_id = organisation.id
+      user.status = User::USER_STATUS_PENDING
       user.save
+      organisation = Organisation.find(user.organisations.collect(&:id)[0])
+      organisation.update_attributes!(owner_id: user.id)
+      user.update_attributes!(organisation_id: organisation.id)
     end
-    generate_token(user)
-    render json: {response: {user: UserSerializer.new(user).serializable_hash}}, status: 200
-  rescue StandardError => error
-    render json: {errors: [error]}, status: 400
+    # TODO do alternate things for email and messages
+    render json: {response: UserSerializer.new(user).serializable_hash}, status: 200
   end
 
   def show
@@ -157,6 +140,10 @@ class V1::UsersController < ApplicationController
 
   def otp_params
     params.require(:otp).permit(:mob_num, :otp_pin) if params[:otp]
+  end
+
+  def signup_params
+    params.require(:user).permit(:mob_num, :email, :organisation_id, organisations_attributes: [:id, :preferred_plan_id]) if params[:user]
   end
 
 end

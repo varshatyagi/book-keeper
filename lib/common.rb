@@ -9,4 +9,10 @@ class Common
     end
     fy.to_date
   end
+
+  def self.generate_string
+    number = 8
+    charset = Array('A'..'Z') + Array('a'..'z') + Array('1'..'0')
+    Array.new(number) { charset.sample }.join
+  end
 end
