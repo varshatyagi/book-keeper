@@ -17,16 +17,11 @@
 #
 
 class Plan < ApplicationRecord
-  has_many :organisations
+  belongs_to :organisation, optional: true
 
   validates_presence_of :amount, message: "Please enter amount for respective plan"
   validates_presence_of :plan, message: "Please provide plan you want to activate"
   validates_presence_of :plan_start_date, message: "Please provide when you want to start the plan"
 
-  PLAN_ID = {
-    BASIC: 1,
-    ESSENTIAL: 2,
-    ACCOUNTANT: 3,
-    ENTERPRISE: 4
-  }
+  PLAN_NAME = ["Basic", "Essential", "Accountant", "Enterprise"]
 end
