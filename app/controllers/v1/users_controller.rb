@@ -64,8 +64,7 @@ class V1::UsersController < ApplicationController
     unless user.valid_password? options[:password]
       return render json: {errors: ['password is not valid']}
     end
-    user.token = generate_token(user)
-    {response: UserSerializer.new(user).serializable_hash}
+    {response: UserSerializer.new(generate_token(user)).serializable_hash}
   end
 
   def login_via_otp(otp_params)
@@ -81,7 +80,7 @@ class V1::UsersController < ApplicationController
     # check for present user if it exist
     user = User.find_by(mob_num: otp_params[:mob_num])
     raise 'This mobile number is not register' unless user.present?
-    user.token = generate_token(user)
+    user = generate_token(user)
     user.is_temporary_password = false
     {response: UserSerializer.new(user).serializable_hash}
   end
