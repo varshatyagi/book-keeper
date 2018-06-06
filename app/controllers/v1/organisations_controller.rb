@@ -1,6 +1,6 @@
 class V1::OrganisationsController < ApplicationController
 
-  before_action :require_user
+  # before_action :require_user
   # before_action :require_admin_or_organisation_owner
 
   def index
@@ -17,7 +17,7 @@ class V1::OrganisationsController < ApplicationController
 
   def balance_summary
     organisation = Organisation.find(params[:id])
-    org_balances = organisation.org_balances.first
+    org_balances = organisation.org_balances.by_financial_year(Common.calulate_financial_year).first
     return render json: {errors: ['Balanace Summary is not available for this orgnanisation']}, status: 400 if org_balances.blank?
     render json: {response: OrgBalanceSerializer.new(org_balances).serializable_hash}
   end
@@ -26,10 +26,10 @@ class V1::OrganisationsController < ApplicationController
     organisation = Organisation.find(params[:id]) || not_found
     # here checking the name manually because we are updating the values by nesteda ttributes which throws
     # errors, cant handle
-    multiple_name_exist = Organisation.where("name = ? and id <> ?", organisation_params[:name], organisation.id)
-    if multiple_name_exist.present?
-      return render json: {errors: ['Organisation name has already been exist']}
-    end
+    # multiple_name_exist = Organisation.where("name = ? and id <> ?", organisation_params[:name], organisation.id)
+    # if multiple_name_exist.present?
+    #   return render json: {errors: ['Organisation name has already been exist']}
+    # end
     options = organisation_params
     options[:org_balances_attributes][:id] = organisation.org_balances.first.id
     options[:is_setup_complete] = true
@@ -45,9 +45,9 @@ class V1::OrganisationsController < ApplicationController
     from_date = Date.parse(params[:from]) if params[:from].present?
     to_date = Date.parse(params[:to]) if params[:to].present?
 
-    financial_year_start = Common.calulate_current_financial_year
+    financial_year_start = Common.calulate_financial_year
     if params[:financial_year].present?
-      financial_year_start = Common.calulate_current_financial_year(fy: params[:financial_year])
+      financial_year_start = Common.calulate_financial_year(fy: params[:financial_year])
     end
 
     case params[:report_type]

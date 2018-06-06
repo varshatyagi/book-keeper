@@ -114,5 +114,3 @@
 #
 # ActiveRecord::Migration.drop_table(:states)
 # ActiveRecord::Migration.create_table(:states)
-
-User.create(name: "Admin", email: "Admin@gmail.com", password: "admin", password_confirmation: "admin", status: "active")
