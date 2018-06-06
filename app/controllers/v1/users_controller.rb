@@ -20,7 +20,7 @@ class V1::UsersController < ApplicationController
       user.role = User::USER_ROLE_CLIENT
       user.status = User::USER_STATUS_PENDING
       user.save
-      organisation = Organisation.find(user.organisations.collect(&:id)[0])
+      organisation = Organisation.find(user.organisations.first.id)
       organisation.update_attributes!(owner_id: user.id, is_setup_complete: false)
       user.update_attributes!(organisation_id: organisation.id)
     end
