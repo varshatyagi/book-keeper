@@ -32,13 +32,13 @@ class V1::Admin::PlansController < ApplicationController
 
   def user_signup_via_mobile(user)
     # TODO: send mail to user to sign up the user
-    user.update_attributes!(status: Plan::USER_STATUS_ACTIVE)
+    user.update_attributes!(status: Plan::PLAN_STATUS_ACTIVE)
   end
 
   def user_signup_via_email(user)
     # TODO: send mail to user to sign up the user with is_temporary_password
     user.update_attributes!({
-      status: Plan::USER_STATUS_ACTIVE,
+      status: Plan::PLAN_STATUS_ACTIVE,
       password: Common.generate_string,
       password_confirmation: Common.generate_string,
       is_temporary_password: true
