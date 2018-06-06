@@ -58,11 +58,11 @@ class V1::UsersController < ApplicationController
   def login_via_email(options)
     user = User.find_by(email: options[:email])
     unless user.present?
-      return render json: {errors: ['User is not registered with provided email id']}
+      return {errors: ['User is not registered with provided email id']}
     end
 
     unless user.valid_password? options[:password]
-      return render json: {errors: ['password is not valid']}
+      return {errors: ['password is not valid']}
     end
     {response: UserSerializer.new(generate_token(user)).serializable_hash}
   end

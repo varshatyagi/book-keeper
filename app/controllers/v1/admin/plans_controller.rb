@@ -13,7 +13,7 @@ class V1::Admin::PlansController < ApplicationController
     options = plan_params
     plan_start_date = Date.parse(plan_params[:plan_start_date])
     options[:plan_end_date] = plan_start_date + 1.year
-    options[:status] = PLAN::PLAN_STATUS_ACTIVE
+    options[:status] = Plan::PLAN_STATUS_ACTIVE
     ApplicationRecord.transaction do
       plan.update_attributes!(options)
       organisation.update_attributes!(active_plan_id: plan.plan)
