@@ -1,6 +1,6 @@
 class V1::OrganisationsController < ApplicationController
 
-  # before_action :require_user
+  before_action :require_user
   # before_action :require_admin_or_organisation_owner
 
   def index
