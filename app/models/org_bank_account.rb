@@ -19,6 +19,8 @@ class OrgBankAccount < ApplicationRecord
   belongs_to :bank, optional: true
   has_many :org_bank_account_balance_summaries
 
+  scope :display_acnts_with_financial_year, lambda { |fy| where("org_bank_accounts.financial_year = ?", fy)}
+
   validates_presence_of :account_num, message: "Please enter valid Account Number"
   validates_presence_of :bank_id
 
@@ -27,7 +29,7 @@ class OrgBankAccount < ApplicationRecord
 
 
   def set_financial_year
-    self.financial_year = Common.calulate_current_financial_year(fy: financial_year) if self.financial_year.blank?
+    self.financial_year = Common.calulate_financial_year(fy: financial_year) if self.financial_year.blank?
   end
 
 end

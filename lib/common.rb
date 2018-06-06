@@ -1,9 +1,9 @@
 class Common
 
-  def self.calulate_current_financial_year(fy: nil)
+  def self.calulate_financial_year(fy: nil)
     if fy.present?
-      fy = Date.parse(fy).year
-      fy = DateTime.new(fy, 4, 1, 00, 00, 0)
+      year = fy.year
+      fy = DateTime.new(year, 4, 1, 00, 00, 0)
     else
       fy = DateTime.new(Date.today.year, 4, 1, 00, 00, 0)
     end

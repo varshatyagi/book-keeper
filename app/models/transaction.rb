@@ -37,32 +37,35 @@ class Transaction < ApplicationRecord
   }
 
   def update_balance
-    org_bank_rec = OrgBankAccount.find(org_bank_account_id)
+    org_bank_rec = organisation.org_bank_accounts.display_acnts_with_financial_year(Common.calulate_financial_year(fy: self.txn_date))
+    org_bank_rec = org_bank_rec.where(id: org_bank_account_id).first
     org_bank_balance_summary_rec = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_rec.id)
+
+    org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
 
     if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
-        organisation.org_balance.first.bank_balance += amount
+        org_balance.bank_balance += amount
         org_bank_balance_summary_rec.bank_balance += amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_DEBIT
-        organisation.org_balance.first.debit_balance += amount
+        org_balance.debit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
-        organisation.org_balance.first.cash_balance += amount
+        org_balance.cash_balance += amount
       end
     elsif ledger_heading[:transaction_type] == LedgerHeading::TRANSACTION_TYPE_DEBIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
-        organisation.org_balance.first.bank_balance -= amount
+        org_balance.bank_balance -= amount
         org_bank_balance_summary_rec.bank_balance -= amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
-        organisation.org_balance.first.credit_balance += amount
+        org_balance.credit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
-        organisation.org_balance.first.cash_balance -= amount
+        org_balance.cash_balance -= amount
       end
     end
 
-    organisation.org_balance.first.save!
+    org_balance.save!
   end
 
 end

@@ -22,9 +22,9 @@
 #
 
 class Organisation < ApplicationRecord
-  has_many :org_bank_accounts, -> { where('org_bank_accounts.financial_year == ?', Common.calulate_current_financial_year) }
+  has_many :org_bank_accounts
   belongs_to :user, optional: true, foreign_key: 'owner_id'
-  has_many :org_balances, -> { where('org_balances.financial_year_start == ?', Common.calulate_current_financial_year) }
+  has_many :org_balances
   has_many :cash_transactions
   has_many :transactions
   has_one :plan
@@ -46,7 +46,7 @@ class Organisation < ApplicationRecord
         cash_opening_balance: 0.0,
         bank_opening_balance: 0.0,
         credit_opening_balance: 0.0,
-        financial_year_start: Common.calulate_current_financial_year,
+        financial_year_start: Common.calulate_financial_year,
         cash_balance: 0.0,
         bank_balance: 0.0,
         credit_balance: 0.0,
