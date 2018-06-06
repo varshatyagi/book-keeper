@@ -19,8 +19,8 @@ class OrganisationSerializer < ActiveModel::Serializer
       plan_detail = object.plan
     end
       return {
-              active_plan_id: active_id,
-              active_plan_name: Plan::PLAN_NAME[active_id],
+              active_plan_id: active_id ? active_id : nil,
+              active_plan_name: active_id ? Plan::PLAN_NAME[active_id] : nil,
               plan_start_date: plan_detail.plan_start_date,
               plan_end_date: plan_detail.plan_end_date,
               amount: plan_detail.amount.to_f
