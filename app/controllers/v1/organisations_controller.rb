@@ -5,7 +5,7 @@ class V1::OrganisationsController < ApplicationController
 
   def index
     organisations = Organisation.all
-    organisations = organisations.map {|organisation| OrganisationSerializer.new(organisation).serializable_hash} if oraganisations.present?
+    organisations = organisations.map {|organisation| OrganisationSerializer.new(organisation).serializable_hash} if organisations.present?
     render json: {response: organisations}
   end
 
