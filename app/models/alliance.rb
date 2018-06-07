@@ -41,6 +41,6 @@ class Alliance < ApplicationRecord
   validates_presence_of :gstin, message: "Please provide Gstin number"
 
 
-  DEBITOR = 'debitor'
+  DEBITOR = 'debtor'
   CREDITOR = 'creditor'
 end
