@@ -6,7 +6,7 @@ class V1::CashTransactionsController < ApplicationController
   def create
     return render json: {errors: ['Required parameter is missing']}, status: 400 unless cash_transactions_params.present?
     ApplicationRecord.transaction do
-      unless params[:type] == "withdrawal" || params[:type] == "deposit"
+      unless params[:type] == CashTransaction::WITHDRAWAL || params[:type] == CashTransaction::DEPOSIT
         return render json: {errors: ['Transaction is not valid']}, status: 400
       end
       cash_transaction = CashTransaction.new(cash_transactions_params)

@@ -52,11 +52,7 @@ class Transaction < ApplicationRecord
         org_bank_balance_summary_rec.bank_balance += amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_DEBIT
-        if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT
-          org_balance.debit_balance -= amount
-        else
-          org_balance.debit_balance += amount
-        end
+        org_balance.debit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
         org_balance.cash_balance += amount
       end
@@ -66,11 +62,7 @@ class Transaction < ApplicationRecord
         org_bank_balance_summary_rec.bank_balance -= amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
-        if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT
-          org_balance.credit_balance -= amount
-        else
-          org_balance.credit_balance += amount
-        end
+        org_balance.credit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
         org_balance.cash_balance -= amount
       end
