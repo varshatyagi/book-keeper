@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180606175258) do
+ActiveRecord::Schema.define(version: 20180607053648) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20180606175258) do
     t.boolean  "asset",            default: false
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
+    t.string   "display_name"
     t.index ["asset"], name: "index_ledger_headings_on_asset"
     t.index ["name"], name: "index_ledger_headings_on_name"
     t.index ["revenue"], name: "index_ledger_headings_on_revenue"
