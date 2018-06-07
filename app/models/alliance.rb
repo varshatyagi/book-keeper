@@ -38,7 +38,7 @@ class Alliance < ApplicationRecord
   validates_format_of :mob_num, with: /\A\d{10}\z/, message: "Please provide valid mobile number.", allow_blank: true
 
   validates_uniqueness_of :gstin, message: "Gstin has already been taken"
-  validates_presence_of :gstin, message: "pelease provide Gstin number"
+  validates_presence_of :gstin, message: "Please provide Gstin number"
 
 
   DEBITOR = 'debitor'
