@@ -40,7 +40,6 @@ class Alliance < ApplicationRecord
   validates_uniqueness_of :gstin, message: "Gstin has already been taken"
   validates_presence_of :gstin, message: "Please provide Gstin number"
 
-
-  DEBITOR = 'debitor'
+  DEBITOR = 'debtor'
   CREDITOR = 'creditor'
 end
