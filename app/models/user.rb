@@ -26,8 +26,8 @@
 
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable
-  has_many :organisations, foreign_key: :owner_id
-  accepts_nested_attributes_for :organisations
+  has_one :organisation, foreign_key: :owner_id
+  accepts_nested_attributes_for :organisation
 
   validates_uniqueness_of :mob_num, message: "Mobile Number has already been taken", allow_blank: true
   validates_uniqueness_of :email, message: "Email has already been taken", allow_blank: true

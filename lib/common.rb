@@ -2,10 +2,9 @@ class Common
 
   def self.calulate_financial_year(fy: nil)
     if fy.present?
-      year = fy.year
-      fy = DateTime.new(year, 4, 1, 00, 00, 0)
+      fy = DateTime.new(fy.year) + 3.months
     else
-      fy = DateTime.new(Date.today.year, 4, 1, 00, 00, 0)
+      fy = DateTime.new(Date.today.year) + 3.months
     end
     fy
   end

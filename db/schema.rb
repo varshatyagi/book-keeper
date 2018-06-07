@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180606060049) do
+ActiveRecord::Schema.define(version: 20180606175258) do
 
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
@@ -160,7 +160,6 @@ ActiveRecord::Schema.define(version: 20180606060049) do
     t.datetime "updated_at",                               null: false
     t.datetime "plan_end_date"
     t.decimal  "amount",          precision: 10, scale: 2
-    t.string   "status"
     t.index ["organisation_id"], name: "index_plans_on_organisation_id"
     t.index ["plan_start_date"], name: "index_plans_on_plan_start_date"
   end

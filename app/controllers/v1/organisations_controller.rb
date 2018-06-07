@@ -1,6 +1,6 @@
 class V1::OrganisationsController < ApplicationController
 
-  before_action :require_user
+  # before_action :require_user
   # before_action :require_admin_or_organisation_owner
 
   def index
@@ -24,12 +24,6 @@ class V1::OrganisationsController < ApplicationController
 
   def update
     organisation = Organisation.find(params[:id]) || not_found
-    # here checking the name manually because we are updating the values by nesteda ttributes which throws
-    # errors, cant handle
-    # multiple_name_exist = Organisation.where("name = ? and id <> ?", organisation_params[:name], organisation.id)
-    # if multiple_name_exist.present?
-    #   return render json: {errors: ['Organisation name has already been exist']}
-    # end
     options = organisation_params
     options[:org_balances_attributes][:id] = organisation.org_balances.first.id
     options[:is_setup_complete] = true
