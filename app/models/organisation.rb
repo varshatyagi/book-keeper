@@ -53,7 +53,5 @@ class Organisation < ApplicationRecord
         debit_balance: 0.0,
         debit_opening_balance: 0.0
       })
-      plan = Plan.new({organisation_id: self.id, plan: self.preferred_plan_id, status: Plan::PLAN_STATUS_PENDING})
-      plan.save(validate: false)
   end
 end

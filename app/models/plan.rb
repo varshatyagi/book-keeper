@@ -22,8 +22,8 @@ class Plan < ApplicationRecord
   validates_presence_of :amount, message: "Please enter amount for respective plan"
   validates_presence_of :plan, message: "Please provide plan you want to activate"
   validates_presence_of :plan_start_date, message: "Please provide when you want to start the plan"
+  validates_presence_of :organisation_id, message: "Organisation is missing"
+  validates_uniqueness_of :organisation_id, message: "For one Organisation there should be only one Plan."
 
   PLAN_NAME = ["Basic", "Essential", "Accountant", "Enterprise"]
-  PLAN_STATUS_PENDING = 'pending'
-  PLAN_STATUS_ACTIVE = 'active'
 end

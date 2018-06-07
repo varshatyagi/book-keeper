@@ -20,9 +20,9 @@ class V1::UsersController < ApplicationController
       user.role = User::USER_ROLE_CLIENT
       user.status = User::USER_STATUS_PENDING
       user.save
-      organisation = Organisation.find(user.organisations.first.id)
-      organisation.update_attributes!(owner_id: user.id, is_setup_complete: false)
-      user.update_attributes!(organisation_id: organisation.id)
+      organisation = Organisation.find(user.organisation.id)
+      organisation.update_attributes!(is_setup_complete: false, created_by: user.id)
+      user.update_attributes!(organisation_id: user.organisation.id)
     end
     # TODO do alternate things for email and messages
     render json: {response: UserSerializer.new(user).serializable_hash}, status: 200
@@ -115,7 +115,8 @@ class V1::UsersController < ApplicationController
       otp_record = Otp.new(mob_num: otp_params[:mob_num], created_at: Time.now, otp_pin: Common.otp)
       msg_response = Common.send_sms(otp_record)
       if msg_response["status"] == "failure"
-        return render json: {errors: msg_response["warnings"]}
+        return render json: {errors: msg_response["warnings"].first["message"]} if msg_response["warnings"].present?
+        return render json: {errors: msg_response["errors"].first["message"]} if msg_response["errors"].present?
       end
       otp_pin = msg_response["message"]["content"]
       otp_record.save!
@@ -142,7 +143,7 @@ class V1::UsersController < ApplicationController
   end
 
   def signup_params
-    params.require(:user).permit(:mob_num, :email, :organisation_id, organisations_attributes: [:id, :preferred_plan_id]) if params[:user]
+    params.require(:user).permit(:mob_num, :email, :organisation_id, organisation_attributes: [:id, :preferred_plan_id]) if params[:user]
   end
 
 end

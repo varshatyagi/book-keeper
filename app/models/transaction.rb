@@ -37,11 +37,14 @@ class Transaction < ApplicationRecord
   }
 
   def update_balance
-    org_bank_rec = organisation.org_bank_accounts.display_acnts_with_financial_year(Common.calulate_financial_year(fy: self.txn_date))
-    org_bank_rec = org_bank_rec.where(id: org_bank_account_id).first
-    org_bank_balance_summary_rec = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_rec.id)
 
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
+
+    if payment_mode == PaymentMode::PAYMENT_MODE_BANK
+      org_bank_rec = organisation.org_bank_accounts.display_acnts_with_financial_year(Common.calulate_financial_year(fy: self.txn_date))
+      org_bank_rec = org_bank_rec.where(id: org_bank_account_id).first
+      org_bank_balance_summary_rec = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_rec.id)
+    end
 
     if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK

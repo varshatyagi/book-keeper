@@ -1,13 +1,6 @@
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   namespace :v1 do
-    namespace :admin do
-      resources :plans do
-        member do
-          get :plan_info
-        end
-      end
-    end
     resources :users do
       member do
         post :change_password
@@ -21,9 +14,11 @@ Rails.application.routes.draw do
       resources :transactions
       resources :alliances
       resources :cash_transactions
+      resources :plans
       member do
         get :balance_summary
         get :reports
+        get :plan_info
       end
     end
 
