@@ -31,11 +31,11 @@ class CashTransaction < ApplicationRecord
   DEPOSIT = "DEPOSIT"
 
   def update_balance
-    organisation = Organisation.find(organisation.id) || not_found
+
+    organisation = Organisation.find(org_bank_account.organisation_id) || not_found
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
 
     org_bank_acnt_balance = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_account.id)
-
     if withdrawal?
       org_bank_acnt_balance.bank_balance -= amount
       org_balance.cash_balance += amount

@@ -20,14 +20,17 @@
 
 class LedgerHeading < ApplicationRecord
 
-  validates_presence_of :revenue, message: "Either Revenue or Asset must have value", unless: :asset
-  validates_presence_of :asset, message: "Either Revenue or Asset must have value", unless: :revenue
   validates_presence_of :name, message: "Ledger Heading is required"
 
   TRANSACTION_TYPE_REVENUE = 'revenue'
   TRANSACTION_TYPE_ASSET = 'asset'
   TRANSACTION_TYPE_CREDIT = 'credit'
   TRANSACTION_TYPE_DEBIT = 'debit'
+
+  CREDIT_PAYMENT = 'CREDIT_PAYMENT'
+  DEBIT_PAYMENT = 'DEBIT_PAYMENT'
+
+  CASH_TRANSACTION = "cash_transaction"
 
   def debit?
     transaction_type == TRASACTION_TYPE_DEBIT
