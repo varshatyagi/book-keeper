@@ -27,8 +27,8 @@ class CashTransaction < ApplicationRecord
 
   after_create :update_balance
 
-  WITHDRAWAL = "withdrawal"
-  DEPOSIT = "deposit"
+  WITHDRAWAL = "WITHDRAWAL"
+  DEPOSIT = "DEPOSIT"
 
   def update_balance
     organisation = Organisation.find(organisation.id) || not_found
