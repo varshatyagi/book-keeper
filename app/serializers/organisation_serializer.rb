@@ -1,5 +1,5 @@
 class OrganisationSerializer < ActiveModel::Serializer
-  attributes :id, :name, :owner_id, :created_by, :owner, :plan_info
+  attributes :id, :name, :owner_id, :created_by, :owner, :is_setup_complete, :plan_info
 
   def owner
     return nil if object.id.blank?
