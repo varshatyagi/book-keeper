@@ -81,3 +81,5 @@ City.create(state_code: "MP", name: "Indore")
 City.create(state_code: "MP", name: "Gwalior")
 City.create(state_code: "MP", name: "Bhopal")
 #### End of states seed data ####
+
+User.create(name: "admin", email: "admin@gmail.com", password: "admin", password_confirmation: "admin", role: "admin")
