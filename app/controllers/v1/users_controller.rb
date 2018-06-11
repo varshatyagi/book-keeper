@@ -81,6 +81,7 @@ class V1::UsersController < ApplicationController
     raise 'This mobile number is not register' unless user.present?
     user = generate_token(user)
     user.is_temporary_password = false
+    otp_existing_record.destroy
     {response: UserSerializer.new(user).serializable_hash}
   end
 
@@ -109,7 +110,7 @@ class V1::UsersController < ApplicationController
       is_expired = (Time.now.to_i - otp_existing_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
       if is_expired
         otp_existing_record.destroy
-        otp_record = Otp.new(mob_num: otp_params[:mob_num], created_at: Time.now, otp_pin: Common.otp)
+        otp_record = Otp.create(mob_num: otp_params[:mob_num], created_at: Time.now, otp_pin: Common.otp)
         otp_pin = otp_record.otp_pin
       elsif !is_expired && otp_existing_record.present?
         otp_pin = otp_existing_record.otp_pin
