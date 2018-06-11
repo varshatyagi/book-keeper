@@ -1,6 +1,7 @@
 class V1::LedgerHeadingsController < ApplicationController
 
   before_action :require_user
+  before_action :require_admin, only: [:create, :update, :destroy]
 
   def index
     render json: {response: prepare_ledger_headings}
