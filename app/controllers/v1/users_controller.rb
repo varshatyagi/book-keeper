@@ -73,7 +73,6 @@ class V1::UsersController < ApplicationController
     unless otp_existing_record.present?
       return {errors: ['Mobile Number and OTP combination is invalid']}
     end
-
     if (Time.now.to_i - otp_existing_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
       return {errors: ['OTP has been expired']}
     end
@@ -109,8 +108,9 @@ class V1::UsersController < ApplicationController
     if otp_existing_record.present?
       is_expired = (Time.now.to_i - otp_existing_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
       if is_expired
-        otp_existing_record.update_attributes(otp_pin: Common.otp)
-        otp_pin = otp_existing_record.otp_pin
+        otp_existing_record.destroy
+        otp_record = Otp.new(mob_num: otp_params[:mob_num], created_at: Time.now, otp_pin: Common.otp)
+        otp_pin = otp_record.otp_pin
       elsif !is_expired && otp_existing_record.present?
         otp_pin = otp_existing_record.otp_pin
       end
