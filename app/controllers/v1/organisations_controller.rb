@@ -183,7 +183,7 @@ class V1::OrganisationsController < ApplicationController
     transactions = []
     scope.each do |transaction|
       transactions << {
-        ledger_heading: transaction.ledger_heading.name,
+        ledger_heading: transaction.ledger_heading.display_name,
         txn_date: transaction.txn_date.strftime("%d-%m-%Y"),
         transaction_type: transaction.ledger_heading.transaction_type,
         amount: transaction.amount.to_f,
