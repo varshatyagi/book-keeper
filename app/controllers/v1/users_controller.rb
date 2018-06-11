@@ -91,6 +91,9 @@ class V1::UsersController < ApplicationController
     unless user.present?
       return render json: {errors: ['User is not found']}
     end
+    unless user.valid_password? user_params[:old_password]
+      return render json: {errors: ['Password is not correct']}
+    end
     if user.is_temporary_password
       options[:is_temporary_password] = false
     end
@@ -115,8 +118,8 @@ class V1::UsersController < ApplicationController
       otp_record = Otp.new(mob_num: otp_params[:mob_num], created_at: Time.now, otp_pin: Common.otp)
       msg_response = Common.send_sms(otp_record)
       if msg_response["status"] == "failure"
-        return render json: {errors: msg_response["warnings"].first["message"]} if msg_response["warnings"].present?
-        return render json: {errors: msg_response["errors"].first["message"]} if msg_response["errors"].present?
+        return render json: {errors: [msg_response["warnings"].first["message"]]} if msg_response["warnings"].present?
+        return render json: {errors: [msg_response["errors"].first["message"]]} if msg_response["errors"].present?
       end
       otp_pin = msg_response["message"]["content"]
       otp_record.save!
@@ -135,7 +138,7 @@ class V1::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :mob_num, :name, :address, :city, :state_code) if params[:user]
+    params.require(:user).permit(:email, :password, :mob_num, :name, :address, :city, :state_code, :old_password) if params[:user]
   end
 
   def otp_params
