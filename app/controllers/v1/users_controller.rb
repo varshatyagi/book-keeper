@@ -106,8 +106,8 @@ class V1::UsersController < ApplicationController
     if otp_existing_record.present?
       is_expired = (Time.now.to_i - otp_existing_record.created_at.to_i) > Otp::OTP_EXPIRATION_TIME
       if is_expired
-        otp_existing_record.destroy
-        otp_pin = Common.otp
+        otp_existing_record.update_attributes(otp_pin: Common.otp)
+        opt_pin = otp_existing_record.otp_pin
       elsif !is_expired && otp_existing_record.present?
         otp_pin = otp_existing_record.otp_pin
       end
