@@ -1,5 +1,5 @@
 Description : To get plan
-Request Url : localhost:3000/v1/admin/plans/1/plan_info
+Request Url : http://localhost:3000/v1/organisations/3/plans/2
 Method: GET
 Status: 200
 Response :
@@ -15,8 +15,30 @@ Response :
   }
 }
 
+Description : To create plan
+Request Url : http://localhost:3000/v1/organisations/3/plans
+Method: POST
+Status: 200
+Body:
+{
+	"plan": {
+		"amount": 3000,
+		"plan_start_date": "4/06/2018",
+		"plan_end_date": null,
+		"plan": 2
+	}
+}
+Response :
+
+{
+  "response": {
+    true
+  }
+}
+
+
 Description : To update plan
-Request Url : http://localhost:3000/v1/admin/plans/1
+Request Url : http://localhost:3000/v1/organisations/3/plans
 Method: PUT
 Status: 200
 Body:

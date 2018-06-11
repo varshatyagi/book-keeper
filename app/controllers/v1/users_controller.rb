@@ -25,7 +25,7 @@ class V1::UsersController < ApplicationController
       user.update_attributes!(organisation_id: user.organisation.id)
     end
     # TODO do alternate things for email and messages
-    render json: {response: UserSerializer.new(user).serializable_hash}, status: 200
+    render json: {response: ['Thank you. Admin will contact you for further communication.']}, status: 200
   end
 
   def show
