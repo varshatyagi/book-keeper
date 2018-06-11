@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   require 'auth'
   require 'common'
   require 'uri'
-  
+
   #before_action :ensure_domain
   @current_user = nil
 
@@ -11,7 +11,6 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ActiveRecord::RecordInvalid do |e|
-    puts e
     render json: {errors: ['Record is Invalid']}, status: 400
   end
 
@@ -25,7 +24,8 @@ class ApplicationController < ActionController::API
   end
 
   def require_admin
-    get_current_user
+    return render json: {errors: ['You are not authorized to access this resource']} unless @current_user.role == User::USER_ROLE_ADMIN
+    true
   end
 
   def get_current_user

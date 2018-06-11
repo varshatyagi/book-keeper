@@ -1,5 +1,8 @@
 class V1::PlansController < ApplicationController
 
+  before_action :require_user
+  before_action :require_admin, only: [:create, :update]
+
   def create
     organisation = Organisation.find_by(id: params[:organisation_id]) || not_found
     plan = Plan.new(plan_params)
