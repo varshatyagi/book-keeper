@@ -135,13 +135,14 @@ class V1::OrganisationsController < ApplicationController
     transactions[:assets] << {ledger_heading: "Cash A/C", amount: org_balance.cash_balance.to_f}
 
     # joins transactions and alliances where alliance_type = debit in the from to to_date
-    credit_debit_transactions = Transaction.joins(:alliance).where(organisation_id: organisation.id).where("alliance_id is not null").group("alliances.alliance_type").sum(:amount)
+    credit_debit_transactions = Transaction.joins(:alliance).where(organisation_id: organisation.id).where("alliance_id is not null")
     if from_date.blank?
       credit_debit_transactions = credit_debit_transactions
     else
       credit_debit_transactions = credit_debit_transactions.where("txn_date >= ? and (txn_date > ? and txn_date < ?)", from_date, financial_year_start, financial_year_end) if from_date.present?
       credit_debit_transactions = credit_debit_transactions.where("txn_date <= ? and (txn_date > ? and txn_date < ?)", to_date, financial_year_start, financial_year_end) if to_date.present?
     end
+    credit_debit_transactions = credit_debit_transactions.group("alliances.alliance_type").sum(:amount)
     # add creditors to liabilities
 
     liabilities = {}
