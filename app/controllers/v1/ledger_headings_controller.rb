@@ -7,6 +7,12 @@ class V1::LedgerHeadingsController < ApplicationController
     render json: {response: prepare_ledger_headings}
   end
 
+  def show
+    ledger_heading = LedgerHeading.find(params[:id]) || not_found
+    ledger_heading = LedgerHeadingSerializer.new(ledger_heading).serializable_hash
+    render json: {response: ledger_heading}
+  end
+
   def create
     ledger_heading = LedgerHeading.new(ledger_heading_params)
     ledger_heading.save!
