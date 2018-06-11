@@ -30,6 +30,11 @@ class V1::PlansController < ApplicationController
     render json: {response: [true]}
   end
 
+  def show
+    plan = Plan.find(params[:id]) || not_found
+    render json: {response: PlanSerializer.new(plan).serializable_hash}, status: 200
+  end
+
   private
 
   def plan_params
