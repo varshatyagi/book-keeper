@@ -148,11 +148,9 @@ class V1::OrganisationsController < ApplicationController
     liabilities = {}
     assets = {}
     if org_balance[:credit_balance] > org_balance[:debit_balance]
-      profit_of_the_year = org_balance[:credit_balance] - org_balance[:debit_balance]
-      liabilities[:profit_of_the_year] = profit_of_the_year
-    else
-      loss_of_the_year = org_balance[:debit_balance] - org_balance[:credit_balance]
-      assets[:loss_of_the_year] = loss_of_the_year
+      assets[:loss_of_the_year] = org_balance[:credit_balance] - org_balance[:debit_balance]
+    elsif org_balance[:credit_balance] < org_balance[:debit_balance]
+      liabilities[:profit_of_the_year] = org_balance[:debit_balance] - org_balance[:credit_balance]
     end
 
     if credit_debit_transactions.present?
