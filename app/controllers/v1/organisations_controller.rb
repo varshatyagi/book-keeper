@@ -71,10 +71,12 @@ class V1::OrganisationsController < ApplicationController
     results = Transaction.joins(:ledger_heading)
     # fetch transaction for that finanacial year
     results = results.where("organisation_id = ? and (txn_date > ? and txn_date < ?)", organisation.id, financial_year_start, financial_year_end)
-    results = results.where("ledger_headings.revenue = ?", true).group(:ledger_heading_id).sum(:amount)
+    results = results.where("ledger_headings.revenue = ?", true)
 
     results = results.where("txn_date >= ?)", from_date) if from_date.present?
     results = results.where("txn_date <= )", to_date) if to_date.present?
+
+    results = results.group(:ledger_heading_id).sum(:amount)
 
     ledger_heading_ids = results.keys
     ledger_heading_by_ids = {}
@@ -104,10 +106,11 @@ class V1::OrganisationsController < ApplicationController
     results = Transaction.joins(:ledger_heading)
     # fetch transaction for that finanacial year
     results = results.where("organisation_id = ? and (txn_date > ? and txn_date < ?)", organisation.id, financial_year_start, financial_year_end)
-    results = results.where("ledger_headings.asset = ?", true).where("alliance_id is null").group(:ledger_heading_id).sum(:amount)
-
+    results = results.where("ledger_headings.asset = ?", true).where("alliance_id is null")
     results = results.where("txn_date >= ?", from_date) if from_date.present?
     results = results.where("txn_date <= ?", to_date) if to_date.present?
+
+    results = results.group(:ledger_heading_id).sum(:amount)
 
     ledger_heading_ids = results.keys
     ledger_heading_by_ids = {}
@@ -172,8 +175,8 @@ class V1::OrganisationsController < ApplicationController
     # fetch transaction for that finanacial year
     scope = scope.where("organisation_id = ? and (txn_date > ? and txn_date < ?)", organisation.id, financial_year_start, financial_year_end)
 
-    scope = scope.where("txn_date >=", from_date) if from_date.present?
-    scope = scope.where("txn_date <=", to_date) if to_date.present?
+    scope = scope.where("txn_date >= ?", from_date) if from_date.present?
+    scope = scope.where("txn_date <= ?", to_date) if to_date.present?
     scope_condittion = {}
     scope_condittion[:alliance_id] = params[:alliance_id] if params[:alliance_id].present?
     scope_condittion[:ledger_heading_ids] = params[:ledger_heading_ids] if params[:ledger_heading_ids].present?
