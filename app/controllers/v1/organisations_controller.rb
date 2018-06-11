@@ -73,11 +73,10 @@ class V1::OrganisationsController < ApplicationController
     results = results.where("organisation_id = ? and (txn_date > ? and txn_date < ?)", organisation.id, financial_year_start, financial_year_end)
     results = results.where("ledger_headings.revenue = ?", true)
 
-    results = results.where("txn_date >= ?)", from_date) if from_date.present?
-    results = results.where("txn_date <= ?)", to_date) if to_date.present?
+    results = results.where("txn_date >= ?", from_date) if from_date.present?
+    results = results.where("txn_date <= ?", to_date) if to_date.present?
 
     results = results.group(:ledger_heading_id).sum(:amount)
-
     ledger_heading_ids = results.keys
     ledger_heading_by_ids = {}
     if ledger_heading_ids.present?
@@ -141,7 +140,7 @@ class V1::OrganisationsController < ApplicationController
       credit_debit_transactions = credit_debit_transactions
     else
       credit_debit_transactions = credit_debit_transactions.where("txn_date >= ? and (txn_date > ? and txn_date < ?)", from_date, financial_year_start, financial_year_end) if from_date.present?
-      credit_debit_transactions = credit_debit_transactions.where("txn_date <= ? sand (txn_date > ? and txn_date < ?)", to_date, financial_year_start, financial_year_end) if to_date.present?
+      credit_debit_transactions = credit_debit_transactions.where("txn_date <= ? and (txn_date > ? and txn_date < ?)", to_date, financial_year_start, financial_year_end) if to_date.present?
     end
     # add creditors to liabilities
 
