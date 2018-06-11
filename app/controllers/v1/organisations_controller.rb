@@ -74,7 +74,7 @@ class V1::OrganisationsController < ApplicationController
     results = results.where("ledger_headings.revenue = ?", true)
 
     results = results.where("txn_date >= ?)", from_date) if from_date.present?
-    results = results.where("txn_date <= )", to_date) if to_date.present?
+    results = results.where("txn_date <= ?)", to_date) if to_date.present?
 
     results = results.group(:ledger_heading_id).sum(:amount)
 
@@ -130,10 +130,10 @@ class V1::OrganisationsController < ApplicationController
         transactions[:assets] << info
       end
     end
-
+    org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: financial_year_start)).first
     # add bank bal, cash bal, debitors in assets
-    transactions[:assets] << {ledger_heading: "Bank A/C", amount: organisation.org_balance.bank_balance.to_f}
-    transactions[:assets] << {ledger_heading: "Cash A/C", amount: organisation.org_balance.cash_balance.to_f}
+    transactions[:assets] << {ledger_heading: "Bank A/C", amount: org_balance.bank_balance.to_f}
+    transactions[:assets] << {ledger_heading: "Cash A/C", amount: org_balance.cash_balance.to_f}
 
     # joins transactions and alliances where alliance_type = debit in the from to to_date
     credit_debit_transactions = Transaction.joins(:alliance).where(organisation_id: organisation.id).where("alliance_id is not null").group("alliances.alliance_type").sum(:amount)
@@ -144,7 +144,6 @@ class V1::OrganisationsController < ApplicationController
       credit_debit_transactions = credit_debit_transactions.where("txn_date <= ? sand (txn_date > ? and txn_date < ?)", to_date, financial_year_start, financial_year_end) if to_date.present?
     end
     # add creditors to liabilities
-    org_balance = organisation.org_balance.by_financial_year(Common.calulate_financial_year(fy: financial_year_start)).first
 
     liabilities = {}
     assets = {}
