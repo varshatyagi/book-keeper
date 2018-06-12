@@ -16,18 +16,21 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def balance_summary
-    organisation = Organisation.find(params[:id]) || not_found
-    org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year).first
-    render json: {response: OrgBalanceSerializer.new(org_balance).serializable_hash}
+    organisation = Organisation.find(params[:id])
+    org_balances = organisation.org_balances.by_financial_year(Common.calulate_financial_year).first
+    return render json: {errors: ['Balanace Summary is not available for this orgnanisation']}, status: 400 if org_balances.blank?
+    render json: {response: OrgBalanceSerializer.new(org_balances).serializable_hash}
   end
 
   def update
     organisation = Organisation.find(params[:id]) || not_found
     options = organisation_params
+    options[:org_balances_attributes][:id] = organisation.org_balances.first.id
+    options[:is_setup_complete] = true
     ApplicationRecord.transaction do
       organisation.update_attributes!(options)
     end
-    render json: {response: OrganisationSerializer.new(organisation).serializable_hash}
+    render json: {response: true}, status: 200
   end
 
   def reports
@@ -43,11 +46,11 @@ class V1::OrganisationsController < ApplicationController
     end
 
     case params[:report_type]
-    when Organisation::REPORT_TYPE_PROFIT_AND_LOSS
+    when "pl"
       render json: {response: prepare_pl_report_data(from_date, to_date, organisation, financial_year_start)}
-    when Organisation::REPORT_TYPE_ACCOUNT_LEDGER
+    when "account_ledger"
       render json: {response: prepare_account_ledger_report_data(from_date, to_date, organisation, financial_year_start)}
-    when Organisation::REPORT_TYPE_BALANCE_SHEET
+    when "balance_sheet"
       data = prepare_balance_sheet_report_data(from_date, to_date, organisation, financial_year_start)
       render json: {response: data}
     else
@@ -62,18 +65,16 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def prepare_pl_report_data(from_date, to_date, organisation, financial_year_start)
-    financial_year_end = financial_year_start + 1.year
+    financial_year_end = financial_year_start + 1.year - 1.day
     transactions = {incomes: [], expenses: []}
 
-    results = Transaction.joins(:ledger_heading).where("organisation_id = ? ", organisation_id)
-                          .where("ledger_headings.revenue = ?", true)
+    results = Transaction.joins(:ledger_heading)
+    # fetch transaction for that finanacial year
+    results = results.where("organisation_id = ? and (txn_date > ? and txn_date < ?)", organisation.id, financial_year_start, financial_year_end)
+    results = results.where("ledger_headings.revenue = ?", true)
 
     results = results.where("txn_date >= ?", from_date) if from_date.present?
     results = results.where("txn_date <= ?", to_date) if to_date.present?
-
-    unless from_date.present?
-      results = results.where("txn_date >= ? and txn_date < ?)", financial_year_start, financial_year_end)
-    end
 
     results = results.group(:ledger_heading_id).sum(:amount)
     ledger_heading_ids = results.keys
@@ -98,19 +99,15 @@ class V1::OrganisationsController < ApplicationController
   end
 
   def prepare_balance_sheet_report_data(from_date, to_date, organisation, financial_year_start)
-    financial_year_end = financial_year_start + 1.year
+    financial_year_end = financial_year_start + 1.year - 1.day
     transactions = {assets: [], liabilities: []}
 
-    results = Transaction.joins(:ledger_heading).where("organisation_id = ?", organisation_id)
-                          .where("ledger_headings.asset = ?", true)
-                          .where("alliance_id is null")
-
+    results = Transaction.joins(:ledger_heading)
+    # fetch transaction for that finanacial year
+    results = results.where("organisation_id = ? and (txn_date > ? and txn_date < ?)", organisation.id, financial_year_start, financial_year_end)
+    results = results.where("ledger_headings.asset = ?", true).where("alliance_id is null")
     results = results.where("txn_date >= ?", from_date) if from_date.present?
     results = results.where("txn_date <= ?", to_date) if to_date.present?
-
-    unless from_date.present?
-      results = results.where("txn_date >= ? and txn_date < ?)", financial_year_start, financial_year_end)
-    end
 
     results = results.group(:ledger_heading_id).sum(:amount)
 
@@ -132,46 +129,51 @@ class V1::OrganisationsController < ApplicationController
         transactions[:assets] << info
       end
     end
-    # calcuate pl of the year
-    income = 0
-    expense = 0
-    profit_loss_records = prepare_pl_report_data(from_date, to_date, organisation, financial_year_start)
-    if profit_loss_records[:incomes].present?
-      income = collect_sum(profit_loss_records[:incomes])
-    end
-
-    if profit_loss_records[:expenses].present?
-      expense = collect_sum(profit_loss_records[:expenses])
-    end
-
-    if income > expense
-      transactions[:liabilities] << {ledger_heading: "Profit of the year", amount: (income - expense)}
-    else
-      transactions[:assets] << {ledger_heading: "Loss of the year", amount: (expense - income)}
-    end
-
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: financial_year_start)).first
     # add bank bal, cash bal, debitors in assets
     transactions[:assets] << {ledger_heading: "Bank A/C", amount: org_balance.bank_balance.to_f}
     transactions[:assets] << {ledger_heading: "Cash A/C", amount: org_balance.cash_balance.to_f}
-    transactions[:assets] << {ledger_heading: "Debtors", amount: org_balance.debit_balance.to_f}
-    transactions[:liabilities] << {ledger_heading: "Creditors", amount: org_balance.credit_balance.to_f} if liabilities.present?
 
+    # joins transactions and alliances where alliance_type = debit in the from to to_date
+    credit_debit_transactions = Transaction.joins(:alliance).where(organisation_id: organisation.id).where("alliance_id is not null")
+    if from_date.blank?
+      credit_debit_transactions = credit_debit_transactions
+    else
+      credit_debit_transactions = credit_debit_transactions.where("txn_date >= ? and (txn_date > ? and txn_date < ?)", from_date, financial_year_start, financial_year_end) if from_date.present?
+      credit_debit_transactions = credit_debit_transactions.where("txn_date <= ? and (txn_date > ? and txn_date < ?)", to_date, financial_year_start, financial_year_end) if to_date.present?
+    end
+    credit_debit_transactions = credit_debit_transactions.group("alliances.alliance_type").sum(:amount)
+    # add creditors to liabilities
+
+    liabilities = {}
+    assets = {}
+    if org_balance[:credit_balance] > org_balance[:debit_balance]
+      assets[:loss_of_the_year] = org_balance[:credit_balance] - org_balance[:debit_balance]
+    elsif org_balance[:credit_balance] < org_balance[:debit_balance]
+      liabilities[:profit_of_the_year] = org_balance[:debit_balance] - org_balance[:credit_balance]
+    end
+
+    if credit_debit_transactions.present?
+      liabilities[:ledger_heading] = "Creditors"
+      liabilities[:amount] = credit_debit_transactions["creditors"].to_f
+      assets[:ledger_heading] = "Debitors"
+      assets[:amount] = credit_debit_transactions["debitors"].to_f
+    end
+
+    transactions[:liabilities] << liabilities if liabilities.present?
+    transactions[:assets] << assets if assets.present?
     transactions
   end
 
   def prepare_account_ledger_report_data(from_date, to_date, organisation, financial_year_start)
-    financial_year_end = financial_year_start + 1.year
+    financial_year_end = financial_year_start + 1.year - 1.day
 
-    scope = Transaction.includes(:ledger_heading).joins(:ledger_heading).where("organisation_id = ?", organisation_id)
+    scope = Transaction.includes(:ledger_heading).joins(:ledger_heading)
+    # fetch transaction for that finanacial year
+    scope = scope.where("organisation_id = ? and (txn_date > ? and txn_date < ?)", organisation.id, financial_year_start, financial_year_end)
 
     scope = scope.where("txn_date >= ?", from_date) if from_date.present?
     scope = scope.where("txn_date <= ?", to_date) if to_date.present?
-
-    unless from_date.present?
-      scope = scope.where("txn_date >= ? and txn_date < ?)", financial_year_start, financial_year_end)
-    end
-
     scope_condittion = {}
     scope_condittion[:alliance_id] = params[:alliance_id] if params[:alliance_id].present?
     scope_condittion[:ledger_heading_ids] = params[:ledger_heading_ids] if params[:ledger_heading_ids].present?
@@ -189,13 +191,5 @@ class V1::OrganisationsController < ApplicationController
       }
     end
     transactions
-  end
-
-  def collect_sum(records)
-    sum = 0
-    records.each do |record|
-      sum += record.amount
-    end
-    sum
   end
 end
