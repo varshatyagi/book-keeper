@@ -36,6 +36,10 @@ class Organisation < ApplicationRecord
 
   validates_uniqueness_of :name, message: "Business name has already been taken", if: :name_present?
 
+  REPORT_TYPE_PROFIT_AND_LOSS = 'pl',
+  REPORT_TYPE_ACCOUNT_LEDGER = 'account_ledger',
+  REPORT_TYPE_BALANCE_SHEET = 'balance_sheet'
+
   def name_present?
     name.present?
   end
