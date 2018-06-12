@@ -29,7 +29,7 @@ class V1::UsersController < ApplicationController
     if need_to_send_sms
       Common.send_sms({message: 'Thank you. Admin will contact you for further communication.', mob_num: user.mob_num})
     else
-      # OrganizationNotifierMailer.send_thank_you_email(user).deliver
+      OrganizationNotifierMailer.send_thank_you_email(user).deliver
       OrganizationNotifierMailer.activate_user.deliver
     end
     render json: {response: ['Thank you. Admin will contact you for further communication.']}, status: 200

@@ -13,7 +13,7 @@ class OrganizationNotifierMailer < ApplicationMailer
 
   def plan_activated(user)
     @temporary_password = Common.generate_string
-    mail( :to => user.email, :subject => 'Account has been activated' )
+    mail( :to => user.email, :subject => 'Your account has been activated successfully.' )
 
   end
 end

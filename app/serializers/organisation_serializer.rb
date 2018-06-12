@@ -1,6 +1,6 @@
 class OrganisationSerializer < ActiveModel::Serializer
   attributes :id, :name, :owner_id, :created_by, :owner, :is_setup_complete, :plan_info, :preferred_plan_id
-  attributes :active_plan_id, :created_at
+  attributes :active_plan_id, :created_at, :cash_balance
 
   def owner
     return nil if object.id.blank?
@@ -29,5 +29,14 @@ class OrganisationSerializer < ActiveModel::Serializer
               amount: plan_detail && plan_detail.amount.to_f ? plan_detail.amount.to_f : nil,
               expired: expired
             }
+  end
+
+  def cash_balance
+    org_balance = object.org_balances.by_financial_year(Common.calulate_financial_year).first
+    return {
+      cash_balance: org_balance && org_balance.cash_balance && org_balance.cash_balance > 0 ? org_balance && org_balance.cash_balance : 0,
+      cash_opening_balance: org_balance && org_balance.cash_opening_balance && org_balance.cash_opening_balance > 0 ? org_balance && org_balance.cash_opening_balance : 0,
+      id: org_balance && org_balance.id ? org_balance && org_balance.id : nil
+    }
   end
 end

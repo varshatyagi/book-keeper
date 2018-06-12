@@ -29,5 +29,4 @@ class OrgBalance < ApplicationRecord
   def calulate_financial_year
     Common.calulate_financial_year
   end
-
 end
