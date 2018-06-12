@@ -23,6 +23,7 @@ class V1::PlansController < ApplicationController
   def update
     plan = Plan.find(params[:id]) || not_found
     plan[:plan_end_date] = plan[:plan_start_date] + 1.year
+    organisation = Organisation.find(params[:organisation_id])
     ApplicationRecord.transaction do
       plan.save!
       organisation.update_attributes!(active_plan_id: plan.plan)
