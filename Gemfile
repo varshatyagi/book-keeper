@@ -15,10 +15,9 @@ gem 'rails_admin', '~> 1.3'
 gem 'jwt'
 gem 'swagger-docs'
 gem 'active_model_serializers'
-
+gem 'pg'
 
 group :development, :test do
-  gem 'sqlite3'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
 end
@@ -29,7 +28,6 @@ group :development do
 end
 
 group :production do
-    gem 'pg'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

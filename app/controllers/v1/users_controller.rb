@@ -7,8 +7,10 @@ class V1::UsersController < ApplicationController
 
   def signup
     user = nil
+    need_to_send_sms = false
     if signup_params[:mob_num].present?
       user = User.find_by(mob_num: signup_params[:mob_num])
+      need_to_send_sms = true
     elsif signup_params[:email].present?
       user = User.find_by(email: signup_params[:email])
     end
@@ -24,7 +26,12 @@ class V1::UsersController < ApplicationController
       organisation.update_attributes!(is_setup_complete: false, created_by: user.id)
       user.update_attributes!(organisation_id: user.organisation.id)
     end
-    # TODO do alternate things for email and messages
+    if need_to_send_sms
+      Common.send_sms({message: 'Thank you. Admin will contact you for further communication.', mob_num: user.mob_num})
+    else
+      # OrganizationNotifierMailer.send_thank_you_email(user).deliver
+      OrganizationNotifierMailer.activate_user.deliver
+    end
     render json: {response: ['Thank you. Admin will contact you for further communication.']}, status: 200
   end
 
@@ -117,7 +124,7 @@ class V1::UsersController < ApplicationController
       end
     else
       otp_record = Otp.new(mob_num: otp_params[:mob_num], created_at: Time.now, otp_pin: Common.otp)
-      msg_response = Common.send_sms(otp_record)
+      msg_response = Common.send_sms({message: otp_record.otp_pin, mob_num: otp_record.mob_num})
       if msg_response["status"] == "failure"
         return render json: {errors: [msg_response["warnings"].first["message"]]} if msg_response["warnings"].present?
         return render json: {errors: [msg_response["errors"].first["message"]]} if msg_response["errors"].present?

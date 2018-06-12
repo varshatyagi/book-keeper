@@ -39,5 +39,8 @@ module BookKeeper
         resource '*', :headers => :any, :methods => [:get, :post, :delete, :put, :patch, :options]
       end
     end
+    config.action_mailer.asset_host = config.action_controller.asset_host
+    config.action_mailer.default_url_options = { host: "activityhero.com" }
+
   end
 end

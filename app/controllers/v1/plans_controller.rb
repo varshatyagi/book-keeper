@@ -42,12 +42,12 @@ class V1::PlansController < ApplicationController
   end
 
   def user_signup_via_mobile(user)
-    # TODO: send mail to user to sign up the user
+    Common.send_sms({message: 'Thank you. Your plan has been activated.', mob_num: user.mob_num})
     user.update_attributes!(status: User::USER_STATUS_ACTIVE)
   end
 
   def user_signup_via_email(user)
-    # TODO: send mail to user to sign up the user with is_temporary_password
+    OrganizationNotifierMailer.plan_activated(user).deliver
     user.update_attributes!({
       status: User::USER_STATUS_ACTIVE,
       password: Common.generate_string,
