@@ -32,7 +32,7 @@ class OrganisationSerializer < ActiveModel::Serializer
   end
 
   def cash_balance
-    org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year).first
+    org_balance = object.org_balances.by_financial_year(Common.calulate_financial_year).first
     return {
       cash_balance: org_balance && org_balance.cash_balance ? org_balance && org_balance.cash_balance : nil,
       cash_opening_balance: org_balance && org_balance.cash_opening_balance ? org_balance && org_balance.cash_opening_balance : nil,
