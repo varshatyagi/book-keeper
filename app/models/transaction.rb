@@ -52,31 +52,39 @@ class Transaction < ApplicationRecord
         org_bank_balance_summary_rec.bank_balance += amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_DEBIT
-        if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT
-          org_balance.debit_balance -= amount
-        else
-          org_balance.debit_balance += amount
-        end
+        org_balance.debit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
         org_balance.cash_balance += amount
       end
+
     elsif ledger_heading[:transaction_type] == LedgerHeading::TRANSACTION_TYPE_DEBIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
         org_balance.bank_balance -= amount
         org_bank_balance_summary_rec.bank_balance -= amount
         org_bank_balance_summary_rec.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
-        if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT
-          org_balance.credit_balance -= amount
-        else
-          org_balance.credit_balance += amount
-        end
+        org_balance.credit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
         org_balance.cash_balance -= amount
       end
     end
 
+    if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT || ledger_heading.name == LedgerHeading::DEBIT_PAYMENT
+      org_balance = manage_balance_in_special_case(ledger_heading.name, org_balance)
+    end
+
     org_balance.save!
+  end
+
+  def manage_balance_in_special_case(ledger_heading, org_balance)
+    case ledger_heading
+    when LedgerHeading::CREDIT_PAYMENT
+    org_balance.debit_balance -= amount
+    when LedgerHeading::DEBIT_PAYMENT
+    org_balance.credit_balance -= amount
+    else
+    end
+    org_balance
   end
 
 end
