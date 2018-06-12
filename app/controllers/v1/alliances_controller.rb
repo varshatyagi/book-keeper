@@ -12,11 +12,13 @@ class V1::AlliancesController < ApplicationController
   end
 
   def show
-    alliance = Alliance.find(id: params[:id]) || not_found
+    raise 'Request Allaince is not registered for this Organisation' unless Alliance.find_by(id: params[:id]).present?
+    alliance = Alliance.find(params[:id])
     render json: {response: AllianceSerializer.new(alliance).serializable_hash}
   end
 
   def create
+    return render json: {errors: ['Required params are missing']} unless alliance_params.present?
     alliance = Alliance.new(alliance_params)
     alliance.organisation_id = params[:organisation_id]
     return render json: {errors: alliance.errors.values.flatten(2)}, status: 400 unless alliance.valid?
@@ -25,8 +27,9 @@ class V1::AlliancesController < ApplicationController
   end
 
   def destroy
-    alliance = Alliance.find_by(id: params[:id]) || not_found
-    alliance.destroy
+    raise 'Request Allaince is not registered for this Organisation' unless Alliance.find_by(id: params[:id]).present?
+    alliance = Alliance.find(params[:id])
+    alliance.delete
     render json: {response: true}
   end
 

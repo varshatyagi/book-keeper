@@ -4,6 +4,7 @@ class V1::CashTransactionsController < ApplicationController
   # before_action :require_admin_or_organisation_owner
 
   def create
+    return render json: {errors: ['Required parameter is missing']}, status: 400 unless cash_transactions_params.present?
     ApplicationRecord.transaction do
       unless params[:type].upcase == CashTransaction::WITHDRAWAL || params[:type].upcase == CashTransaction::DEPOSIT
         return render json: {errors: ['Transaction is not valid']}, status: 400
@@ -22,7 +23,7 @@ class V1::CashTransactionsController < ApplicationController
       cash_transaction.txn_date = Time.now unless cash_transactions_params[:txn_date].present?
       cash_transaction.organisation_id = params[:organisation_id]
       cash_transaction.save!
-      render json: {response: CashTransaction.new(cash_transaction).serializable_hash}}
+      render json: {response: [true]}
     end
   end
 
