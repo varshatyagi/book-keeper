@@ -4,7 +4,7 @@ class V1::OrganisationsController < ApplicationController
   # before_action :require_admin_or_organisation_owner
 
   def index
-    organisations = Organisation.all
+    organisations = Organisation.all.order(updated_at: :desc)
     organisations = organisations.map {|organisation| OrganisationSerializer.new(organisation).serializable_hash} if organisations.present?
     render json: {response: organisations}
   end

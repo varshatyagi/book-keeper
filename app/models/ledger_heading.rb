@@ -20,7 +20,7 @@
 
 class LedgerHeading < ApplicationRecord
 
-  validates_presence_of :name, message: "Ledger Heading is required"
+  validates_presence_of :display_name, message: "Ledger Heading name is required"
 
   TRANSACTION_TYPE_REVENUE = 'revenue'
   TRANSACTION_TYPE_ASSET = 'asset'
@@ -32,11 +32,18 @@ class LedgerHeading < ApplicationRecord
 
   CASH_TRANSACTION = "cash_transaction"
 
+  before_create :create_name_for_ledger_heading
+
   def debit?
     transaction_type == TRASACTION_TYPE_DEBIT
   end
 
   def credit?
     transaction_type == TRASACTION_TYPE_CREDIT
+  end
+
+  def create_name_for_ledger_heading
+    display_name = self.display_name
+    self.display_name = display_name.gsub(/( )/, '_').upcase
   end
 end

@@ -33,7 +33,7 @@ class V1::LedgerHeadingsController < ApplicationController
   private
 
   def prepare_ledger_headings
-    scope = LedgerHeading.all
+    scope = LedgerHeading.all.order(:display_name)
     scope = scope.where.not(transaction_type: LedgerHeading::CASH_TRANSACTION)
     if params[:transaction_type].present?
       scope = scope.where(transaction_type: params[:transaction_type])
@@ -52,7 +52,7 @@ class V1::LedgerHeadingsController < ApplicationController
 
   private
   def ledger_heading_params
-    params.require(:ledger_heading).permit(:name, :revenue, :transaction_type, :asset)
+    params.require(:ledger_heading).permit(:display_name, :revenue, :transaction_type, :asset)
   end
 
   def true?(obj)
