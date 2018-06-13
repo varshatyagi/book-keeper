@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20180607053648) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "alliances", force: :cascade do |t|
     t.string   "name"
     t.string   "gstin"
@@ -31,7 +34,7 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
     t.integer  "organisation_id"
-    t.index ["organisation_id"], name: "index_alliances_on_organisation_id"
+    t.index ["organisation_id"], name: "index_alliances_on_organisation_id", using: :btree
   end
 
   create_table "banks", force: :cascade do |t|
@@ -50,10 +53,10 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.datetime "updated_at",                                   null: false
     t.integer  "organisation_id"
     t.integer  "ledger_heading_id"
-    t.index ["ledger_heading_id"], name: "index_cash_transactions_on_ledger_heading_id"
-    t.index ["org_bank_account_id"], name: "index_cash_transactions_on_org_bank_account_id"
-    t.index ["organisation_id"], name: "index_cash_transactions_on_organisation_id"
-    t.index ["txn_date"], name: "index_cash_transactions_on_txn_date"
+    t.index ["ledger_heading_id"], name: "index_cash_transactions_on_ledger_heading_id", using: :btree
+    t.index ["org_bank_account_id"], name: "index_cash_transactions_on_org_bank_account_id", using: :btree
+    t.index ["organisation_id"], name: "index_cash_transactions_on_organisation_id", using: :btree
+    t.index ["txn_date"], name: "index_cash_transactions_on_txn_date", using: :btree
   end
 
   create_table "cities", force: :cascade do |t|
@@ -82,10 +85,10 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
     t.string   "display_name"
-    t.index ["asset"], name: "index_ledger_headings_on_asset"
-    t.index ["name"], name: "index_ledger_headings_on_name"
-    t.index ["revenue"], name: "index_ledger_headings_on_revenue"
-    t.index ["transaction_type"], name: "index_ledger_headings_on_transaction_type"
+    t.index ["asset"], name: "index_ledger_headings_on_asset", using: :btree
+    t.index ["name"], name: "index_ledger_headings_on_name", using: :btree
+    t.index ["revenue"], name: "index_ledger_headings_on_revenue", using: :btree
+    t.index ["transaction_type"], name: "index_ledger_headings_on_transaction_type", using: :btree
   end
 
   create_table "org_balances", force: :cascade do |t|
@@ -101,7 +104,7 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.datetime "updated_at",                                      null: false
     t.decimal  "debit_balance",          precision: 10, scale: 2
     t.decimal  "debit_opening_balance",  precision: 10, scale: 2
-    t.index ["organisation_id"], name: "index_org_balances_on_organisation_id"
+    t.index ["organisation_id"], name: "index_org_balances_on_organisation_id", using: :btree
   end
 
   create_table "org_bank_account_balance_summaries", force: :cascade do |t|
@@ -119,7 +122,7 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.boolean  "deleted",         default: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
-    t.datetime "financial_year"
+    t.decimal  "financial_year"
     t.datetime "opening_date"
   end
 
@@ -138,15 +141,15 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.boolean  "is_setup_complete"
     t.integer  "preferred_plan_id"
     t.datetime "business_start_date"
-    t.index ["active_plan_id"], name: "index_organisations_on_active_plan_id"
-    t.index ["owner_id"], name: "index_organisations_on_owner_id"
+    t.index ["active_plan_id"], name: "index_organisations_on_active_plan_id", using: :btree
+    t.index ["owner_id"], name: "index_organisations_on_owner_id", using: :btree
   end
 
   create_table "otps", force: :cascade do |t|
     t.string   "mob_num"
     t.string   "otp_pin"
     t.datetime "created_at"
-    t.index ["mob_num", "otp_pin"], name: "index_otps_on_mob_num_and_otp_pin", unique: true
+    t.index ["mob_num", "otp_pin"], name: "index_otps_on_mob_num_and_otp_pin", unique: true, using: :btree
   end
 
   create_table "payment_modes", force: :cascade do |t|
@@ -161,8 +164,8 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.datetime "updated_at",                               null: false
     t.datetime "plan_end_date"
     t.decimal  "amount",          precision: 10, scale: 2
-    t.index ["organisation_id"], name: "index_plans_on_organisation_id"
-    t.index ["plan_start_date"], name: "index_plans_on_plan_start_date"
+    t.index ["organisation_id"], name: "index_plans_on_organisation_id", using: :btree
+    t.index ["plan_start_date"], name: "index_plans_on_plan_start_date", using: :btree
   end
 
   create_table "sp_entries", force: :cascade do |t|
@@ -212,8 +215,8 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.integer  "org_bank_account_id"
     t.integer  "organisation_id"
     t.integer  "alliance_id"
-    t.index ["ledger_heading_id"], name: "index_transactions_on_ledger_heading_id"
-    t.index ["txn_date"], name: "index_transactions_on_txn_date"
+    t.index ["ledger_heading_id"], name: "index_transactions_on_ledger_heading_id", using: :btree
+    t.index ["txn_date"], name: "index_transactions_on_txn_date", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -233,7 +236,12 @@ ActiveRecord::Schema.define(version: 20180607053648) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.boolean  "is_temporary_password"
-    t.index ["organisation_id"], name: "index_users_on_organisation_id"
+    t.index ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
   end
 
+  add_foreign_key "org_bank_account_balance_summaries", "org_bank_accounts"
+  add_foreign_key "transactions", "alliances"
+  add_foreign_key "transactions", "ledger_headings"
+  add_foreign_key "transactions", "org_bank_accounts"
+  add_foreign_key "transactions", "organisations"
 end
