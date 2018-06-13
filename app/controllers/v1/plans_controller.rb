@@ -1,7 +1,7 @@
 class V1::PlansController < ApplicationController
 
-  before_action :require_user
-  before_action :require_admin, only: [:create, :update]
+  #before_action :require_user
+  #before_action :require_admin, only: [:create, :update]
 
   def create
     organisation = Organisation.find_by(id: params[:organisation_id]) || not_found
@@ -17,7 +17,7 @@ class V1::PlansController < ApplicationController
         user_signup_via_email(user)
       end
     end
-    render json: {response: [true]}
+    render json: {response: PlanSerializer.new(plan).serializable_hash}
   end
 
   def update
@@ -28,7 +28,7 @@ class V1::PlansController < ApplicationController
       plan.save!
       organisation.update_attributes!(active_plan_id: plan.plan)
     end
-    render json: {response: [true]}
+    render json: {response: PlanSerializer.new(plan).serializable_hash}
   end
 
   def show
