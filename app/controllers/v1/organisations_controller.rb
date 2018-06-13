@@ -1,6 +1,6 @@
 class V1::OrganisationsController < ApplicationController
 
-  # sbefore_action :require_user
+  before_action :require_user
   # before_action :require_admin_or_organisation_owner
 
   def index
@@ -17,7 +17,11 @@ class V1::OrganisationsController < ApplicationController
 
   def balance_summary
     organisation = Organisation.find(params[:id]) || not_found
-    org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year).first
+    financial_year = Common.calulate_financial_year
+    if params[:financial_year].present?
+      financial_year = Common.calulate_financial_year(fy: Date.parse(params[:financial_year]))
+    end
+    org_balance = organisation.org_balances.by_financial_year(financial_year).first
     render json: {response: OrgBalanceSerializer.new(org_balance).serializable_hash}
   end
 
@@ -86,7 +90,7 @@ class V1::OrganisationsController < ApplicationController
 
     results.each do |ledger_heading_id, total|
       ledger_heading = ledger_heading_by_ids[ledger_heading_id.to_s]
-      info = {ledger_heading: ledger_heading.name, amount: total.to_f}
+      info = {ledger_heading: ledger_heading.display_name, amount: total.to_f}
       if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
         transactions[:incomes] << info
       else
@@ -122,7 +126,7 @@ class V1::OrganisationsController < ApplicationController
 
     results.each do |ledger_heading_id, total|
       ledger_heading = ledger_heading_by_ids[ledger_heading_id.to_s]
-      info = {ledger_heading: ledger_heading.name, amount: total.to_f}
+      info = {ledger_heading: ledger_heading.display_name, amount: total.to_f}
       if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
         transactions[:liabilities] << info
       else
