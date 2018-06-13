@@ -4,9 +4,18 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Almost there...</h1>
-    <p>User Temporary password to login to your account to change your password.</p>
-    <p>Password: <%= @temporary_password %></p>
-    <p><a href="#">click here to setup your account</a></p>
+    <h4>Hurray, your plan is active now!</h4>
+    <p>Here is your temporary password to login to your Onacc account.</p>
+    <p>Password: <strong><%= @password %></strong></p>
+    <p><a href="#">Click here</a> to login to your account.</p>
+
+    <hr/>
+    <p>
+      <p><strong>Plan Info</strong></p>
+      <p>Plan Name: <strong><%= @user.organisation.plan.plan_name %></strong></p>
+      <p>Plan <%= @user.organisation.plan.plan_start_date < Date.today ? "Started" : "Starts" %> on: <strong><%= @user.organisation.plan.plan_start_date %></strong></p>
+      <p>Plan Expires on: <strong><%= @user.organisation.plan.plan_end_date %></strong></p>
+      <p>Plan Amount: <strong><%= @user.organisation.plan.amount %></strong></p>
+    </p>
   </body>
 </html>

@@ -3,17 +3,18 @@ class OrganizationNotifierMailer < ApplicationMailer
 
   admin_email = User.find_by(role: 'admin').email
 
-  def send_thank_you_email(user)
-    mail( :to => user.email, :subject => 'Thank you for signing up' )
+  def thank_you_email(user)
+    mail(to: 'varsha@newput.com', subject: 'Thank you for contacting Onacc')
   end
 
-  def activate_user
-    mail( :to => 'varsha@newput.com', :subject => 'Activate User' )
+  def activate_user(user)
+    @user = user
+    mail(to: 'varsha@newput.com', subject: 'Request to Activate Plan')
   end
 
-  def plan_activated(user)
-    @temporary_password = Common.generate_string
-    mail( :to => user.email, :subject => 'Your account has been activated successfully.' )
-
+  def plan_activated(user, password)
+    @user = user
+    @password = password
+    mail(to: 'varsha@newput.com', subject: 'Your Onacc a/c is active now!')
   end
 end

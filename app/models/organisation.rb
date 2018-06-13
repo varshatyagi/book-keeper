@@ -32,7 +32,7 @@ class Organisation < ApplicationRecord
   accepts_nested_attributes_for :org_bank_accounts
   accepts_nested_attributes_for :org_balances
 
-  after_create :create_dependent_record
+  after_create :create_org_balance
 
   validates_uniqueness_of :name, message: "Business name has already been taken", if: :name_present?
 
@@ -44,7 +44,12 @@ class Organisation < ApplicationRecord
     name.present?
   end
 
-  def create_dependent_record
+  def preferred_plan_name
+    return "n/a" if preferred_plan_id.blank?
+    Plan::PLAN_NAME[preferred_plan_id]
+  end
+
+  def create_org_balance
     OrgBalance.create({
         organisation_id: self.id,
         cash_opening_balance: 0.0,

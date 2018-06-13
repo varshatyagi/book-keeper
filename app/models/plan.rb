@@ -26,4 +26,8 @@ class Plan < ApplicationRecord
   validates_uniqueness_of :organisation_id, message: "For one Organisation there should be only one Plan."
 
   PLAN_NAME = ["Basic", "Essential", "Accountant", "Enterprise"]
+
+  def plan_name
+    PLAN_NAME[plan]
+  end
 end
