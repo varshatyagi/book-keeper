@@ -6,8 +6,7 @@ class V1::AlliancesController < ApplicationController
     query_params = {organisation_id: params[:organisation_id]}
     query_params[:alliance_type] = params[:alliance_type] if params[:alliance_type].present?
     alliances = Alliance.where(query_params)
-    return render json: {errors: ['Organisation has no Alliance']}, status: 400 unless alliances.present?
-    alliances = alliances.map {|alliance| AllianceSerializer.new(alliance).serializable_hash}
+    alliances = alliances.map {|alliance| AllianceSerializer.new(alliance).serializable_hash} if alliances.present?
     render json: {response: alliances}
   end
 
