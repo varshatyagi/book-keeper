@@ -21,7 +21,7 @@ class V1::LedgerHeadingsController < ApplicationController
 
   def update
     ledger_heading = LedgerHeading.find(params[:id])
-    ledger_heading = ledger_heading.update_attributes!(ledger_heading_params)
+    ledger_heading.update_attributes!(ledger_heading_params)
     render json: {response: LedgerHeadingSerializer.new(ledger_heading).serializable_hash}
   end
 

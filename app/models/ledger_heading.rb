@@ -44,6 +44,6 @@ class LedgerHeading < ApplicationRecord
 
   def create_name_for_ledger_heading
     display_name = self.display_name
-    self.display_name = display_name.gsub(/( )/, '_').upcase
+    self.name = display_name.gsub(/( )/, '_').upcase
   end
 end
