@@ -112,6 +112,33 @@ class V1::UsersController < ApplicationController
     render json: {response: UserSerializer.new(user).serializable_hash}
   end
 
+  # def forgot_password
+  #   if signup_params[:mob_num].present?
+  #     user = User.find_by(mob_num: signup_params[:mob_num]) || not_found
+  #     need_to_send_sms = true
+  #   elsif signup_params[:email].present?
+  #     user = User.find_by(email: signup_params[:email]) || not_found
+  #   end
+  #   user.is_temporary_password = true
+  #
+  #
+  #   user = User.find(params[:id])
+  #   options = {}
+  #   unless user.present?
+  #     return render json: {errors: ['User is not found']}
+  #   end
+  #   unless user.valid_password? user_params[:old_password]
+  #     return render json: {errors: ['Password is not correct']}
+  #   end
+  #   if user.is_temporary_password
+  #     options[:is_temporary_password] = false
+  #   end
+  #   options[:password] = user_params[:password]
+  #   options[:password_confirmation] = user_params[:password]
+  #   user.update_attributes!(options)
+  #   render json: {response: UserSerializer.new(user).serializable_hash}
+  # end
+
   def otp
     raise 'Please provide Mobile Number to send otp' unless otp_params[:mob_num].present?
     otp_existing_record = Otp.find_by(mob_num: otp_params[:mob_num])
