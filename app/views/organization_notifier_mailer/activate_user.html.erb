@@ -5,7 +5,7 @@
   </head>
   <body>
     <h4>Activate User</h4>
-    <p>User with <%= @user.email.present? ? "email: #{@user.email}" : "mobile: #{@user.mob_num}" %> has contacted for plan <strong><%= @user.organisation.preferred_plan_name %></strong> the account.</p>
+    <p>User with <%= @user.email.present? ? "email: #{@user.email}" : "mobile: #{@user.mob_num}" %> has contacted for plan <strong><%= @user.organisation.preferred_plan_name %></strong>.</p>
     <p><a href="https://online-acc.herokuapp.com/login">Click here</a> to activate the plan for this user.</p>
   </body>
 </html>

@@ -7,7 +7,7 @@ class V1::UsersController < ApplicationController
 
   def signup
     user = nil
-    success_msg = "Thank you for showing interest in Onacc. Admin will get back to you asap!"
+    success_msg = "Thank you for showing interest in Onacc. Admin will get back to you at the earliest!"
     need_to_send_sms = false
     if signup_params[:mob_num].present?
       user = User.find_by(mob_num: signup_params[:mob_num])
@@ -15,24 +15,25 @@ class V1::UsersController < ApplicationController
     elsif signup_params[:email].present?
       user = User.find_by(email: signup_params[:email])
     end
-    if user.present?
-      return render json: {response: [success_msg]}
+    if user.blank?
+      ApplicationRecord.transaction do
+        user = User.new(signup_params)
+        user.role = User::USER_ROLE_CLIENT
+        user.status = User::USER_STATUS_PENDING
+        user.save
+        organisation = Organisation.find(user.organisation.id)
+        organisation.update_attributes!(is_setup_complete: false, created_by: user.id)
+        user.update_attributes!(organisation_id: user.organisation.id)
+        if need_to_send_sms
+          Common.send_sms({message: success_msg, mob_num: user.mob_num})
+        else
+          OrganizationNotifierMailer.thank_you_email(user).deliver
+        end
+        OrganizationNotifierMailer.activate_user(user).deliver
+      end
+    elsif user.organisation.active_plan_id.blank?
+      success_msg = "We have already received a request from you. Admin will get back to you at the earliest!"
     end
-    ApplicationRecord.transaction do
-      user = User.new(signup_params)
-      user.role = User::USER_ROLE_CLIENT
-      user.status = User::USER_STATUS_PENDING
-      user.save
-      organisation = Organisation.find(user.organisation.id)
-      organisation.update_attributes!(is_setup_complete: false, created_by: user.id)
-      user.update_attributes!(organisation_id: user.organisation.id)
-    end
-    if need_to_send_sms
-      Common.send_sms({message: success_msg, mob_num: user.mob_num})
-    else
-      OrganizationNotifierMailer.thank_you_email(user).deliver
-    end
-    OrganizationNotifierMailer.activate_user(user).deliver
     render json: {response: [success_msg]}
   end
 

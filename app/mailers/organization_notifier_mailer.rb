@@ -1,7 +1,5 @@
 class OrganizationNotifierMailer < ApplicationMailer
-  default :from => 'onacc.bookkeeping.com'
-
-  admin_email = User.find_by(role: 'admin').email
+  default :from => 'vipin@newput.com'
 
   def thank_you_email(user)
     mail(:to => user.email, :subject => 'Thank you for contacting Onacc')
