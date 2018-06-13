@@ -5,35 +5,35 @@ class OrgBalanceSerializer < ActiveModel::Serializer
 
 
   def cash_opening_balance
-    object.cash_opening_balance = object.cash_opening_balance.to_f
+    object.cash_opening_balance.to_f
   end
 
   def bank_opening_balance
-    object.bank_opening_balance = object.bank_opening_balance.to_f
+    object.bank_opening_balance.to_f
   end
 
   def credit_opening_balance
-    object.credit_opening_balance = object.credit_opening_balance.to_f
+    object.credit_opening_balance.to_f
   end
 
   def cash_balance
-    object.cash_balance = object.cash_balance.to_f
+    object.cash_balance.to_f
   end
 
   def credit_balance
-    object.credit_balance = object.credit_balance.to_f
+    object.credit_balance.to_f
   end
 
   def bank_balance
-    object.bank_balance = object.bank_balance.to_f
+    object.bank_balance.to_f
   end
 
   def debit_balance
-    object.debit_balance = object.debit_balance.to_f
+    object.debit_balance.to_f
   end
 
   def debit_opening_balance
-    object.debit_opening_balance = object.debit_opening_balance.to_f
+    object.debit_opening_balance.to_f
   end
 
 end
