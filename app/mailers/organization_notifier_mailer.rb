@@ -9,7 +9,7 @@ class OrganizationNotifierMailer < ApplicationMailer
 
   def activate_user(user)
     @user = user
-    mail(:to => admin_email, :subject => 'Request to Activate Plan')
+    mail(:to => 'satya@newput.com', :subject => 'Request to Activate Plan')
   end
 
   def plan_activated(user, password)

@@ -47,8 +47,8 @@ module BookKeeper
       address: 'smtp.sendgrid.net',
       port: '587',
       authentication: :plain,
-      user_name: "niteshthakur",
-      password: "Nitesh@123",
+      user_name: "varshatyagi",
+      password: "newput2015",
       domain: 'heroku.com',
       enable_starttls_auto: true
     }
