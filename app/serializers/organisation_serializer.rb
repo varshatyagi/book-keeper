@@ -22,7 +22,7 @@ class OrganisationSerializer < ActiveModel::Serializer
       expired = plan_detail && plan_detail.plan_end_date ? plan_detail.plan_end_date < DateTime.now : nil
       plan_info = { id: plan_detail ? plan_detail.id : nil,
                     active_plan_id: active_id ? active_id : nil,
-                    active_plan_name: active_id ? Plan::PLAN_NAME[active_id] : nil,
+                    active_plan_name: active_id ? Plan::PLAN_NAME[active_id - 1] : nil,
                     plan_start_date: plan_detail && plan_detail.plan_start_date ? plan_detail.plan_start_date : nil,
                     plan_end_date: plan_detail && plan_detail.plan_end_date ? plan_detail.plan_end_date : nil,
                     amount: plan_detail && plan_detail.amount.to_f ? plan_detail.amount.to_f : nil,
