@@ -73,12 +73,10 @@ class V1::OrganisationsController < ApplicationController
 
     results = results.where("txn_date >= ?", from_date) if from_date.present?
     results = results.where("txn_date <= ?", to_date) if to_date.present?
-
-    unless from_date.present?
-      results = results.where("txn_date >= ? and txn_date < ?", financial_year_start, financial_year_end)
-    end
-
     results = results.group(:ledger_heading_id).sum(:amount)
+    # unless from_date.present?
+    #   results = results.where("txn_date >= ? and txn_date < ?", financial_year_start, financial_year_end)
+    # end
     ledger_heading_ids = results.keys
     ledger_heading_by_ids = {}
     if ledger_heading_ids.present?
@@ -109,9 +107,9 @@ class V1::OrganisationsController < ApplicationController
     results = results.where("txn_date >= ?", from_date) if from_date.present?
     results = results.where("txn_date <= ?", to_date) if to_date.present?
 
-    unless from_date.present?
-      results = results.where("txn_date >= ? and txn_date < ?", financial_year_start, financial_year_end)
-    end
+    # unless from_date.present?
+    #   results = results.where("txn_date >= ? and txn_date < ?", financial_year_start, financial_year_end)
+    # end
 
     results = results.group(:ledger_heading_id).sum(:amount)
 
@@ -165,19 +163,20 @@ class V1::OrganisationsController < ApplicationController
     financial_year_end = financial_year_start + 1.year
 
     scope = Transaction.includes(:ledger_heading).joins(:ledger_heading).where("organisation_id = ?", organisation.id)
+    if params[:ledger_heading_ids].present?
+      scope = scope.where(ledger_heading_id: params[:ledger_heading_ids])
+    end
+
+    if params[:alliance_id].present?
+      scope = scope.where(alliance_id: params[:alliance_id])
+    end
 
     scope = scope.where("txn_date >= ?", from_date) if from_date.present?
     scope = scope.where("txn_date <= ?", to_date) if to_date.present?
 
-    unless from_date.present?
-      scope = scope.where("txn_date >= ? and txn_date < ?", financial_year_start, financial_year_end)
-    end
-
-    scope_condittion = {}
-    scope_condittion[:alliance_id] = params[:alliance_id] if params[:alliance_id].present?
-    scope_condittion[:ledger_heading_ids] = params[:ledger_heading_ids] if params[:ledger_heading_ids].present?
-    scope = scope.where(scope_condittion) if scope_condittion.present?
-    scope.order(txn_date: :asc)
+    # unless from_date.present?
+    #   scope = scope.where("txn_date >= ? and txn_date < ?", financial_year_start, financial_year_end)
+    # end
 
     transactions = []
     scope.each do |transaction|
