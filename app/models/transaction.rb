@@ -39,6 +39,7 @@ class Transaction < ApplicationRecord
   def update_balance
 
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
+    raise 'Transaction can not be done outside of the financial year of Organization Bank Accounts.' unless org_balance.present?
     if payment_mode == PaymentMode::PAYMENT_MODE_BANK
       org_bank_rec = organisation.org_bank_accounts.display_acnts_with_financial_year(Common.calulate_financial_year(fy: self.txn_date))
       org_bank_rec = org_bank_rec.where(id: org_bank_account.id).first
