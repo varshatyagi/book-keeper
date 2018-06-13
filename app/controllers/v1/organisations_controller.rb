@@ -22,6 +22,7 @@ class V1::OrganisationsController < ApplicationController
       financial_year = Common.calulate_financial_year(fy: Date.parse(params[:financial_year]))
     end
     org_balance = organisation.org_balances.by_financial_year(financial_year).first
+    raise 'No organisation balance is present' unless org_balance.present?
     render json: {response: OrgBalanceSerializer.new(org_balance).serializable_hash}
   end
 
