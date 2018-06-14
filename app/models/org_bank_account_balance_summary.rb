@@ -1,13 +1,15 @@
 class OrgBankAccountBalanceSummary < ApplicationRecord
   belongs_to :org_bank_account, optional: true
 
+  scope :acnts_with_financial_year, lambda { |fy| where("org_bank_account_balance_summaries.financial_year = ?", fy)}
+
   after_create :update_total_balance
   before_create :set_financial_year
 
   def update_total_balance
     return true unless bank_balance.present? && bank_balance > 0
     cur_bal = bank_balance
-    org_bank_account = OrgBankAccount.find(org_bank_account_id)
+    org_bank_account = OrgBankAccount.find(org_bank_account.id)
     organisation = Organisation.find(org_bank_account.organisation_id)
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year).first
     unless org_balance.bank_balance.nil?
@@ -22,7 +24,6 @@ class OrgBankAccountBalanceSummary < ApplicationRecord
     else
       self.financial_year = Common.calulate_financial_year
     end
-
   end
 
 end

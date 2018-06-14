@@ -41,9 +41,8 @@ class Transaction < ApplicationRecord
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
     raise 'Transaction can not be done outside of the financial year of Organization Bank Accounts.' unless org_balance.present?
     if payment_mode == PaymentMode::PAYMENT_MODE_BANK
-      org_bank_rec = organisation.org_bank_accounts.acnts_with_financial_year(Common.calulate_financial_year(fy: self.txn_date))
-      org_bank_rec = org_bank_rec.where(id: org_bank_account.id).first
-      org_bank_balance_summary_rec = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_rec.id)
+      org_bank_balance_summary_rec = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: organisation.org_bank_accounts.id)
+      org_bank_balance_summary_rec = org_bank_balance_summary_rec.acnts_with_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
     end
     if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
