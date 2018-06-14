@@ -67,7 +67,7 @@ class Transaction < ApplicationRecord
       end
     end
 
-    if ledger_heading.name == LedgerHeading::CREDITORS || ledger_heading.name == LedgerHeading::DEBTORS
+    if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT || ledger_heading.name == LedgerHeading::DEBIT_PAYMENT
       org_balance = manage_balance_in_special_case(ledger_heading.name, org_balance)
     end
 
@@ -76,9 +76,9 @@ class Transaction < ApplicationRecord
 
   def manage_balance_in_special_case(ledger_heading, org_balance)
     case ledger_heading
-    when LedgerHeading::CREDITORS
+    when LedgerHeading::CREDIT_PAYMENT
     org_balance.credit_balance -= amount
-    when LedgerHeading::DEBTORS
+    when LedgerHeading::DEBIT_PAYMENT
     org_balance.debit_balance -= amount
     else
     end
