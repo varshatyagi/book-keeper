@@ -1200,4 +1200,4 @@ City.create(state_code: "BR", name: "Asarganj")
 City.create(state_code: "HR", name: "Sarsod")
 #### End of states seed data ####
 
-User.create(name: "admin", email: "admin@gmail.com", password: "admin", password_confirmation: "admin", role: "admin")
+User.create(name: "admin", email: "satya@newput.com", password: "admin", password_confirmation: "admin", role: "admin")

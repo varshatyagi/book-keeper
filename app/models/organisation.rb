@@ -32,21 +32,19 @@ class Organisation < ApplicationRecord
   accepts_nested_attributes_for :org_bank_accounts
   accepts_nested_attributes_for :org_balances
 
-  after_create :create_org_balance
-
   validates_uniqueness_of :name, message: "Business name has already been taken", if: :name_present?
 
   REPORT_TYPE_PROFIT_AND_LOSS = 'pl'
   REPORT_TYPE_ACCOUNT_LEDGER = 'account_ledger'
   REPORT_TYPE_BALANCE_SHEET = 'balance_sheet'
-
+  after_create :create_org_balance
   def name_present?
     name.present?
   end
 
   def preferred_plan_name
     return "n/a" if preferred_plan_id.blank?
-    Plan::PLAN_NAME[preferred_plan_id]
+    Plan::PLAN_NAME[preferred_plan_id - 1]
   end
 
   def create_org_balance
