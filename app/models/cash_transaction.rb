@@ -27,8 +27,8 @@ class CashTransaction < ApplicationRecord
 
   after_create :update_balance
 
-  WITHDRAWAL = "WITHDRAWAL"
-  DEPOSIT = "DEPOSIT"
+  WITHDRAWAL = "CASH_WITHDRAWAL"
+  DEPOSIT = "CASH_DEPOSIT"
 
   def update_balance
 
