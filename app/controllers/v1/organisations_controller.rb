@@ -165,12 +165,13 @@ class V1::OrganisationsController < ApplicationController
 
     scope = Transaction.includes(:ledger_heading).joins(:ledger_heading).where("organisation_id = ?", organisation.id)
     if params[:ledger_heading_ids].present?
-      ids = params[:ledger_heading_ids].split(' ').map(&:to_i)
+      ids = params[:ledger_heading_ids].split(',').map(&:to_i)
       scope = scope.where(ledger_heading_id: ids)
     end
 
-    if params[:alliance_id].present?
-      scope = scope.where(alliance_id: params[:alliance_id])
+    if params[:alliance_ids].present?
+      ids = params[:alliance_ids].split(',').map(&:to_i)
+      scope = scope.where(alliance_id: ids)
     end
 
     scope = scope.where("txn_date >= ?", from_date) if from_date.present?
