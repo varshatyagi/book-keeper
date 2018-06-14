@@ -27,8 +27,8 @@ class LedgerHeading < ApplicationRecord
   TRANSACTION_TYPE_CREDIT = 'credit'
   TRANSACTION_TYPE_DEBIT = 'debit'
 
-  CREDIT_PAYMENT = 'CREDIT_PAYMENT'
-  DEBIT_PAYMENT = 'DEBIT_PAYMENT'
+  CREDITORS = 'CREDITORS'
+  DEBTORS = 'DEBTORS'
 
   CASH_TRANSACTION = "cash_transaction"
 

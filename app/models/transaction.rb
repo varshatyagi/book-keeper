@@ -68,7 +68,7 @@ class Transaction < ApplicationRecord
       end
     end
 
-    if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT || ledger_heading.name == LedgerHeading::DEBIT_PAYMENT
+    if ledger_heading.name == LedgerHeading::CREDITORS || ledger_heading.name == LedgerHeading::DEBTORS
       org_balance = manage_balance_in_special_case(ledger_heading.name, org_balance)
     end
 
