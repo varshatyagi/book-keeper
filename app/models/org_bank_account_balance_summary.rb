@@ -2,6 +2,7 @@ class OrgBankAccountBalanceSummary < ApplicationRecord
   belongs_to :org_bank_account, optional: true
 
   after_create :update_total_balance
+  before_create :set_financial_year
 
   def update_total_balance
     return true unless bank_balance.present? && bank_balance > 0
@@ -13,6 +14,15 @@ class OrgBankAccountBalanceSummary < ApplicationRecord
       cur_bal += org_balance.bank_balance
     end
     org_balance.update_attributes!(bank_balance: cur_bal, bank_opening_balance: cur_bal)
+  end
+
+  def set_financial_year
+    if self.financial_year.present?
+      self.financial_year = Common.calulate_financial_year(fy: financial_year)
+    else
+      self.financial_year = Common.calulate_financial_year
+    end
+
   end
 
 end

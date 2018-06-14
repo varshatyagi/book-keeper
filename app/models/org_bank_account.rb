@@ -25,16 +25,6 @@ class OrgBankAccount < ApplicationRecord
   validates_presence_of :bank_id
 
   accepts_nested_attributes_for :org_bank_account_balance_summary
-  before_create :set_financial_year
 
-
-  def set_financial_year
-    if self.financial_year.present?
-      self.financial_year = Common.calulate_financial_year(fy: financial_year)
-    else
-      self.financial_year = Common.calulate_financial_year
-    end
-
-  end
 
 end
