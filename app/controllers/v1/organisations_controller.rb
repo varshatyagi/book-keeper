@@ -103,7 +103,7 @@ class V1::OrganisationsController < ApplicationController
     financial_year_end = financial_year_start + 1.year
     transactions = {assets: [], liabilities: []}
 
-    results = Transaction.joins(:ledger_heading).where("organisation_id = ?", organisation.id).where("ledger_headings.asset = ?", true).where("alliance_id is null")
+    results = Transaction.joins(:ledger_heading).where("organisation_id = ?", organisation.id).where("ledger_headings.asset = ?", true)
 
     results = results.where("txn_date >= ?", from_date) if from_date.present?
     results = results.where("txn_date <= ?", to_date) if to_date.present?
