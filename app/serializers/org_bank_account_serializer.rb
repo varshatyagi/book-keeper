@@ -1,5 +1,5 @@
 class OrgBankAccountSerializer < ActiveModel::Serializer
-  attributes :id, :account_num, :organisation_id, :financial_year
+  attributes :id, :account_num, :organisation_id
 
   attributes :bank, :org_bank_account_summary
 
