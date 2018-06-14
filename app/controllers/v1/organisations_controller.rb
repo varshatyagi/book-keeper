@@ -63,7 +63,7 @@ class V1::OrganisationsController < ApplicationController
   private
 
   def organisation_params
-    params.require(:organisation).permit(:name, :is_setup_complete, :business_start_date, org_balances_attributes: [:id, :cash_balance, :cash_opening_balance], org_bank_accounts_attributes: [:id, :bank_id, :account_num, :opening_date, :organisation_id, org_bank_account_balance_summaries_attributes: [:id, :bank_balance, :financial_year, :opening_balance]])
+    params.require(:organisation).permit(:name, :is_setup_complete, :business_start_date, org_balances_attributes: [:id, :cash_balance, :cash_opening_balance], org_bank_accounts_attributes: [:id, :bank_id, :account_num, :opening_date, :organisation_id, org_bank_account_balance_summary_attributes: [:id, :bank_balance, :financial_year, :opening_balance]])
   end
 
   def prepare_pl_report_data(from_date, to_date, organisation, financial_year_start)
