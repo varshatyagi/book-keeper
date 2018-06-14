@@ -165,7 +165,8 @@ class V1::OrganisationsController < ApplicationController
 
     scope = Transaction.includes(:ledger_heading).joins(:ledger_heading).where("organisation_id = ?", organisation.id)
     if params[:ledger_heading_ids].present?
-      scope = scope.where("ledger_heading_id IN (?)", params[:ledger_heading_ids])
+      ids = params[:ledger_heading_ids].split(' ').map(&:to_i)
+      scope = scope.where(ledger_heading_id: ids)
     end
 
     if params[:alliance_id].present?
