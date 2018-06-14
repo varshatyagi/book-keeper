@@ -41,16 +41,5 @@ module BookKeeper
     end
     config.action_mailer.asset_host = config.action_controller.asset_host
     # config.action_mailer.default_url_options = { host: "onacc.com" }
-
-    ActionMailer::Base.delivery_method = :smtp
-    ActionMailer::Base.smtp_settings = {
-      address: 'smtp.sendgrid.net',
-      port: '587',
-      authentication: :plain,
-      user_name: "varshat",
-      password: "newput2015",
-      domain: 'heroku.com',
-      enable_starttls_auto: true
-    }
   end
 end
