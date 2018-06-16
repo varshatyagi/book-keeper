@@ -4,7 +4,7 @@ class V1::PlansController < ApplicationController
   before_action :require_admin, only: [:create, :update]
 
   def create
-    organisation = Organisation.find_by(id: params[:organisation_id]) || not_found
+    organisation = Organisation.find(params[:organisation_id]) || not_found
     plan = Plan.new(plan_params)
     plan[:plan_end_date] = plan[:plan_start_date] + 1.year
     ApplicationRecord.transaction do

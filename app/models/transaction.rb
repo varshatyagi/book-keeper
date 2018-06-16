@@ -39,16 +39,14 @@ class Transaction < ApplicationRecord
   def update_balance
 
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
+    org_bank_summary = OrgBankAccountBalanceSummary.where(org_bank_account_id: org_bank_account_id).acnts_with_financial_year(Common.calulate_financial_year(fy: txn_date)).first
     raise 'Transaction can not be done outside of the financial year of Organization Bank Accounts.' unless org_balance.present?
-    if payment_mode == PaymentMode::PAYMENT_MODE_BANK
-      org_bank_balance_summary_rec = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: organisation.org_bank_accounts.id)
-      org_bank_balance_summary_rec = org_bank_balance_summary_rec.acnts_with_financial_year(Common.calulate_financial_year(fy: self.txn_date))
-    end
+
     if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
         org_balance.bank_balance += amount
-        org_bank_balance_summary_rec.bank_balance += amount
-        org_bank_balance_summary_rec.save!
+        org_bank_summary.bank_balance += amount
+        org_bank_summary.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_DEBIT
         org_balance.debit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH
@@ -58,8 +56,8 @@ class Transaction < ApplicationRecord
     elsif ledger_heading[:transaction_type] == LedgerHeading::TRANSACTION_TYPE_DEBIT
       if payment_mode == PaymentMode::PAYMENT_MODE_BANK
         org_balance.bank_balance -= amount
-        org_bank_balance_summary_rec.bank_balance -= amount
-        org_bank_balance_summary_rec.save!
+        org_bank_summary.bank_balance -= amount
+        org_bank_summary.save!
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CREDIT
         org_balance.credit_balance += amount
       elsif payment_mode == PaymentMode::PAYMENT_MODE_CASH

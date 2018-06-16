@@ -27,4 +27,14 @@ class Common
     res = Net::HTTP.post_form(uri, 'apikey' => Rails.configuration.SMS[:API_KEY], 'message' => object[:message], 'numbers' => object[:mob_num], 'test' => true)
     response = JSON.parse(res.body)
   end
+
+  def self.prepare_finanacial_year(fy)
+    fy_arr = []
+    while fy.year < Date.today.year
+      fy_arr << {fy: fy}
+      fy = fy + 1.year
+    end
+    fy_arr
+  end
+
 end

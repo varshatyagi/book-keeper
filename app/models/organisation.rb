@@ -37,7 +37,7 @@ class Organisation < ApplicationRecord
   REPORT_TYPE_PROFIT_AND_LOSS = 'pl'
   REPORT_TYPE_ACCOUNT_LEDGER = 'account_ledger'
   REPORT_TYPE_BALANCE_SHEET = 'balance_sheet'
-  after_create :create_org_balance
+
   def name_present?
     name.present?
   end
@@ -47,18 +47,26 @@ class Organisation < ApplicationRecord
     Plan::PLAN_NAME[preferred_plan_id - 1]
   end
 
-  def create_org_balance
-    OrgBalance.create({
-        organisation_id: self.id,
-        cash_opening_balance: 0.0,
-        bank_opening_balance: 0.0,
-        credit_opening_balance: 0.0,
-        financial_year_start: Common.calulate_financial_year,
-        cash_balance: 0.0,
+  def create_org_balances
+    if business_start_date.present?
+      fy_of_business_start_date = Common.calulate_financial_year(fy: business_start_date)
+    else
+      fy_of_business_start_date = Common.calulate_financial_year
+    end
+    fy_arr = Common.prepare_finanacial_year(fy_of_business_start_date)
+    fy_arr.each do |fy|
+      OrgBalance.create!({
+        financial_year_start: fy[:fy],
         bank_balance: 0.0,
-        credit_balance: 0.0,
+        bank_opening_balance: 0.0,
+        cash_balance: 0.0,
+        cash_opening_balance: 0.0,
         debit_balance: 0.0,
-        debit_opening_balance: 0.0
+        debit_opening_balance: 0.0,
+        organisation_id: id,
+        credit_balance: 0.0,
+        credit_opening_balance: 0.0
       })
+    end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180614070823) do
+ActiveRecord::Schema.define(version: 20180618070216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,7 +45,6 @@ ActiveRecord::Schema.define(version: 20180614070823) do
 
   create_table "cash_transactions", force: :cascade do |t|
     t.decimal  "amount",              precision: 10, scale: 2
-    t.integer  "org_bank_account_id"
     t.boolean  "withdrawal"
     t.datetime "txn_date"
     t.string   "remarks"
@@ -53,8 +52,8 @@ ActiveRecord::Schema.define(version: 20180614070823) do
     t.datetime "updated_at",                                   null: false
     t.integer  "organisation_id"
     t.integer  "ledger_heading_id"
+    t.integer  "org_bank_account_id"
     t.index ["ledger_heading_id"], name: "index_cash_transactions_on_ledger_heading_id", using: :btree
-    t.index ["org_bank_account_id"], name: "index_cash_transactions_on_org_bank_account_id", using: :btree
     t.index ["organisation_id"], name: "index_cash_transactions_on_organisation_id", using: :btree
     t.index ["txn_date"], name: "index_cash_transactions_on_txn_date", using: :btree
   end
@@ -93,17 +92,17 @@ ActiveRecord::Schema.define(version: 20180614070823) do
 
   create_table "org_balances", force: :cascade do |t|
     t.integer  "organisation_id"
-    t.decimal  "cash_opening_balance",   precision: 10, scale: 2
-    t.decimal  "bank_opening_balance",   precision: 10, scale: 2
-    t.decimal  "credit_opening_balance", precision: 10, scale: 2
+    t.decimal  "cash_opening_balance",   default: "0.0", null: false
+    t.decimal  "bank_opening_balance",   default: "0.0", null: false
+    t.decimal  "credit_opening_balance", default: "0.0", null: false
     t.datetime "financial_year_start"
-    t.decimal  "cash_balance",           precision: 10, scale: 2
-    t.decimal  "bank_balance",           precision: 10, scale: 2
-    t.decimal  "credit_balance",         precision: 10, scale: 2
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
-    t.decimal  "debit_balance",          precision: 10, scale: 2
-    t.decimal  "debit_opening_balance",  precision: 10, scale: 2
+    t.decimal  "cash_balance",           default: "0.0", null: false
+    t.decimal  "bank_balance",           default: "0.0", null: false
+    t.decimal  "credit_balance",         default: "0.0", null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.decimal  "debit_balance",          default: "0.0", null: false
+    t.decimal  "debit_opening_balance",  default: "0.0", null: false
     t.index ["organisation_id"], name: "index_org_balances_on_organisation_id", using: :btree
   end
 
@@ -212,9 +211,9 @@ ActiveRecord::Schema.define(version: 20180614070823) do
     t.integer  "created_by"
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
-    t.integer  "org_bank_account_id"
     t.integer  "organisation_id"
     t.integer  "alliance_id"
+    t.integer  "org_bank_account_id"
     t.index ["ledger_heading_id"], name: "index_transactions_on_ledger_heading_id", using: :btree
     t.index ["txn_date"], name: "index_transactions_on_txn_date", using: :btree
   end
@@ -242,6 +241,5 @@ ActiveRecord::Schema.define(version: 20180614070823) do
   add_foreign_key "org_bank_account_balance_summaries", "org_bank_accounts"
   add_foreign_key "transactions", "alliances"
   add_foreign_key "transactions", "ledger_headings"
-  add_foreign_key "transactions", "org_bank_accounts"
   add_foreign_key "transactions", "organisations"
 end

@@ -1,6 +1,6 @@
 class V1::CashTransactionsController < ApplicationController
 
-  before_action :require_user
+  # before_action :require_user
   # before_action :require_admin_or_organisation_owner
 
   def create
@@ -28,6 +28,6 @@ class V1::CashTransactionsController < ApplicationController
 
   private
   def cash_transactions_params
-    params.require(:cash_transaction).permit(:org_bank_account_id, :amount, :txn_date, :remarks) if params[:cash_transaction]
+    params.require(:cash_transaction).permit(:org_bank_account_id, :amount, :txn_date, :remarks, :organisation_id) if params[:cash_transaction]
   end
 end
