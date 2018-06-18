@@ -38,7 +38,7 @@ class V1::PlansController < ApplicationController
   private
 
   def plan_params
-    params.require(:plan).permit(:amount, :plan_start_date, :plan_end_date, :plan, :organisation_id) if params[:plan]
+    params.require(:plan).permit(:amount, :plan_start_date, :plan_end_date, :plan, :organisation_id, :remarks) if params[:plan]
   end
 
   def user_signup_via_mobile(user)

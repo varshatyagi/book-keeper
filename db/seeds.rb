@@ -3,8 +3,8 @@
 
 #### LedgerHeading seed data ####
 
-LedgerHeading.create(name: 'CREDIT_PAYMENT', display_name: "Credit Payment", revenue: 1, transaction_type: 'debit', asset: 0)
-LedgerHeading.create(name: 'DEBIT_PAYMENT', display_name: "Debit Payment", revenue: 1, transaction_type: 'credit', asset: 0)
+LedgerHeading.create(name: 'CREDIT_PAYMENT', display_name: "Credit Payment", revenue: 0, transaction_type: 'debit', asset: 0)
+LedgerHeading.create(name: 'DEBIT_PAYMENT', display_name: "Debit Payment", revenue: 0, transaction_type: 'credit', asset: 0)
 LedgerHeading.create(name: 'WITHDRAWAL', display_name: "Cash Withdrawal", revenue: 0, transaction_type: 'cash_transaction' , asset: 0)
 LedgerHeading.create(name: 'DEPOSIT', display_name: "Cash Deposit", revenue: 0, transaction_type: 'cash_transaction' , asset: 0)
 
