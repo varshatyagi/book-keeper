@@ -1,7 +1,7 @@
 class V1::TransactionsController < ApplicationController
 
   before_action :require_user
-  # before_action :require_admin_or_organisation_owner
+  #before_action :require_admin_or_organisation_owner
 
   def create
     ApplicationRecord.transaction do

@@ -13,9 +13,9 @@
     <p>
       <p><strong>Plan Info</strong></p>
       <p>Plan Name: <strong><%= @user.organisation.plan.plan_name %></strong></p>
-      <p>Plan <%= @user.organisation.plan.plan_start_date < Date.today ? "Started" : "Starts" %> on: <strong><%= @user.organisation.plan.plan_start_date %></strong></p>
-      <p>Plan Expires on: <strong><%= @user.organisation.plan.plan_end_date %></strong></p>
-      <p>Plan Amount: <strong><%= @user.organisation.plan.amount %></strong></p>
+      <p>Plan <%= @user.organisation.plan.plan_start_date < Date.today ? "Started" : "Starts" %> on: <strong><%= @user.organisation.plan.plan_start_date.strftime('%m/%d/%Y') %></strong></p>
+      <p>Plan Expires on: <strong><%= @user.organisation.plan.plan_end_date.strftime('%m/%d/%Y') %></strong></p>
+      <p>Plan Amount: <strong>Rs. <%= @user.organisation.plan.amount %>/-</strong></p>
     </p>
   </body>
 </html>
