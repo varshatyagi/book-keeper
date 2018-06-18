@@ -23,6 +23,12 @@ class V1::AlliancesController < ApplicationController
     render json: {response: AllianceSerializer.new(alliance).serializable_hash}
   end
 
+  def update
+    alliance = Alliance.find(params[:id]) || not_found
+    alliance.update_attributes!(alliance_params)
+    render json: {response: AllianceSerializer.new(alliance).serializable_hash}
+  end
+
   def destroy
     alliance = Alliance.find_by(id: params[:id]) || not_found
     alliance.destroy
