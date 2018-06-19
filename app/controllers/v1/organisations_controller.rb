@@ -147,19 +147,18 @@ class V1::OrganisationsController < ApplicationController
       expense = collect_sum(profit_loss_records[:expenses])
     end
 
+    org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: financial_year_start)).first
+    # add bank bal, cash bal, debitors in assets
+    transactions[:assets] << {ledger_heading: "Bank A/C", amount: org_balance.bank_balance.to_f}
+    transactions[:assets] << {ledger_heading: "Cash A/C", amount: org_balance.cash_balance.to_f}
+    transactions[:assets] << {ledger_heading: "Debtors", amount: org_balance.debit_balance.to_f, transaction_type: 'debit'}
+    transactions[:liabilities] << {ledger_heading: "Creditors", amount: org_balance.credit_balance.to_f, transaction_type: 'credit'}
+
     if income > expense
       transactions[:liabilities] << {ledger_heading: "Profit of the year", amount: (income - expense)}
     else
       transactions[:assets] << {ledger_heading: "Loss of the year", amount: (expense - income)}
     end
-
-    org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: financial_year_start)).first
-    # add bank bal, cash bal, debitors in assets
-    transactions[:assets] << {ledger_heading: "Bank A/C", amount: org_balance.bank_balance.to_f}
-    transactions[:assets] << {ledger_heading: "Cash A/C", amount: org_balance.cash_balance.to_f}
-    transactions[:assets] << {ledger_heading: "Debtors", amount: org_balance.debit_balance.to_f}
-    transactions[:liabilities] << {ledger_heading: "Creditors", amount: org_balance.credit_balance.to_f}
-
     transactions
   end
 
