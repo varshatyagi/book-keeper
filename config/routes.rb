@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     resources :users do
       member do
         post :change_password
+        post :forgot_password
       end
     end
     resources :ledger_headings

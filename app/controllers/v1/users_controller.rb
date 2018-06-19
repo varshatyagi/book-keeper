@@ -112,32 +112,28 @@ class V1::UsersController < ApplicationController
     render json: {response: UserSerializer.new(user).serializable_hash}
   end
 
-  # def forgot_password
-  #   if signup_params[:mob_num].present?
-  #     user = User.find_by(mob_num: signup_params[:mob_num]) || not_found
-  #     need_to_send_sms = true
-  #   elsif signup_params[:email].present?
-  #     user = User.find_by(email: signup_params[:email]) || not_found
-  #   end
-  #   user.is_temporary_password = true
-  #
-  #
-  #   user = User.find(params[:id])
-  #   options = {}
-  #   unless user.present?
-  #     return render json: {errors: ['User is not found']}
-  #   end
-  #   unless user.valid_password? user_params[:old_password]
-  #     return render json: {errors: ['Password is not correct']}
-  #   end
-  #   if user.is_temporary_password
-  #     options[:is_temporary_password] = false
-  #   end
-  #   options[:password] = user_params[:password]
-  #   options[:password_confirmation] = user_params[:password]
-  #   user.update_attributes!(options)
-  #   render json: {response: UserSerializer.new(user).serializable_hash}
-  # end
+  def forgot_password
+    if signup_params[:mob_num].present?
+      user = User.find_by(mob_num: signup_params[:mob_num])
+      need_to_send_sms = true
+    elsif signup_params[:email].present?
+      user = User.find_by(email: signup_params[:email])
+    end
+    unless user.present?
+      return render json: {errors: 'User is not found'}
+    end
+    user.is_temporary_password = true
+    password = Common.generate_string
+    user.update_attributes({password: password, password_confirmation: password})
+
+    message = "Your temporary password is : #{password}"
+    if need_to_send_sms
+      Common.send_sms({message: message, mob_num: user.mob_num})
+    else
+      OrganizationNotifierMailer.forgot_password(user, password).deliver
+    end
+    render json: {response: UserSerializer.new(user).serializable_hash}
+  end
 
   def otp
     raise 'Please provide Mobile Number to send otp' unless otp_params[:mob_num].present?
