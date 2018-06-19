@@ -4,7 +4,6 @@ Rails.application.routes.draw do
     resources :users do
       member do
         post :change_password
-        post :forgot_password
       end
     end
     resources :ledger_headings
@@ -28,6 +27,7 @@ Rails.application.routes.draw do
     post "otp", controller: 'users', action: :otp
     get "states", controller: 'states', action: :index
     get "cities", controller: 'cities', action: :index
+    post "forgot_password", controller: 'users', action: :forgot_password
 
   end
 end
