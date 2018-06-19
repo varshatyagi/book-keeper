@@ -15,6 +15,19 @@ class V1::TransactionsController < ApplicationController
     render json: {response: results}
   end
 
+  def show
+    transaction = Transaction.find(params[:id]) || not_found
+    render json: {response: TransactionSerializer.new(transaction).serializable_hash}
+  end
+
+  def update
+    transaction = Transaction.find(params[:id]) || not_found
+    ApplicationRecord.transaction do
+      transaction.update_attributes!(transaction_params)
+    end
+    render json: {response: TransactionSerializer.new(transaction).serializable_hash}
+  end
+
   def create
     ApplicationRecord.transaction do
       transaction = Transaction.new(transaction_params)

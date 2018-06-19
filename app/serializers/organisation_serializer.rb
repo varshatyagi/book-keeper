@@ -27,7 +27,7 @@ class OrganisationSerializer < ActiveModel::Serializer
                     plan_end_date: plan_detail && plan_detail.plan_end_date ? plan_detail.plan_end_date.strftime('%m/%d/%Y') : nil,
                     amount: plan_detail && plan_detail.amount.to_f ? plan_detail.amount.to_f : nil,
                     expired: expired,
-                    remark: plan_detail && plan_detail.remarks ? plan_detail.remarks : nil
+                    remarks: plan_detail && plan_detail.remarks ? plan_detail.remarks : nil
                   }
     end
       return plan_info

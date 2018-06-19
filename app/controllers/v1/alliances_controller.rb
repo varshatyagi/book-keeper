@@ -11,7 +11,7 @@ class V1::AlliancesController < ApplicationController
   end
 
   def show
-    alliance = Alliance.find(id: params[:id]) || not_found
+    alliance = Alliance.find(params[:id]) || not_found
     render json: {response: AllianceSerializer.new(alliance).serializable_hash}
   end
 

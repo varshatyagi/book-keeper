@@ -1,6 +1,6 @@
 class TransactionSerializer < ActiveModel::Serializer
   attributes :id, :ledger_heading_id, :amount, :remarks, :payment_mode, :txn_date
-  attributes :organisation_id, :alliance_id
+  attributes :organisation_id, :alliance_id, :org_bank_account_id
 
   def amount
     object.amount.to_f
