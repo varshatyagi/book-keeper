@@ -188,7 +188,7 @@ class V1::OrganisationsController < ApplicationController
       transactions << {
         ledger_heading: transaction.ledger_heading.display_name,
         txn_date: transaction.txn_date.strftime("%d-%m-%Y"),
-        transaction_type: transaction.ledger_heading.transaction_type,
+        transaction_type: transaction.ledger_heading.ledger_direction,
         amount: transaction.amount.to_f,
         remarks: transaction.remarks
       }
