@@ -19,7 +19,7 @@ class OrganisationSerializer < ActiveModel::Serializer
     elsif object.user.status == User::USER_STATUS_ACTIVE
       plan_detail = object.plan
       # if plan end date is smaller than current time than expired flag is true
-      expired = plan_detail && plan_detail.plan_end_date ? plan_detail.plan_end_date < DateTime.now : nil
+      expired = plan_detail.plan_end_date < DateTime.now
       plan_info = { id: plan_detail ? plan_detail.id : nil,
                     active_plan_id: active_id ? active_id : nil,
                     active_plan_name: active_id ? Plan::PLAN_NAME[active_id - 1] : nil,

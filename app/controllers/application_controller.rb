@@ -43,6 +43,14 @@ class ApplicationController < ActionController::API
     render json: {errors: ['You are not authorized to access this resources']}
   end
 
+  def plan_expired
+    plan = @current_user.organisation.plan
+    if plan.plan_end_date < DateTime.now
+      return render json: {errors: ['Your plan has been expired. Please contact Onacc admin to renew it.']}, status: 400
+    end
+    true
+  end
+
   private
 
   def valid_token?
