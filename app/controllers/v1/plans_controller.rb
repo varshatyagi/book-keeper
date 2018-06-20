@@ -6,7 +6,7 @@ class V1::PlansController < ApplicationController
   def create
     organisation = Organisation.find(params[:organisation_id]) || not_found
     plan = Plan.new(plan_params)
-    plan[:plan_end_date] = plan[:plan_start_date] + 1.year
+    plan[:plan_end_date] = plan[:plan_start_date] + 1.year if plan_params[:plan_end_date].blank?
     ApplicationRecord.transaction do
       plan.save!
       organisation.update_attributes!(active_plan_id: plan.plan)
