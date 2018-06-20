@@ -41,7 +41,7 @@ class OrgBankAccount < ApplicationRecord
       })
     end
     # Do once only for current financial_year
-    capital_accrued_bank_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_BANK)
+    capital_accrued_bank_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_BANK).id
     org_bank_account_blance_summary = org_bank_account_balance_summaries.acnts_with_financial_year(Common.calulate_financial_year).first
     Transaction.create!({
       ledger_heading_id: capital_accrued_bank_ledger_id,
