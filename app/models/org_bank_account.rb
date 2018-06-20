@@ -40,6 +40,16 @@ class OrgBankAccount < ApplicationRecord
         opening_balance: 0.0
       })
     end
+    # Do once only for current financial_year
+    capital_accrued_bank_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_BANK)
+    org_bank_account_blance_summary = org_bank_account_balance_summaries.acnts_with_financial_year(Common.calulate_financial_year).first
+    Transaction.create!({
+      ledger_heading_id: capital_accrued_bank_ledger_id,
+      amount: org_bank_account_blance_summary.bank_opening_balance.to_f,
+      remarks: 'CAPITAL_ACCRUED_BANK',
+      payment_mode: 'bank',
+      txn_date: org_bank_account_blance_summary.created_at
+    })
   end
 
 end

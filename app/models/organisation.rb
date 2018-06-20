@@ -32,6 +32,8 @@ class Organisation < ApplicationRecord
   accepts_nested_attributes_for :org_bank_accounts
   accepts_nested_attributes_for :org_balances
 
+  after_update :do_transaction
+
   REPORT_TYPE_PROFIT_AND_LOSS = 'pl'
   REPORT_TYPE_ACCOUNT_LEDGER = 'account_ledger'
   REPORT_TYPE_BALANCE_SHEET = 'balance_sheet'
@@ -62,5 +64,19 @@ class Organisation < ApplicationRecord
         credit_opening_balance: 0.0
       })
     end
+  end
+
+  def do_transaction
+    capital_accrued_cash_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_CASH)
+
+    org_balance = org_balances.by_financial_year(Common.calulate_financial_year).first
+    Transaction.create!({
+      ledger_heading_id: capital_accrued_cash_ledger_id,
+      amount: org_balance.cash_opening_balance.to_f,
+      remarks: 'CAPITAL_ACCRUED_CASH',
+      payment_mode: 'cash',
+      txn_date: org_balance.created_at
+    })
+
   end
 end

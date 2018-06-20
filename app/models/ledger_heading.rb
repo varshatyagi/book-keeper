@@ -32,6 +32,9 @@ class LedgerHeading < ApplicationRecord
 
   CASH_TRANSACTION = "cash_transaction"
 
+  CAPITAL_ACCRUED_CASH = "CAPITAL_ACCRUED_CASH"
+  CAPITAL_ACCRUED_BANK = "CAPITAL_ACCRUED_BANK"
+
   before_create :create_name_for_ledger_heading
 
   def debit?

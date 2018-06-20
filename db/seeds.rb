@@ -2,11 +2,19 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 #### LedgerHeading seed data ####
-
-LedgerHeading.create(name: 'CREDIT_PAYMENT', display_name: "Credit Payment", revenue: 0, transaction_type: 'debit', asset: 0)
-LedgerHeading.create(name: 'DEBIT_PAYMENT', display_name: "Debit Payment", revenue: 0, transaction_type: 'credit', asset: 0)
-LedgerHeading.create(name: 'WITHDRAWAL', display_name: "Cash Withdrawal", revenue: 0, transaction_type: 'cash_transaction' , asset: 0)
-LedgerHeading.create(name: 'DEPOSIT', display_name: "Cash Deposit", revenue: 0, transaction_type: 'cash_transaction' , asset: 0)
+#
+LedgerHeading.create(name: 'CREDIT_PAYMENT', display_name: "Credit Payment", revenue: 0, transaction_type: 'debit', asset: 0, ledger_direction: 'credit')
+LedgerHeading.create(name: 'DEBIT_PAYMENT', display_name: "Debit Payment", revenue: 0, transaction_type: 'credit', asset: 0, ledger_direction: 'debit')
+LedgerHeading.create(name: 'WITHDRAWAL', display_name: "Cash Withdrawal", revenue: 0, transaction_type: 'cash_transaction' , asset: 0, ledger_direction: 'debit')
+LedgerHeading.create(name: 'DEPOSIT', display_name: "Cash Deposit", revenue: 0, transaction_type: 'cash_transaction' , asset: 0, ledger_direction: 'credit')
+LedgerHeading.create(name: 'CAPITAL_ACCRUED_CASH', display_name: "Capital accrued cash", revenue: 0, transaction_type: 'debit' , asset: 1, ledger_direction: 'credit')
+LedgerHeading.create(name: 'CAPITAL_ACCRUED_BANK', display_name: "Capital accrued bank", revenue: 0, transaction_type: 'debit' , asset: 1, ledger_direction: 'credit')
+LedgerHeading.create(name: 'WATER_BILL', display_name: "Water Bill", revenue: 1, transaction_type: 'debit' , asset: 0, ledger_direction: 'debit')
+LedgerHeading.create(name: 'HOUSE_RENT', display_name: "House Rent", revenue: 1, transaction_type: 'credit' , asset: 0, ledger_direction: 'credit')
+LedgerHeading.create(name: 'FURNITURE', display_name: "Furniture", revenue: 0, transaction_type: 'debit' , asset: 1, ledger_direction: 'debit')
+LedgerHeading.create(name: 'HOUSE_RENT', display_name: "House Rent", revenue: 1, transaction_type: 'debit' , asset: 0, ledger_direction: 'debit')
+LedgerHeading.create(name: 'SALARIES', display_name: "Salaries", revenue: 1, transaction_type: 'debit' , asset: 0, ledger_direction: 'debit')
+LedgerHeading.create(name: 'CONVEYANCE_ALLOWANCE', display_name: "Conveyance Allowance", revenue: 1, transaction_type: 'debit' , asset: 0, ledger_direction: 'debit')
 
 #### End of LedgerHeading seed data ####
 
