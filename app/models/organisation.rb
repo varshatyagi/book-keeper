@@ -62,15 +62,21 @@ class Organisation < ApplicationRecord
         credit_opening_balance: 0.0
       })
     end
-    capital_accrued_cash_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_CASH).id
 
+    transaction = Transaction.joins(:ledger_heading).where('organisation_id = ?', id).where('ledger_headings.name = ?', LedgerHeading::CAPITAL_ACCRUED_CASH)
+    if transaction.present?
+      return
+    end
+    capital_accrued_cash_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_CASH).id
     org_balance = org_balances.by_financial_year(Common.calulate_financial_year).first
     Transaction.create!({
       ledger_heading_id: capital_accrued_cash_ledger_id,
       amount: org_balance.cash_opening_balance.to_f,
       remarks: 'CAPITAL_ACCRUED_CASH',
       payment_mode: 'cash',
-      txn_date: org_balance.created_at
+      txn_date: org_balance.created_at,
+      created_by: owner_id,
+      organisation_id: id
     })
   end
 end
