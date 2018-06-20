@@ -44,7 +44,8 @@ class ApplicationController < ActionController::API
   end
 
   def plan_expired
-    plan = @current_user.organisation.plan
+    organisation = Organisation.find(params[:organisation_id])
+    plan = organisation.plan
     if plan.plan_end_date < DateTime.now
       return render json: {errors: ['Your plan has been expired. Please contact Onacc admin to renew it.']}, status: 400
     end
