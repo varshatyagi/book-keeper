@@ -195,6 +195,7 @@ class V1::OrganisationsController < ApplicationController
     transactions = []
     scope.each do |transaction|
       transactions << {
+        id: transaction.id,
         ledger_heading: transaction.ledger_heading,
         txn_date: transaction.txn_date.strftime("%d-%m-%Y"),
         transaction_type: transaction.ledger_heading.ledger_direction,
