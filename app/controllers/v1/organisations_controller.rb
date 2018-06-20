@@ -201,7 +201,7 @@ class V1::OrganisationsController < ApplicationController
         transaction_type: transaction.ledger_heading.ledger_direction,
         amount: transaction.amount.to_f,
         remarks: transaction.remarks,
-        alliance: transaction.alliance_id ? transaction.alliance
+        alliance: transaction.alliance_id ? transaction.alliance : nil
       }
     end
     transactions
