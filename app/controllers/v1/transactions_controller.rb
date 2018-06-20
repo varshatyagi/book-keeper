@@ -35,6 +35,7 @@ class V1::TransactionsController < ApplicationController
   def update
     transaction = Transaction.find(params[:id]) || not_found
     ApplicationRecord.transaction do
+      transaction.update_balance(Transaction::REVERT_TRANSACTION)
       transaction.update_attributes!(transaction_params)
     end
     render json: {response: TransactionSerializer.new(transaction).serializable_hash}
@@ -48,7 +49,7 @@ class V1::TransactionsController < ApplicationController
       transaction.txn_date = Time.now unless transaction_params[:txn_date].present?
       transaction.organisation_id = params[:organisation_id]
       transaction.save!
-      transaction.update_balance
+      transaction.update_balance(Transaction::UPDATE_TRANSACTION)
       render json: {response: true}
     end
   end
