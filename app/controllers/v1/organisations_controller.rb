@@ -152,8 +152,8 @@ class V1::OrganisationsController < ApplicationController
     # add bank bal, cash bal, debitors in assets
     transactions[:assets] << {ledger_heading: "Bank A/C", amount: org_balance.bank_balance.to_f}
     transactions[:assets] << {ledger_heading: "Cash A/C", amount: org_balance.cash_balance.to_f}
-    transactions[:assets] << {ledger_heading: "Debtors", amount: org_balance.debit_balance.to_f, transaction_type: 'debit'}
-    transactions[:liabilities] << {ledger_heading: "Creditors", amount: org_balance.credit_balance.to_f, transaction_type: 'credit'}
+    transactions[:assets] << {ledger_heading: "Debtors", amount: org_balance.debit_balance.to_f}
+    transactions[:liabilities] << {ledger_heading: "Creditors", amount: org_balance.credit_balance.to_f}
 
     if income > expense
       transactions[:liabilities] << {ledger_heading: "Profit of the year", amount: (income - expense)}
