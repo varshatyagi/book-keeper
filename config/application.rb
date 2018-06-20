@@ -27,6 +27,7 @@ module BookKeeper
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = false
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.assets.compile = false
 
     config.SMS = {
       URI: "https://api.textlocal.in/send/?",
