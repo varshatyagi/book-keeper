@@ -50,7 +50,7 @@ class OrgBankAccount < ApplicationRecord
       amount: records.opening_balance.to_f,
       remarks: 'CAPITAL_ACCRUED_BANK',
       payment_mode: 'bank',
-      txn_date: records.created_at,
+      txn_date: DateTime.new,
       created_by: organisation.owner_id,
       organisation_id: organisation.id
     })

@@ -34,7 +34,7 @@ class V1::LedgerHeadingsController < ApplicationController
 
   def prepare_ledger_headings
     scope = LedgerHeading.all.order(:display_name)
-    scope = scope.where.not(transaction_type: LedgerHeading::CASH_TRANSACTION)
+    scope = scope.where('transaction_type != ?', LedgerHeading::CASH_TRANSACTION).where('name NOT IN (?)', [LedgerHeading::CAPITAL_ACCRUED_CASH, LedgerHeading::CAPITAL_ACCRUED_BANK])
     if params[:transaction_type].present?
       scope = scope.where(transaction_type: params[:transaction_type])
     end
