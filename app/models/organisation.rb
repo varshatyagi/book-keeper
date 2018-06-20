@@ -62,7 +62,6 @@ class Organisation < ApplicationRecord
         credit_opening_balance: 0.0
       })
     end
-
     capital_accrued_cash_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_CASH).id
 
     org_balance = org_balances.by_financial_year(Common.calulate_financial_year).first

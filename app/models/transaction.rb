@@ -28,8 +28,6 @@ class Transaction < ApplicationRecord
   belongs_to :org_bank_account, optional: true
   belongs_to :alliance, optional: true
 
-  after_create :update_balance
-
   STATUS = {
     "COMPLETED": "Completed",
     "PENDING": "Pending",

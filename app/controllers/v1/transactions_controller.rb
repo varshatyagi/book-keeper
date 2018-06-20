@@ -37,6 +37,7 @@ class V1::TransactionsController < ApplicationController
       transaction.txn_date = Time.now unless transaction_params[:txn_date].present?
       transaction.organisation_id = params[:organisation_id]
       transaction.save!
+      transaction.update_balance
       render json: {response: true}
     end
   end
