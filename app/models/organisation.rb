@@ -74,7 +74,7 @@ class Organisation < ApplicationRecord
       amount: org_balance.cash_opening_balance.to_f,
       remarks: 'CAPITAL_ACCRUED_CASH',
       payment_mode: 'cash',
-      txn_date: DateTime.new,
+      txn_date: Date.today,
       created_by: owner_id,
       organisation_id: id
     })
