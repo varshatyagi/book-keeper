@@ -125,11 +125,12 @@ class V1::OrganisationsController < ApplicationController
         ledger_heading_by_ids[ledger_heading.id.to_s] = ledger_heading
       end
     end
-
     results.each do |ledger_heading_id, total|
       ledger_heading = ledger_heading_by_ids[ledger_heading_id.to_s]
       info = {ledger_heading: ledger_heading.display_name, amount: total.to_f}
       if ledger_heading.transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
+        transactions[:liabilities] << info
+      elsif ledger_heading.name == LedgerHeading::CAPITAL_ACCRUED_BANK || ledger_heading.name == LedgerHeading::CAPITAL_ACCRUED_CASH
         transactions[:liabilities] << info
       else
         transactions[:assets] << info

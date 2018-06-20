@@ -44,12 +44,15 @@ class OrgBankAccount < ApplicationRecord
     capital_accrued_bank_ledger_id = LedgerHeading.find_by(name: LedgerHeading::CAPITAL_ACCRUED_BANK).id
     records = org_bank_account_balance_summaries.where(org_bank_account_id: id)
     records = records.acnts_with_financial_year(Common.calulate_financial_year).first
+    organisation = Organisation.find(organisation_id)
     Transaction.create!({
       ledger_heading_id: capital_accrued_bank_ledger_id,
       amount: records.opening_balance.to_f,
       remarks: 'CAPITAL_ACCRUED_BANK',
       payment_mode: 'bank',
-      txn_date: records.created_at
+      txn_date: records.created_at,
+      created_by: organisation.owner_id,
+      organisation_id: organisation.id
     })
   end
 
