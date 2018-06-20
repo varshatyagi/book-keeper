@@ -180,6 +180,14 @@ class V1::OrganisationsController < ApplicationController
     scope = scope.where("txn_date >= ?", from_date) if from_date.present?
     scope = scope.where("txn_date <= ?", to_date) if to_date.present?
 
+    if params[:creditors].present?
+      scope = scope.where('alliance_id is not null and alliance_type = ?', Alliance::CREDITOR)
+    end
+
+    if params[:debtors].present?
+      scope = scope.where('alliance_id is not null and alliance_type = ?', Alliance::DEBITOR)
+    end
+
     # unless from_date.present?
     #   scope = scope.where("txn_date >= ? and txn_date < ?", financial_year_start, financial_year_end)
     # end
@@ -187,11 +195,12 @@ class V1::OrganisationsController < ApplicationController
     transactions = []
     scope.each do |transaction|
       transactions << {
-        ledger_heading: transaction.ledger_heading.display_name,
+        ledger_heading: transaction.ledger_heading,
         txn_date: transaction.txn_date.strftime("%d-%m-%Y"),
         transaction_type: transaction.ledger_heading.ledger_direction,
         amount: transaction.amount.to_f,
-        remarks: transaction.remarks
+        remarks: transaction.remarks,
+        alliance: transaction.alliance_id ? transaction.alliance
       }
     end
     transactions
