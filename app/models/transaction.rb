@@ -70,8 +70,8 @@ class Transaction < ApplicationRecord
         bank_summary.bank_balance += amount
         bank_summary.save!
       elsif direction == Transaction::REVERT_TRANSACTION
-        org_balance.bank_balance += amount
-        bank_summary.bank_balance += amount
+        org_balance.bank_balance -= amount
+        bank_summary.bank_balance -= amount
         bank_summary.save!
       end
     elsif transaction_type == LedgerHeading::TRANSACTION_TYPE_DEBIT
