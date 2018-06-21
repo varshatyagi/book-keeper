@@ -73,7 +73,9 @@ class V1::UsersController < ApplicationController
     unless user.valid_password? options[:password]
       return {errors: ['password is not valid']}
     end
-    {response: UserSerializer.new(generate_token(user)).serializable_hash}
+    user_response = UserSerializer.new(user).serializable_hash
+    user_response[:token] = generate_token(user)
+    {response: user_response}
   end
 
   def login_via_otp(otp_params)
@@ -88,10 +90,11 @@ class V1::UsersController < ApplicationController
     # check for present user if it exist
     user = User.find_by(mob_num: otp_params[:mob_num])
     raise 'This mobile number is not register' unless user.present?
-    user = generate_token(user)
     user.is_temporary_password = false
     otp_existing_record.destroy
-    {response: UserSerializer.new(user).serializable_hash}
+    user_response = UserSerializer.new(user).serializable_hash
+    user_response[:token] = generate_token(user)
+    {response: user_response}
   end
 
   def change_password
@@ -163,11 +166,12 @@ class V1::UsersController < ApplicationController
   private
 
   def generate_token(current_user)
-    jwt = Auth.encode({user: current_user.id, time: Time.now}) # get token
-    current_user.token = jwt
-    current_user.reset_token_at =  Time.now
-    current_user.save()
-    current_user
+    jwt = Auth.encode({
+      user: current_user.id,
+      iat: Time.new.strftime('%s'),
+      exp: (Time.new + 1.hour).strftime('%s')
+    }) # get token
+    jwt
   end
 
   def user_params

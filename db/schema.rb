@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180619104058) do
+ActiveRecord::Schema.define(version: 20180621042953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -232,8 +232,6 @@ ActiveRecord::Schema.define(version: 20180619104058) do
     t.string   "status"
     t.integer  "created_by"
     t.string   "encrypted_password"
-    t.string   "token"
-    t.datetime "reset_token_at"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.boolean  "is_temporary_password"

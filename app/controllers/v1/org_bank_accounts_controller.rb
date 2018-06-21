@@ -1,7 +1,6 @@
 class V1::OrgBankAccountsController < ApplicationController
 
   before_action :require_user
-  # before_action :require_admin_or_organisation_owner
 
   def index
     organisation = Organisation.find(params[:organisation_id]) || not_found

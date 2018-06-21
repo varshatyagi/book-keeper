@@ -1,6 +1,7 @@
 class Auth
   require 'jwt'
-  ALGORITHM = 'HS256'
+
+  ALGORITHM = "HS256"
 
   def self.encode(payload)
     JWT.encode(payload, Rails.application.secrets.secret_key_base, ALGORITHM)

@@ -37,9 +37,14 @@ class ApplicationController < ActionController::API
   end
 
   def require_admin_or_organisation_owner
-    return render json: {errors: ['Organisation is missing']} unless params[:organisation_id].present?
-    organisation = Organisation.find(params[:organisation_id])
-    return true if organisation.role == User::USER_ROLE_ADMIN || organisation.owner_id == @current_user[:id]
+    org_id = nil
+    if params[:organisation_id].present?
+      org_id = params[:organisation_id]
+    else
+      org_id = params[:id]
+    end
+    organisation = Organisation.find(org_id) || not_found
+    return true if organisation.owner_id == @current_user[:id] || @current_user.role == User::USER_ROLE_ADMIN
     render json: {errors: ['You are not authorized to access this resources']}
   end
 
@@ -57,9 +62,12 @@ class ApplicationController < ActionController::API
   def valid_token?
     token = http_auth_header
     if token.present?
-      user = User.find_by(token: token)
+      auth = Auth.decode(token)
+      unless auth.present?
+        return false
+      end
+      user = User.find(auth["user"])
       if user.present?
-        return false if user.token_expired?
         set_current_user(user)
         return true
       end
