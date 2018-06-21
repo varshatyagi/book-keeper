@@ -163,7 +163,7 @@ class V1::UsersController < ApplicationController
     render json: {response: {otp_pin: otp_pin}}
   end
 
-  def associated_url
+  def actual_url
     record = ShortUrl.find_by(url_code: params[:url_code])
     record.destroy
     render json: {response: ShortUrlSerializer.new(record).serializable_hash}
