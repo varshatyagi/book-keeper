@@ -57,7 +57,7 @@ class Transaction < ApplicationRecord
     end
 
     if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT || ledger_heading.name == LedgerHeading::DEBIT_PAYMENT
-      org_balance = manage_balance_in_special_case(ledger_heading.name, org_balance, direction)
+      org_balance = manage_balance_in_special_case(ledger_heading.name, org_balance, direction, amount)
     end
 
     org_balance.save!
@@ -120,7 +120,7 @@ class Transaction < ApplicationRecord
     end
   end
 
-  def manage_balance_in_special_case(ledger_heading, org_balance, direction)
+  def manage_balance_in_special_case(ledger_heading, org_balance, direction, amount)
     case ledger_heading
     when LedgerHeading::CREDIT_PAYMENT
     org_balance.credit_balance -= amount if direction == Transaction::UPDATE_TRANSACTION
