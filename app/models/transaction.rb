@@ -111,6 +111,12 @@ class Transaction < ApplicationRecord
       elsif direction == Transaction::REVERT_TRANSACTION
         org_balance.cash_balance -= amount
       end
+    elsif transaction_type == LedgerHeading::TRANSACTION_TYPE_DEBIT
+      if direction == Transaction::UPDATE_TRANSACTION
+        org_balance.cash_balance -= amount
+      elsif direction == Transaction::REVERT_TRANSACTION
+        org_balance.cash_balance += amount
+      end
     end
   end
 
