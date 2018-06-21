@@ -51,7 +51,7 @@ class V1::TransactionsController < ApplicationController
       transaction.organisation_id = params[:organisation_id]
       transaction.save!
       transaction.update_balance(Transaction::UPDATE_TRANSACTION)
-      render json: {response: true}
+      render json: {response: TransactionSerializer.new(transaction).serializable_hash}
     end
   end
 
