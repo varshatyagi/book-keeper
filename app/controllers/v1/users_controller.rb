@@ -128,8 +128,8 @@ class V1::UsersController < ApplicationController
     user.is_temporary_password = true
     password = Common.generate_string
     user.update_attributes({password: password, password_confirmation: password})
-
-    message = "Your temporary password is : #{password}"
+    url_code = Common.short_url_code(User::FORGOT_PASSWORD_URL)
+    message = "Your temporary password is : #{password}. Please click on below link to reset your password #{User::BASE_URL}#{url_code}"
     if need_to_send_sms
       Common.send_sms({message: message, mob_num: user.mob_num})
     else
@@ -161,6 +161,12 @@ class V1::UsersController < ApplicationController
       otp_record.save!
     end
     render json: {response: {otp_pin: otp_pin}}
+  end
+
+  def associated_url
+    record = ShortUrl.find_by(url_code: params[:url_code])
+    record.destroy
+    render json: {response: ShortUrlSerializer.new(record).serializable_hash}
   end
 
   private

@@ -42,7 +42,9 @@ class V1::PlansController < ApplicationController
   end
 
   def user_signup_via_mobile(user)
-    Common.send_sms({message: 'Thank you. Your plan has been activated.', mob_num: user.mob_num})
+    url_code = Common.short_url_code(User::LOGIN_URL)
+    message = "Thank you. Your plan has been activated. Please click on below link to login to your account #{User::BASE_URL}#{url_code}"
+    Common.send_sms({message: message, mob_num: user.mob_num})
     user.update_attributes!(status: User::USER_STATUS_ACTIVE)
   end
 

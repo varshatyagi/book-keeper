@@ -43,7 +43,9 @@ class User < ApplicationRecord
   USER_STATUS_ACTIVE = 'active'
   USER_STATUS_PENDING = 'pending'
 
-  TOKEN_EXPIRATION_TIME = 86400 # In seconds 24 hrs
+  BASE_URL = "https://online-acc.herokuapp.com/r?code="
+  FORGOT_PASSWORD_URL = "https://online-acc.herokuapp.com/forgot-password"
+  LOGIN_URL = "https://online-acc.herokuapp.com/login"
 
   def admin?
     role == USER_ROLE_ADMIN
@@ -51,10 +53,6 @@ class User < ApplicationRecord
 
   def client?
     role == USER_ROLE_CLIENT
-  end
-
-  def token_expired?
-    (Time.now.to_i - reset_token_at.to_i) > TOKEN_EXPIRATION_TIME
   end
 
   def downcase_fields

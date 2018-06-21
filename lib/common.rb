@@ -37,4 +37,10 @@ class Common
     fy_arr
   end
 
+  def self.short_url_code(associated_url)
+    code = Digest::MD5.hexdigest(associated_url+ "onacc app").slice(0..6)
+    ShortUrl.create({associated_url: associated_url, url_code: code})
+    code
+  end
+
 end

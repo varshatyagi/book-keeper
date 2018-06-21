@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     get "states", controller: 'states', action: :index
     get "cities", controller: 'cities', action: :index
     post "forgot_password", controller: 'users', action: :forgot_password
+    get "associated_url", controller: 'users', action: :associated_url
 
   end
 end
