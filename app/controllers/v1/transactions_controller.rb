@@ -37,6 +37,7 @@ class V1::TransactionsController < ApplicationController
     ApplicationRecord.transaction do
       transaction.update_balance(Transaction::REVERT_TRANSACTION)
       transaction.update_attributes!(transaction_params)
+      transaction.update_balance(Transaction::UPDATE_TRANSACTION)
     end
     render json: {response: TransactionSerializer.new(transaction).serializable_hash}
   end

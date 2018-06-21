@@ -43,15 +43,16 @@ class Transaction < ApplicationRecord
     org_bank_summary = OrgBankAccountBalanceSummary.where(org_bank_account_id: org_bank_account_id).acnts_with_financial_year(Common.calulate_financial_year(fy: txn_date)).first
     raise 'Transaction can not be done outside of the financial year of Organization Bank Accounts.' unless org_balance.present?
 
+    transaction_type = LedgerHeading.find(ledger_heading_id).transaction_type
     case payment_mode
     when PaymentMode::PAYMENT_MODE_BANK
-      update_bank_balances(transaction_type, org_balance, org_bank_summary, self.amount, direction)
+      update_bank_balances(transaction_type, org_balance, org_bank_summary, amount, direction)
     when PaymentMode::PAYMENT_MODE_DEBIT
-      update_credit_debit_balances(transaction_type, org_balance, self.amount, direction)
+      update_credit_debit_balances(transaction_type, org_balance, amount, direction)
     when PaymentMode::PAYMENT_MODE_CASH
-      update_cash_balances(transaction_type, org_balance, self.amount, direction)
+      update_cash_balances(transaction_type, org_balance, amount, direction)
     when PaymentMode::PAYMENT_MODE_CREDIT
-      update_credit_debit_balances(transaction_type, org_balance, self.amount, direction)
+      update_credit_debit_balances(transaction_type, org_balance, amount, direction)
     else
     end
 
