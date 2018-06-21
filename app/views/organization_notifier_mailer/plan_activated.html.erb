@@ -4,18 +4,36 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h4>Hurray, your plan is active now!</h4>
-    <p>Here is your temporary password to login to your Onacc account.</p>
-    <p>Password: <strong><%= @password %></strong></p>
-    <p><a href="https://online-acc.herokuapp.com/login">Click here</a> to login to your account.</p>
-
-    <hr/>
-    <p>
-      <p><strong>Plan Info</strong></p>
-      <p>Plan Name: <strong><%= @user.organisation.plan.plan_name %></strong></p>
-      <p>Plan <%= @user.organisation.plan.plan_start_date < Date.today ? "Started" : "Starts" %> on: <strong><%= @user.organisation.plan.plan_start_date.strftime('%m/%d/%Y') %></strong></p>
-      <p>Plan Expires on: <strong><%= @user.organisation.plan.plan_end_date.strftime('%m/%d/%Y') %></strong></p>
-      <p>Plan Amount: <strong>Rs. <%= @user.organisation.plan.amount %>/-</strong></p>
-    </p>
+    <table align="left" cellspacing="0" style="width:100%;">
+      <tbody>
+        <tr>
+          <td valign="middle" style="font-size:13px;">
+            <h4>Hurray, your plan is active now!</h4>
+            <p>Here is your temporary password to login to your Onacc account.</p>
+            <p>Password: <strong><%= @password %></strong></p>
+          </td>
+        </tr>
+        <tr align="left">
+          <td align="left" valign="middle" style="font-size:13px;">
+            <p><strong>Plan Info</strong></p>
+            <p>Plan Name: <strong><%= @user.organisation.plan.plan_name %></strong></p>
+            <p>Plan <%= @user.organisation.plan.plan_start_date < Date.today ? "Started" : "Starts" %> on: <strong><%= @user.organisation.plan.plan_start_date.strftime('%m/%d/%Y') %></strong></p>
+            <p>Plan Expires on: <strong><%= @user.organisation.plan.plan_end_date.strftime('%m/%d/%Y') %></strong></p>
+            <p>Plan Amount: <strong>Rs. <%= @user.organisation.plan.amount %>/-</strong></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table width="150" align ="center">
+              <tbody>
+                <td align="center" valign="middle" style="font-size:16px;padding:15px;background-color:#25A0D3">
+                  <a href="https://online-acc.herokuapp.com/login" style="color:#fff;text-decoration:none;" target="_blank">Sign In</a>
+                </td>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>

@@ -4,8 +4,25 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h4>Activate User</h4>
-    <p>User with <%= @user.email.present? ? "email: #{@user.email}" : "mobile: #{@user.mob_num}" %> has contacted for plan <strong><%= @user.organisation.preferred_plan_name %></strong>.</p>
-    <p><a href="https://online-acc.herokuapp.com/login">Click here</a> to activate the plan for this user.</p>
+    <table align="left" cellspacing="0" style="width:100%;">
+      <tbody>
+        <tr>
+          <td valign="middle" style="font-size:13px;">
+            <h4>Activate User</h4>
+            <p>User with <%= @user.email.present? ? "email: #{@user.email}" : "mobile: #{@user.mob_num}" %> has contacted for plan <strong><%= @user.organisation.preferred_plan_name %></strong>.</p>
+            <p>Click below link to activate the plan for this user.</p>
+          </td>
+        </tr>
+        <tr align="center">
+          <table width="150" align ="center">
+            <tbody>
+              <td align="center" valign="middle" style="font-size:16px;padding:15px;background-color:#25A0D3">
+                <a href="https://online-acc.herokuapp.com/login" style="color:#fff;text-decoration:none;" target="_blank">Activate Plan</a>
+              </td>
+            </tbody>
+          </table>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
