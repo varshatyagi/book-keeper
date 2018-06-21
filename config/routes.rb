@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     post "otp", controller: 'users', action: :otp
     get "states", controller: 'states', action: :index
     get "cities", controller: 'cities', action: :index
+    post "forgot_password", controller: 'users', action: :forgot_password
 
   end
 end

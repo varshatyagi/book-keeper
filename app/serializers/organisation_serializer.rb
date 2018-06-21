@@ -1,6 +1,6 @@
 class OrganisationSerializer < ActiveModel::Serializer
   attributes :id, :name, :owner_id, :created_by, :is_setup_complete, :owner, :preferred_plan_id
-  attributes :active_plan_id, :created_at, :balance_summary, :plan_info
+  attributes :active_plan_id, :created_at, :balance_summary, :plan_info, :business_start_date
 
   def owner
     return nil if object.id.blank?
@@ -19,14 +19,15 @@ class OrganisationSerializer < ActiveModel::Serializer
     elsif object.user.status == User::USER_STATUS_ACTIVE
       plan_detail = object.plan
       # if plan end date is smaller than current time than expired flag is true
-      expired = plan_detail && plan_detail.plan_end_date ? plan_detail.plan_end_date < DateTime.now : nil
+      expired = plan_detail.plan_end_date < DateTime.now
       plan_info = { id: plan_detail ? plan_detail.id : nil,
                     active_plan_id: active_id ? active_id : nil,
-                    active_plan_name: active_id ? Plan::PLAN_NAME[active_id] : nil,
-                    plan_start_date: plan_detail && plan_detail.plan_start_date ? plan_detail.plan_start_date : nil,
-                    plan_end_date: plan_detail && plan_detail.plan_end_date ? plan_detail.plan_end_date : nil,
+                    active_plan_name: active_id ? Plan::PLAN_NAME[active_id - 1] : nil,
+                    plan_start_date: plan_detail && plan_detail.plan_start_date ? plan_detail.plan_start_date.strftime('%m/%d/%Y') : nil,
+                    plan_end_date: plan_detail && plan_detail.plan_end_date ? plan_detail.plan_end_date.strftime('%m/%d/%Y') : nil,
                     amount: plan_detail && plan_detail.amount.to_f ? plan_detail.amount.to_f : nil,
-                    expired: expired
+                    expired: expired,
+                    remarks: plan_detail && plan_detail.remarks ? plan_detail.remarks : nil
                   }
     end
       return plan_info

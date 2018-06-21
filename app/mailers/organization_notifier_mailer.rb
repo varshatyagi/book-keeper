@@ -15,4 +15,9 @@ class OrganizationNotifierMailer < ApplicationMailer
     @password = password
     mail(:to => user.email, :subject => 'Your Onacc a/c is active now!')
   end
+
+  def forgot_password(user, password)
+    @password = password
+    mail(:to => user.email, :subject => 'Reset your Onacc acount password')
+  end
 end

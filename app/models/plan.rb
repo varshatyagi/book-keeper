@@ -28,6 +28,6 @@ class Plan < ApplicationRecord
   PLAN_NAME = ["Basic", "Essential", "Accountant", "Enterprise"]
 
   def plan_name
-    PLAN_NAME[plan]
+    PLAN_NAME[plan - 1]
   end
 end

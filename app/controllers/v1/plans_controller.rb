@@ -4,9 +4,9 @@ class V1::PlansController < ApplicationController
   before_action :require_admin, only: [:create, :update]
 
   def create
-    organisation = Organisation.find_by(id: params[:organisation_id]) || not_found
+    organisation = Organisation.find(params[:organisation_id]) || not_found
     plan = Plan.new(plan_params)
-    plan[:plan_end_date] = plan[:plan_start_date] + 1.year
+    plan[:plan_end_date] = plan[:plan_start_date] + 1.year if plan_params[:plan_end_date].blank?
     ApplicationRecord.transaction do
       plan.save!
       organisation.update_attributes!(active_plan_id: plan.plan)
@@ -38,7 +38,7 @@ class V1::PlansController < ApplicationController
   private
 
   def plan_params
-    params.require(:plan).permit(:amount, :plan_start_date, :plan_end_date, :plan, :organisation_id) if params[:plan]
+    params.require(:plan).permit(:amount, :plan_start_date, :plan_end_date, :plan, :organisation_id, :remarks) if params[:plan]
   end
 
   def user_signup_via_mobile(user)

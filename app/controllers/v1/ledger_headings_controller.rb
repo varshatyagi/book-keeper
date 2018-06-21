@@ -21,7 +21,7 @@ class V1::LedgerHeadingsController < ApplicationController
 
   def update
     ledger_heading = LedgerHeading.find(params[:id])
-    ledger_heading = ledger_heading.update_attributes!(ledger_heading_params)
+    ledger_heading.update_attributes!(ledger_heading_params)
     render json: {response: LedgerHeadingSerializer.new(ledger_heading).serializable_hash}
   end
 
@@ -34,7 +34,7 @@ class V1::LedgerHeadingsController < ApplicationController
 
   def prepare_ledger_headings
     scope = LedgerHeading.all.order(:display_name)
-    scope = scope.where.not(transaction_type: LedgerHeading::CASH_TRANSACTION)
+    scope = scope.where('transaction_type != ?', LedgerHeading::CASH_TRANSACTION).where('name NOT IN (?)', [LedgerHeading::CAPITAL_ACCRUED_CASH, LedgerHeading::CAPITAL_ACCRUED_BANK])
     if params[:transaction_type].present?
       scope = scope.where(transaction_type: params[:transaction_type])
     end

@@ -4,4 +4,9 @@ class CashTransactionSerializer < ActiveModel::Serializer
   def amount
     object.amount.to_f
   end
+
+  def txn_date
+    object.txn_date.strftime('%m/%d/%Y')
+  end
+
 end

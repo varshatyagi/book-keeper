@@ -1,7 +1,9 @@
 class OrgBankAccountBalanceSummary < ApplicationRecord
   belongs_to :org_bank_account, optional: true
 
-  after_create :update_total_balance
+  scope :acnts_with_financial_year, lambda { |fy| where("org_bank_account_balance_summaries.financial_year = ?", fy)}
+
+  after_commit :update_total_balance, on: :create
 
   def update_total_balance
     return true unless bank_balance.present? && bank_balance > 0

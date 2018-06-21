@@ -25,8 +25,9 @@ module BookKeeper
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
-    config.api_only = true
+    config.api_only = false
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.assets.compile = false
 
     config.SMS = {
       URI: "https://api.textlocal.in/send/?",
@@ -41,16 +42,6 @@ module BookKeeper
     end
     config.action_mailer.asset_host = config.action_controller.asset_host
     # config.action_mailer.default_url_options = { host: "onacc.com" }
-
-    ActionMailer::Base.delivery_method = :smtp
-    ActionMailer::Base.smtp_settings = {
-      address: 'smtp.sendgrid.net',
-      port: '587',
-      authentication: :plain,
-      user_name: "varshat",
-      password: "newput2015",
-      domain: 'heroku.com',
-      enable_starttls_auto: true
-    }
+    config.middleware.use Rack::MethodOverride
   end
 end

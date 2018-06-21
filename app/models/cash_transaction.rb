@@ -27,26 +27,26 @@ class CashTransaction < ApplicationRecord
 
   after_create :update_balance
 
-  WITHDRAWAL = "WITHDRAWAL"
-  DEPOSIT = "DEPOSIT"
+  WITHDRAWAL = "CASH_WITHDRAWAL"
+  DEPOSIT = "CASH_DEPOSIT"
 
   def update_balance
 
-    organisation = Organisation.find(org_bank_account.organisation_id) || not_found
+    organisation = Organisation.find(organisation_id) || not_found
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
+    org_bank_summary = OrgBankAccountBalanceSummary.where(org_bank_account_id: org_bank_account_id).acnts_with_financial_year(Common.calulate_financial_year).first
 
-    org_bank_acnt_balance = OrgBankAccountBalanceSummary.find_by(org_bank_account_id: org_bank_account.id)
     if withdrawal?
-      org_bank_acnt_balance.bank_balance -= amount
+      org_bank_summary.bank_balance -= amount
       org_balance.cash_balance += amount
       org_balance.bank_balance -= amount
     else
-      org_bank_acnt_balance.bank_balance += amount
+      org_bank_summary.bank_balance += amount
       org_balance.cash_balance -= amount
       org_balance.bank_balance += amount
     end
 
-    org_bank_acnt_balance.save!
+    org_bank_summary.save!
     org_balance.save!
   end
 end
