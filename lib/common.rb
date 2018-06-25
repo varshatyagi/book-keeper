@@ -24,7 +24,7 @@ class Common
     uri = URI.parse(requested_url)
     http = Net::HTTP.start(uri.host, uri.port)
     request = Net::HTTP::Get.new(uri.request_uri)
-    res = Net::HTTP.post_form(uri, 'apikey' => Rails.configuration.SMS[:API_KEY], 'message' => object[:message], 'numbers' => object[:mob_num], 'test' => true)
+    res = Net::HTTP.post_form(uri, 'apikey' => Rails.configuration.SMS[:API_KEY], 'message' => object[:message], 'numbers' => object[:mob_num])
     response = JSON.parse(res.body)
   end
 
