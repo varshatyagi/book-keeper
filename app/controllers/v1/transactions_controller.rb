@@ -35,6 +35,14 @@ class V1::TransactionsController < ApplicationController
     render json: {response: TransactionSerializer.new(transaction).serializable_hash}
   end
 
+  def destroy
+    transaction = Transaction.find(params[:id]) || not_found
+    ApplicationRecord.transaction do
+      transaction.delete!
+      transaction.update_balance(Transaction::REVERT_TRANSACTION)
+    end
+  end
+
   def update
     transaction = Transaction.find(params[:id]) || not_found
     ApplicationRecord.transaction do

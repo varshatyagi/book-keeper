@@ -37,7 +37,7 @@ class Transaction < ApplicationRecord
   REVERT_TRANSACTION = 'revert transaction'
   UPDATE_TRANSACTION = 'update transaction'
 
-  def update_balance(direction)
+  def update_balance(action)
 
     org_balance = organisation.org_balances.by_financial_year(Common.calulate_financial_year(fy: self.txn_date)).first
     org_bank_summary = OrgBankAccountBalanceSummary.where(org_bank_account_id: org_bank_account_id).acnts_with_financial_year(Common.calulate_financial_year(fy: txn_date)).first
@@ -46,40 +46,40 @@ class Transaction < ApplicationRecord
     transaction_type = LedgerHeading.find(ledger_heading_id).transaction_type
     case payment_mode
     when PaymentMode::PAYMENT_MODE_BANK
-      update_bank_balances(transaction_type, org_balance, org_bank_summary, amount, direction)
+      update_bank_balances(transaction_type, org_balance, org_bank_summary, amount, action)
     when PaymentMode::PAYMENT_MODE_DEBIT
-      update_credit_debit_balances(transaction_type, org_balance, amount, direction)
+      update_credit_debit_balances(transaction_type, org_balance, amount, action)
     when PaymentMode::PAYMENT_MODE_CASH
-      update_cash_balances(transaction_type, org_balance, amount, direction)
+      update_cash_balances(transaction_type, org_balance, amount, action)
     when PaymentMode::PAYMENT_MODE_CREDIT
-      update_credit_debit_balances(transaction_type, org_balance, amount, direction)
+      update_credit_debit_balances(transaction_type, org_balance, amount, action)
     else
     end
 
     if ledger_heading.name == LedgerHeading::CREDIT_PAYMENT || ledger_heading.name == LedgerHeading::DEBIT_PAYMENT
-      org_balance = manage_balance_in_special_case(ledger_heading.name, org_balance, direction, amount)
+      org_balance = manage_balance_in_special_case(ledger_heading.name, org_balance, action, amount)
     end
 
     org_balance.save!
   end
 
-  def update_bank_balances(transaction_type, org_balance, bank_summary, amount, direction)
+  def update_bank_balances(transaction_type, org_balance, bank_summary, amount, action)
     if transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
-      if direction == Transaction::UPDATE_TRANSACTION
+      if action == Transaction::UPDATE_TRANSACTION
         org_balance.bank_balance += amount
         bank_summary.bank_balance += amount
         bank_summary.save!
-      elsif direction == Transaction::REVERT_TRANSACTION
+      elsif action == Transaction::REVERT_TRANSACTION
         org_balance.bank_balance -= amount
         bank_summary.bank_balance -= amount
         bank_summary.save!
       end
     elsif transaction_type == LedgerHeading::TRANSACTION_TYPE_DEBIT
-      if direction == Transaction::UPDATE_TRANSACTION
+      if action == Transaction::UPDATE_TRANSACTION
         org_balance.bank_balance -= amount
         bank_summary.bank_balance -= amount
         bank_summary.save!
-      elsif direction == Transaction::REVERT_TRANSACTION
+      elsif action == Transaction::REVERT_TRANSACTION
         org_balance.bank_balance += amount
         bank_summary.bank_balance += amount
         bank_summary.save!
@@ -88,46 +88,46 @@ class Transaction < ApplicationRecord
 
   end
 
-  def update_credit_debit_balances(transaction_type, org_balance, amount, direction)
+  def update_credit_debit_balances(transaction_type, org_balance, amount, action)
     if transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
-      if direction == Transaction::UPDATE_TRANSACTION
+      if action == Transaction::UPDATE_TRANSACTION
         org_balance.debit_balance += amount
-      elsif direction == Transaction::REVERT_TRANSACTION
+      elsif action == Transaction::REVERT_TRANSACTION
         org_balance.debit_balance -= amount
       end
     elsif transaction_type == LedgerHeading::TRANSACTION_TYPE_DEBIT
-      if direction == Transaction::UPDATE_TRANSACTION
+      if action == Transaction::UPDATE_TRANSACTION
         org_balance.credit_balance += amount
-      elsif direction == Transaction::REVERT_TRANSACTION
+      elsif action == Transaction::REVERT_TRANSACTION
         org_balance.credit_balance -= amount
       end
     end
   end
 
-  def update_cash_balances(transaction_type, org_balance, amount, direction)
+  def update_cash_balances(transaction_type, org_balance, amount, action)
     if transaction_type == LedgerHeading::TRANSACTION_TYPE_CREDIT
-      if direction == Transaction::UPDATE_TRANSACTION
+      if action == Transaction::UPDATE_TRANSACTION
         org_balance.cash_balance += amount
-      elsif direction == Transaction::REVERT_TRANSACTION
+      elsif action == Transaction::REVERT_TRANSACTION
         org_balance.cash_balance -= amount
       end
     elsif transaction_type == LedgerHeading::TRANSACTION_TYPE_DEBIT
-      if direction == Transaction::UPDATE_TRANSACTION
+      if action == Transaction::UPDATE_TRANSACTION
         org_balance.cash_balance -= amount
-      elsif direction == Transaction::REVERT_TRANSACTION
+      elsif action == Transaction::REVERT_TRANSACTION
         org_balance.cash_balance += amount
       end
     end
   end
 
-  def manage_balance_in_special_case(ledger_heading, org_balance, direction, amount)
+  def manage_balance_in_special_case(ledger_heading, org_balance, action, amount)
     case ledger_heading
     when LedgerHeading::CREDIT_PAYMENT
-    org_balance.credit_balance -= amount if direction == Transaction::UPDATE_TRANSACTION
-    org_balance.credit_balance += amount if direction == Transaction::REVERT_TRANSACTION
+    org_balance.credit_balance -= amount if action == Transaction::UPDATE_TRANSACTION
+    org_balance.credit_balance += amount if action == Transaction::REVERT_TRANSACTION
     when LedgerHeading::DEBIT_PAYMENT
-    org_balance.debit_balance -= amount if direction == Transaction::UPDATE_TRANSACTION
-    org_balance.debit_balance += amount if direction == Transaction::REVERT_TRANSACTION
+    org_balance.debit_balance -= amount if action == Transaction::UPDATE_TRANSACTION
+    org_balance.debit_balance += amount if action == Transaction::REVERT_TRANSACTION
     else
     end
     org_balance
