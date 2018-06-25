@@ -1,6 +1,7 @@
 class V1::OrganisationsController < ApplicationController
 
   before_action :require_user
+  before_action :require_admin, only: [:index]
 
   def index
     organisations = Organisation.all.order(updated_at: :desc)

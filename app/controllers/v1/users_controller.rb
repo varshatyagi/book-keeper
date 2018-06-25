@@ -123,7 +123,7 @@ class V1::UsersController < ApplicationController
       user = User.find_by(email: signup_params[:email])
     end
     unless user.present?
-      return render json: {errors: 'User is not found'}
+      return render json: {errors: ['User is not found']}
     end
     user.is_temporary_password = true
     password = Common.generate_string
