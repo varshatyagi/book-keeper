@@ -45,6 +45,8 @@ class V1::LedgerHeadingsController < ApplicationController
       scope = scope.where(asset: true?(params[:asset]))
     end
 
+    scope = scope.paginate(:page => params[:page_start], :per_page => params[:limit]) if params[:page_start].present? && params[:limit].present?
+
     ledger_headings = scope.to_a
     ledger_headings = ledger_headings.map {|ledger_heading| LedgerHeadingSerializer.new(ledger_heading).serializable_hash} if ledger_headings.present?
     ledger_headings

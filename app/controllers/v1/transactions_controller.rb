@@ -23,6 +23,8 @@ class V1::TransactionsController < ApplicationController
       scope = scope.where(alliance_id: ids)
     end
 
+    scope = scope.paginate(:page => params[:page_start], :per_page => params[:limit]) if params[:page_start].present? && params[:limit].present?
+
     results = scope.map {|t| TransactionSerializer.new(t).serializable_hash} if scope.present?
     render json: {response: results}
   end
