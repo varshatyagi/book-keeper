@@ -38,9 +38,10 @@ class V1::TransactionsController < ApplicationController
   def destroy
     transaction = Transaction.find(params[:id]) || not_found
     ApplicationRecord.transaction do
-      transaction.delete!
+      transaction.destroy!
       transaction.update_balance(Transaction::REVERT_TRANSACTION)
     end
+    render json: {response: true}
   end
 
   def update
