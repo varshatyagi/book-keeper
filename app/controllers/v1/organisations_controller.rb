@@ -4,9 +4,10 @@ class V1::OrganisationsController < ApplicationController
 
   def index
     organisations = Organisation.all.order(updated_at: :desc)
+    total_records = organisations.length
     organisations = organisations.paginate(:page => params[:page_start], :per_page => params[:limit]) if params[:page_start].present? && params[:limit].present?
     organisations = organisations.map {|organisation| OrganisationSerializer.new(organisation).serializable_hash} if organisations.present?
-    render json: {response: organisations, total_records: organisations.length}
+    render json: {response: organisations, total_records: total_records}
   end
 
   def show

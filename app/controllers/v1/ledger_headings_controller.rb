@@ -35,6 +35,7 @@ class V1::LedgerHeadingsController < ApplicationController
   def prepare_ledger_headings
     scope = LedgerHeading.all.order(:display_name)
     scope = scope.where('transaction_type != ?', LedgerHeading::CASH_TRANSACTION).where('name NOT IN (?)', [LedgerHeading::CAPITAL_ACCRUED_CASH, LedgerHeading::CAPITAL_ACCRUED_BANK])
+    total_records = scope.length
     if params[:transaction_type].present?
       scope = scope.where(transaction_type: params[:transaction_type])
     end
@@ -45,10 +46,10 @@ class V1::LedgerHeadingsController < ApplicationController
       scope = scope.where(asset: true?(params[:asset]))
     end
     scope = scope.paginate(:page => params[:page_start], :per_page => params[:limit]) if params[:page_start].present? && params[:limit].present?
-    records = scope.length
+
     ledger_headings = scope.to_a
     ledger_headings = ledger_headings.map {|ledger_heading| LedgerHeadingSerializer.new(ledger_heading).serializable_hash} if ledger_headings.present?
-    {total_records: records, ledger_headings: ledger_headings}
+    {total_records: total_records, ledger_headings: ledger_headings}
   end
 
   private
