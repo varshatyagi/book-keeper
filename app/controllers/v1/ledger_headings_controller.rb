@@ -4,7 +4,8 @@ class V1::LedgerHeadingsController < ApplicationController
   before_action :require_admin, only: [:create, :update, :destroy]
 
   def index
-    render json: {response: prepare_ledger_headings}
+    result = prepare_ledger_headings
+    render json: {response: result[:ledger_headings],total_records: result[:total_records]}
   end
 
   def show
