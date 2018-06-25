@@ -5,7 +5,7 @@ class V1::LedgerHeadingsController < ApplicationController
 
   def index
     result = prepare_ledger_headings
-    render json: {response: result[:ledger_headings],total_records: result[:total_records]}
+    render json: {response: result[:ledger_headings], total_records: result[:total_records]}
   end
 
   def show
